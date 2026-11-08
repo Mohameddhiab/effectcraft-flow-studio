@@ -1,0 +1,21 @@
+[package]
+name = "effectcraft-flow-helper"
+description = "Flow Studio helper: decodes media audio, detects silence, runs speech-to-text and manages open models, over a loopback JSON-lines socket or one-shot commands"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "effectcraft-flow-helper"
+path = "src/main.rs"
+
+[dependencies]
+effectcraft-flow = { workspace = true }
+effectcraft-media = { workspace = true }
+effectcraft-time = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

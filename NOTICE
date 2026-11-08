@@ -1,0 +1,14 @@
+Flow Studio
+Copyright (c) 2026 Flow Studio contributors.
+
+This project is an independent, open-source ScriptUI panel for EffectCraft.
+
+It is based on EffectCraft (https://github.com/storytold/effectcraft), copyright (c) 2026 the
+ArtCraft team and the EffectCraft contributors, licensed under MIT OR Apache-2.0.
+
+The ArtCraft name, wordmark and logos are trademarks of the ArtCraft team. They are not included in
+this repository. This project is not affiliated with, endorsed by or sponsored by the ArtCraft team.
+
+The Flow Studio panel, the Rust helper overlay and the documentation are licensed under MIT OR
+Apache-2.0 (see LICENSE-MIT and LICENSE-APACHE). The screenshots in docs/images are original renders
+of EffectCraft/Flow Studio and are covered by the same licence; see ATTRIBUTION.md.

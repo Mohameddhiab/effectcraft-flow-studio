@@ -1,0 +1,8 @@
+target/
+dist/
+log/
+.idea/
+.vscode/
+.DS_Store
+*~
+*.bak

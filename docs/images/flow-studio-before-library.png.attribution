@@ -1,0 +1,8 @@
+asset:        flow-studio-before-library.png
+title:        Flow Studio v1 panel, Library tab
+author:       Flow Studio contributors
+source:       original work (offscreen kittest render, cropped to the Flow Studio panel)
+license:      MIT OR Apache-2.0
+license-file:
+added:        2026-11-07 by Flow Studio contributors
+notes:        Screenshot of EffectCraft/Flow Studio only: the earlier one-column Library with category, preview, list and pager. Empty generated project, no third-party media, fonts or logos.

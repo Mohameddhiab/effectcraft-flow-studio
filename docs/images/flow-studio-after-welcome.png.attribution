@@ -1,0 +1,8 @@
+asset:        flow-studio-after-welcome.png
+title:        Flow Studio v3 welcome screen
+author:       Flow Studio contributors
+source:       original work (offscreen kittest render, cropped to the Flow Studio panel)
+license:      MIT OR Apache-2.0
+license-file:
+added:        2026-11-07 by Flow Studio contributors
+notes:        Screenshot of EffectCraft/Flow Studio only: the v3 welcome screen with exactly two actions (check the helper, continue without it). Empty generated project, no third-party media, fonts or logos.

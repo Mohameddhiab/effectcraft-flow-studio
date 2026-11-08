@@ -1,0 +1,43 @@
+FLOW STUDIO — INSTALLATION DU PANNEAU SEUL
+==========================================
+
+EffectCraft doit déjà être installé sur l'ordinateur. Ce paquet n'installe
+QUE le panneau : il ne compile rien, ne télécharge rien et ne remplace pas
+l'application.
+
+Windows
+  1. Double-clique INSTALL-PANEL.bat.
+     (Ou : clic droit sur install.ps1 > Exécuter avec PowerShell.)
+  2. Redémarre EffectCraft.
+  3. Menu Window > Flow Studio.jsx.
+
+macOS / Linux
+  sh install.sh
+  Puis redémarre EffectCraft et ouvre Window > Flow Studio.jsx.
+
+Le panneau est copié dans :
+  Windows : %APPDATA%\EffectCraft\Scripts\ScriptUI Panels\
+  macOS   : ~/Library/Application Support/EffectCraft/Scripts/ScriptUI Panels/
+  Linux   : ~/.config/effectcraft/Scripts/ScriptUI Panels/
+Si un ancien panneau existe, il est sauvegardé en « Flow Studio.jsx.<date>.bak ».
+Rien n'est supprimé.
+
+Helper (optionnel)
+  Silence, Captions, Sounds, Models et la catégorie Audio de la bibliothèque
+  utilisent le helper local (effectcraft-flow-helper serve, port 9890). Sans
+  lui, Ease, Expressions, Text, Background, Effects, Stroke et la bibliothèque
+  visuelle (titres, effets, transitions, générateurs, scripts AE) fonctionnent.
+  Lance le helper avant ou après EffectCraft ; le panneau s'y reconnecte avec
+  Réglages > Helper & Aide > Réessayer.
+
+À savoir
+  Le panneau s'installe dans une installation EffectCraft standard (vérifié
+  avec EffectCraft 0.22.0). Si l'hôte ne partage pas la hauteur libre, le
+  panneau épingle la zone des onglets à la hauteur du panneau lors du
+  redimensionnement : la ligne d'état et le bas de chaque écran restent
+  visibles. Les améliorations hôte complètes (layout « fill » natif) font
+  partie du fork de développement, pas de ce paquet.
+
+Désinstallation
+  Supprime simplement « Flow Studio.jsx » du dossier ScriptUI Panels ci-dessus
+  (ou restaure la sauvegarde .bak).
