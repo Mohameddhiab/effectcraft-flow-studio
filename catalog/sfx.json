@@ -1,0 +1,1047 @@
+{
+ "schema": 1,
+ "kind": "sfx",
+ "count": 80,
+ "items": [
+  {
+   "id": "sfx.whoosh",
+   "kind": "sfx",
+   "name": "Whoosh",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 0.9,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.whoosh-fast",
+   "kind": "sfx",
+   "name": "Fast Whoosh",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 0.4,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.sweep-down",
+   "kind": "sfx",
+   "name": "Sweep Down",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 0.8,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.whoosh-soft",
+   "kind": "sfx",
+   "name": "Soft Whoosh",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 1.1,
+   "recipe": "whoosh",
+   "variant": 11
+  },
+  {
+   "id": "sfx.whoosh-deep",
+   "kind": "sfx",
+   "name": "Deep Whoosh",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 1.3,
+   "recipe": "whoosh",
+   "variant": 12
+  },
+  {
+   "id": "sfx.swoosh-up",
+   "kind": "sfx",
+   "name": "Swoosh Up",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 0.7,
+   "recipe": "whoosh",
+   "variant": 13
+  },
+  {
+   "id": "sfx.swoosh-down",
+   "kind": "sfx",
+   "name": "Swoosh Down",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 0.7,
+   "recipe": "whoosh",
+   "variant": 14
+  },
+  {
+   "id": "sfx.air-pass",
+   "kind": "sfx",
+   "name": "Air Pass",
+   "family": "Whoosh",
+   "tags": [
+    "sound",
+    "whoosh"
+   ],
+   "seconds": 1.5,
+   "recipe": "whoosh",
+   "variant": 15
+  },
+  {
+   "id": "sfx.riser",
+   "kind": "sfx",
+   "name": "Riser",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 1.6,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.tension-riser",
+   "kind": "sfx",
+   "name": "Tension Riser",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 2.4,
+   "recipe": "riser",
+   "variant": 21
+  },
+  {
+   "id": "sfx.noise-riser",
+   "kind": "sfx",
+   "name": "Noise Riser",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 1.8,
+   "recipe": "riser",
+   "variant": 22
+  },
+  {
+   "id": "sfx.reverse-swell",
+   "kind": "sfx",
+   "name": "Reverse Swell",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 2.0,
+   "recipe": "reverse",
+   "variant": 23
+  },
+  {
+   "id": "sfx.build-up",
+   "kind": "sfx",
+   "name": "Build Up",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 2.8,
+   "recipe": "riser",
+   "variant": 24
+  },
+  {
+   "id": "sfx.uplift",
+   "kind": "sfx",
+   "name": "Uplift",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 2.2,
+   "recipe": "riser",
+   "variant": 25
+  },
+  {
+   "id": "sfx.ascend",
+   "kind": "sfx",
+   "name": "Ascend",
+   "family": "Riser",
+   "tags": [
+    "sound",
+    "riser"
+   ],
+   "seconds": 1.4,
+   "recipe": "riser",
+   "variant": 26
+  },
+  {
+   "id": "sfx.impact",
+   "kind": "sfx",
+   "name": "Cinematic Impact",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 1.5,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.punch",
+   "kind": "sfx",
+   "name": "Punch Hit",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 0.35,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.bass-drop",
+   "kind": "sfx",
+   "name": "Bass Drop",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 1.8,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.heartbeat",
+   "kind": "sfx",
+   "name": "Heartbeat",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 1.2,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.boom",
+   "kind": "sfx",
+   "name": "Boom",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 1.6,
+   "recipe": "boom",
+   "variant": 31
+  },
+  {
+   "id": "sfx.slam",
+   "kind": "sfx",
+   "name": "Slam",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 0.6,
+   "recipe": "impact",
+   "variant": 32
+  },
+  {
+   "id": "sfx.thud",
+   "kind": "sfx",
+   "name": "Thud",
+   "family": "Impact",
+   "tags": [
+    "sound",
+    "impact"
+   ],
+   "seconds": 0.45,
+   "recipe": "impact",
+   "variant": 33
+  },
+  {
+   "id": "sfx.sub-drop",
+   "kind": "sfx",
+   "name": "Sub Drop",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.4,
+   "recipe": "drop",
+   "variant": 41
+  },
+  {
+   "id": "sfx.drop-hit",
+   "kind": "sfx",
+   "name": "Drop Hit",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.0,
+   "recipe": "drop",
+   "variant": 42
+  },
+  {
+   "id": "sfx.low-boom",
+   "kind": "sfx",
+   "name": "Low Boom",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.8,
+   "recipe": "boom",
+   "variant": 43
+  },
+  {
+   "id": "sfx.downlifter",
+   "kind": "sfx",
+   "name": "Downlifter",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.5,
+   "recipe": "downlifter",
+   "variant": 44
+  },
+  {
+   "id": "sfx.gravity",
+   "kind": "sfx",
+   "name": "Gravity",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 2.2,
+   "recipe": "downlifter",
+   "variant": 45
+  },
+  {
+   "id": "sfx.floor-shake",
+   "kind": "sfx",
+   "name": "Floor Shake",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.2,
+   "recipe": "impact",
+   "variant": 46
+  },
+  {
+   "id": "sfx.sub-pulse",
+   "kind": "sfx",
+   "name": "Sub Pulse",
+   "family": "Drop",
+   "tags": [
+    "sound",
+    "drop"
+   ],
+   "seconds": 1.0,
+   "recipe": "drop",
+   "variant": 47
+  },
+  {
+   "id": "sfx.pop",
+   "kind": "sfx",
+   "name": "Pop",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.15,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.click",
+   "kind": "sfx",
+   "name": "Click",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.05,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.key",
+   "kind": "sfx",
+   "name": "Key Press",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.07,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.toggle",
+   "kind": "sfx",
+   "name": "Toggle",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.12,
+   "recipe": "ui",
+   "variant": 51
+  },
+  {
+   "id": "sfx.swipe-ui",
+   "kind": "sfx",
+   "name": "Swipe UI",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.25,
+   "recipe": "ui",
+   "variant": 52
+  },
+  {
+   "id": "sfx.hover",
+   "kind": "sfx",
+   "name": "Hover",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.08,
+   "recipe": "ui",
+   "variant": 53
+  },
+  {
+   "id": "sfx.confirm",
+   "kind": "sfx",
+   "name": "Confirm",
+   "family": "UI",
+   "tags": [
+    "sound",
+    "ui"
+   ],
+   "seconds": 0.3,
+   "recipe": "ui",
+   "variant": 54
+  },
+  {
+   "id": "sfx.ding",
+   "kind": "sfx",
+   "name": "Bell Ding",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 1.4,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.notify",
+   "kind": "sfx",
+   "name": "Notification",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 0.6,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.success",
+   "kind": "sfx",
+   "name": "Success Chime",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 0.9,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.error",
+   "kind": "sfx",
+   "name": "Error Buzz",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 0.45,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.message",
+   "kind": "sfx",
+   "name": "Message",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 0.5,
+   "recipe": "chime",
+   "variant": 61
+  },
+  {
+   "id": "sfx.alert",
+   "kind": "sfx",
+   "name": "Alert",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 0.7,
+   "recipe": "chime",
+   "variant": 62
+  },
+  {
+   "id": "sfx.chime-soft",
+   "kind": "sfx",
+   "name": "Soft Chime",
+   "family": "Notification",
+   "tags": [
+    "sound",
+    "notification"
+   ],
+   "seconds": 1.2,
+   "recipe": "chime",
+   "variant": 63
+  },
+  {
+   "id": "sfx.sparkle",
+   "kind": "sfx",
+   "name": "Sparkle",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 1.1,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.zap",
+   "kind": "sfx",
+   "name": "Laser Zap",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 0.4,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.glitch",
+   "kind": "sfx",
+   "name": "Glitch",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 0.5,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.tape-stop",
+   "kind": "sfx",
+   "name": "Tape Stop",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 1.0,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.shimmer",
+   "kind": "sfx",
+   "name": "Shimmer",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 1.6,
+   "recipe": "shimmer",
+   "variant": 71
+  },
+  {
+   "id": "sfx.fairy-dust",
+   "kind": "sfx",
+   "name": "Fairy Dust",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 1.8,
+   "recipe": "shimmer",
+   "variant": 72
+  },
+  {
+   "id": "sfx.magic-wand",
+   "kind": "sfx",
+   "name": "Magic Wand",
+   "family": "Magic",
+   "tags": [
+    "sound",
+    "magic"
+   ],
+   "seconds": 1.2,
+   "recipe": "sparkle",
+   "variant": 73
+  },
+  {
+   "id": "sfx.data-stream",
+   "kind": "sfx",
+   "name": "Data Stream",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 1.4,
+   "recipe": "digital",
+   "variant": 81
+  },
+  {
+   "id": "sfx.bit-crush",
+   "kind": "sfx",
+   "name": "Bit Crush",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 0.6,
+   "recipe": "digital",
+   "variant": 82
+  },
+  {
+   "id": "sfx.static-burst",
+   "kind": "sfx",
+   "name": "Static Burst",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 0.4,
+   "recipe": "digital",
+   "variant": 83
+  },
+  {
+   "id": "sfx.modem",
+   "kind": "sfx",
+   "name": "Modem",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 1.8,
+   "recipe": "digital",
+   "variant": 84
+  },
+  {
+   "id": "sfx.error-code",
+   "kind": "sfx",
+   "name": "Error Code",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 0.8,
+   "recipe": "digital",
+   "variant": 85
+  },
+  {
+   "id": "sfx.digital-rain",
+   "kind": "sfx",
+   "name": "Digital Rain",
+   "family": "Digital",
+   "tags": [
+    "sound",
+    "digital"
+   ],
+   "seconds": 2.0,
+   "recipe": "digital",
+   "variant": 86
+  },
+  {
+   "id": "sfx.shutter",
+   "kind": "sfx",
+   "name": "Camera Shutter",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 0.25,
+   "recipe": "legacy",
+   "variant": 0
+  },
+  {
+   "id": "sfx.focus-pull",
+   "kind": "sfx",
+   "name": "Focus Pull",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 0.6,
+   "recipe": "camera",
+   "variant": 91
+  },
+  {
+   "id": "sfx.lens-click",
+   "kind": "sfx",
+   "name": "Lens Click",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 0.2,
+   "recipe": "camera",
+   "variant": 92
+  },
+  {
+   "id": "sfx.film-advance",
+   "kind": "sfx",
+   "name": "Film Advance",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 0.9,
+   "recipe": "camera",
+   "variant": 93
+  },
+  {
+   "id": "sfx.flash-charge",
+   "kind": "sfx",
+   "name": "Flash Charge",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 1.2,
+   "recipe": "riser",
+   "variant": 94
+  },
+  {
+   "id": "sfx.camera-roll",
+   "kind": "sfx",
+   "name": "Camera Roll",
+   "family": "Camera",
+   "tags": [
+    "sound",
+    "camera"
+   ],
+   "seconds": 1.5,
+   "recipe": "camera",
+   "variant": 95
+  },
+  {
+   "id": "sfx.room-tone",
+   "kind": "sfx",
+   "name": "Room Tone",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 3.0,
+   "recipe": "ambience",
+   "variant": 101
+  },
+  {
+   "id": "sfx.soft-wind",
+   "kind": "sfx",
+   "name": "Soft Wind",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 4.0,
+   "recipe": "ambience",
+   "variant": 102
+  },
+  {
+   "id": "sfx.deep-drone",
+   "kind": "sfx",
+   "name": "Deep Drone",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 5.0,
+   "recipe": "ambience",
+   "variant": 103
+  },
+  {
+   "id": "sfx.air-pad",
+   "kind": "sfx",
+   "name": "Air Pad",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 4.0,
+   "recipe": "ambience",
+   "variant": 104
+  },
+  {
+   "id": "sfx.ocean-wash",
+   "kind": "sfx",
+   "name": "Ocean Wash",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 4.5,
+   "recipe": "ambience",
+   "variant": 105
+  },
+  {
+   "id": "sfx.night-ambience",
+   "kind": "sfx",
+   "name": "Night Ambience",
+   "family": "Ambience",
+   "tags": [
+    "sound",
+    "ambience"
+   ],
+   "seconds": 5.0,
+   "recipe": "ambience",
+   "variant": 106
+  },
+  {
+   "id": "sfx.boing",
+   "kind": "sfx",
+   "name": "Boing",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 0.7,
+   "recipe": "cartoon",
+   "variant": 111
+  },
+  {
+   "id": "sfx.squeak",
+   "kind": "sfx",
+   "name": "Squeak",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 0.4,
+   "recipe": "cartoon",
+   "variant": 112
+  },
+  {
+   "id": "sfx.slide-whistle",
+   "kind": "sfx",
+   "name": "Slide Whistle",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 1.0,
+   "recipe": "cartoon",
+   "variant": 113
+  },
+  {
+   "id": "sfx.bonk",
+   "kind": "sfx",
+   "name": "Bonk",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 0.3,
+   "recipe": "cartoon",
+   "variant": 114
+  },
+  {
+   "id": "sfx.pop-cork",
+   "kind": "sfx",
+   "name": "Pop Cork",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 0.25,
+   "recipe": "cartoon",
+   "variant": 115
+  },
+  {
+   "id": "sfx.wobble",
+   "kind": "sfx",
+   "name": "Wobble",
+   "family": "Cartoon",
+   "tags": [
+    "sound",
+    "cartoon"
+   ],
+   "seconds": 0.8,
+   "recipe": "cartoon",
+   "variant": 116
+  },
+  {
+   "id": "sfx.laser-zap",
+   "kind": "sfx",
+   "name": "Laser Zap",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 0.4,
+   "recipe": "scifi",
+   "variant": 121
+  },
+  {
+   "id": "sfx.phaser",
+   "kind": "sfx",
+   "name": "Phaser",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 0.8,
+   "recipe": "scifi",
+   "variant": 122
+  },
+  {
+   "id": "sfx.warp",
+   "kind": "sfx",
+   "name": "Warp",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 1.6,
+   "recipe": "scifi",
+   "variant": 123
+  },
+  {
+   "id": "sfx.teleport",
+   "kind": "sfx",
+   "name": "Teleport",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 1.2,
+   "recipe": "scifi",
+   "variant": 124
+  },
+  {
+   "id": "sfx.hologram",
+   "kind": "sfx",
+   "name": "Hologram",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 1.4,
+   "recipe": "scifi",
+   "variant": 125
+  },
+  {
+   "id": "sfx.energy-hum",
+   "kind": "sfx",
+   "name": "Energy Hum",
+   "family": "Sci-Fi",
+   "tags": [
+    "sound",
+    "sci-fi"
+   ],
+   "seconds": 2.0,
+   "recipe": "scifi",
+   "variant": 126
+  }
+ ]
+}

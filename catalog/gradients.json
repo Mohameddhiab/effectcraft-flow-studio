@@ -1,0 +1,1119 @@
+{
+ "schema": 1,
+ "kind": "gradient",
+ "count": 50,
+ "items": [
+  {
+   "id": "bg.sunset",
+   "kind": "gradient",
+   "name": "Sunset",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#FF512F",
+     "#DD2476",
+     "#6A11CB",
+     "#2575FC"
+    ],
+    "angle": 45,
+    "anim": "rotate",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.ocean",
+   "kind": "gradient",
+   "name": "Ocean",
+   "family": "Cool",
+   "tags": [
+    "gradient",
+    "cool",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#0F2027",
+     "#2C5364",
+     "#00C6FF",
+     "#0072FF"
+    ],
+    "angle": 90,
+    "anim": "rotate",
+    "speed": 15
+   }
+  },
+  {
+   "id": "bg.aurora",
+   "kind": "gradient",
+   "name": "Aurora",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#00F5A0",
+     "#00D9F5",
+     "#7F00FF",
+     "#E100FF"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 40
+   }
+  },
+  {
+   "id": "bg.neon-night",
+   "kind": "gradient",
+   "name": "Neon Night",
+   "family": "Neon",
+   "tags": [
+    "gradient",
+    "neon",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#0B0B2B",
+     "#FF00C8",
+     "#00E5FF",
+     "#1A0033"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 50
+   }
+  },
+  {
+   "id": "bg.candy",
+   "kind": "gradient",
+   "name": "Candy",
+   "family": "Pastel",
+   "tags": [
+    "gradient",
+    "pastel",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#FFB6B9",
+     "#FAE3D9",
+     "#BBDED6",
+     "#8AC6D1"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 30
+   }
+  },
+  {
+   "id": "bg.mint",
+   "kind": "gradient",
+   "name": "Mint",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#A8FF78",
+     "#78FFD6",
+     "#78FFD6",
+     "#78FFD6"
+    ],
+    "angle": 135,
+    "anim": "none",
+    "speed": 30
+   }
+  },
+  {
+   "id": "bg.gold",
+   "kind": "gradient",
+   "name": "Gold",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#F7971E",
+     "#FFD200",
+     "#FFD200",
+     "#FFD200"
+    ],
+    "angle": 0,
+    "anim": "none",
+    "speed": 30
+   }
+  },
+  {
+   "id": "bg.midnight",
+   "kind": "gradient",
+   "name": "Midnight",
+   "family": "Dark",
+   "tags": [
+    "gradient",
+    "dark",
+    "radial"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "radial",
+    "colors": [
+     "#2B3A67",
+     "#0A0A14",
+     "#0A0A14",
+     "#0A0A14"
+    ],
+    "angle": 0,
+    "anim": "pulse",
+    "speed": 30
+   }
+  },
+  {
+   "id": "bg.fire",
+   "kind": "gradient",
+   "name": "Fire",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#F12711",
+     "#F5AF19",
+     "#F5AF19",
+     "#F5AF19"
+    ],
+    "angle": 90,
+    "anim": "rotate",
+    "speed": 15
+   }
+  },
+  {
+   "id": "bg.lavender",
+   "kind": "gradient",
+   "name": "Lavender",
+   "family": "Pastel",
+   "tags": [
+    "gradient",
+    "pastel",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#E8D5FF",
+     "#C6A8FF",
+     "#9B7DFF",
+     "#6C4FD8"
+    ],
+    "angle": 120,
+    "anim": "none",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.peach",
+   "kind": "gradient",
+   "name": "Peach",
+   "family": "Pastel",
+   "tags": [
+    "gradient",
+    "pastel",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#FFD3A5",
+     "#FD6585",
+     "#FD6585",
+     "#FD6585"
+    ],
+    "angle": 45,
+    "anim": "none",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.steel",
+   "kind": "gradient",
+   "name": "Steel",
+   "family": "Cool",
+   "tags": [
+    "gradient",
+    "cool",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#1F2937",
+     "#374151",
+     "#6B7280",
+     "#9CA3AF"
+    ],
+    "angle": 180,
+    "anim": "none",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.forest",
+   "kind": "gradient",
+   "name": "Forest",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#0B3D2E",
+     "#1F6F50",
+     "#3FA37A",
+     "#A8E6CF"
+    ],
+    "angle": 90,
+    "anim": "drift",
+    "speed": 18
+   }
+  },
+  {
+   "id": "bg.dusk",
+   "kind": "gradient",
+   "name": "Dusk",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#2B1055",
+     "#7597DE",
+     "#FFB36B",
+     "#FF6B6B"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 25
+   }
+  },
+  {
+   "id": "bg.ice",
+   "kind": "gradient",
+   "name": "Ice",
+   "family": "Cool",
+   "tags": [
+    "gradient",
+    "cool",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#E0F7FF",
+     "#A5D8FF",
+     "#4DABF7",
+     "#1C7ED6"
+    ],
+    "angle": 135,
+    "anim": "none",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.rose-gold",
+   "kind": "gradient",
+   "name": "Rose Gold",
+   "family": "Luxury",
+   "tags": [
+    "gradient",
+    "luxury",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#F9D9C6",
+     "#E8A87C",
+     "#C97B63",
+     "#8C4A3C"
+    ],
+    "angle": 45,
+    "anim": "none",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.cyber",
+   "kind": "gradient",
+   "name": "Cyber",
+   "family": "Neon",
+   "tags": [
+    "gradient",
+    "neon",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#0D0221",
+     "#3A0CA3",
+     "#F72585",
+     "#4CC9F0"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 45
+   }
+  },
+  {
+   "id": "bg.lava",
+   "kind": "gradient",
+   "name": "Lava",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#1A0000",
+     "#8B0000",
+     "#FF4500",
+     "#FFD700"
+    ],
+    "angle": 90,
+    "anim": "pulse",
+    "speed": 25
+   }
+  },
+  {
+   "id": "bg.sky",
+   "kind": "gradient",
+   "name": "Sky",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#56CCF2",
+     "#2F80ED",
+     "#B2FEFA",
+     "#0ED2F7"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 12
+   }
+  },
+  {
+   "id": "bg.mono",
+   "kind": "gradient",
+   "name": "Mono",
+   "family": "Dark",
+   "tags": [
+    "gradient",
+    "dark",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#000000",
+     "#1F1F1F",
+     "#4A4A4A",
+     "#BFBFBF"
+    ],
+    "angle": 0,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.emerald",
+   "kind": "gradient",
+   "name": "Emerald",
+   "family": "Luxury",
+   "tags": [
+    "gradient",
+    "luxury",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#022C22",
+     "#065F46",
+     "#10B981",
+     "#D1FAE5"
+    ],
+    "angle": 120,
+    "anim": "none",
+    "speed": 15
+   }
+  },
+  {
+   "id": "bg.sapphire",
+   "kind": "gradient",
+   "name": "Sapphire",
+   "family": "Luxury",
+   "tags": [
+    "gradient",
+    "luxury",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#0A1128",
+     "#1C3F94",
+     "#2563EB",
+     "#93C5FD"
+    ],
+    "angle": 90,
+    "anim": "drift",
+    "speed": 14
+   }
+  },
+  {
+   "id": "bg.coral",
+   "kind": "gradient",
+   "name": "Coral",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#FF7E5F",
+     "#FEB47B",
+     "#FFD6A5",
+     "#FFF1E6"
+    ],
+    "angle": 45,
+    "anim": "none",
+    "speed": 15
+   }
+  },
+  {
+   "id": "bg.violet",
+   "kind": "gradient",
+   "name": "Violet",
+   "family": "Neon",
+   "tags": [
+    "gradient",
+    "neon",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#1A0033",
+     "#5B21B6",
+     "#A78BFA",
+     "#F5D0FE"
+    ],
+    "angle": 0,
+    "anim": "pulse",
+    "speed": 30
+   }
+  },
+  {
+   "id": "bg.sand",
+   "kind": "gradient",
+   "name": "Sand",
+   "family": "Calm",
+   "tags": [
+    "gradient",
+    "calm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#E9D8A6",
+     "#D4A373",
+     "#BC6C25",
+     "#FEFAE0"
+    ],
+    "angle": 30,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.slate",
+   "kind": "gradient",
+   "name": "Slate",
+   "family": "Corporate",
+   "tags": [
+    "gradient",
+    "corporate",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#0F172A",
+     "#1E293B",
+     "#334155",
+     "#64748B"
+    ],
+    "angle": 180,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.navy",
+   "kind": "gradient",
+   "name": "Navy",
+   "family": "Corporate",
+   "tags": [
+    "gradient",
+    "corporate",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#020617",
+     "#0F172A",
+     "#1E3A8A",
+     "#3B82F6"
+    ],
+    "angle": 90,
+    "anim": "drift",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.teal",
+   "kind": "gradient",
+   "name": "Teal",
+   "family": "Corporate",
+   "tags": [
+    "gradient",
+    "corporate",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#042F2E",
+     "#115E59",
+     "#14B8A6",
+     "#99F6E4"
+    ],
+    "angle": 135,
+    "anim": "none",
+    "speed": 12
+   }
+  },
+  {
+   "id": "bg.sunrise",
+   "kind": "gradient",
+   "name": "Sunrise",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#FF9A8B",
+     "#FF6A88",
+     "#FF99AC",
+     "#FFDEE9"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 18
+   }
+  },
+  {
+   "id": "bg.glacier",
+   "kind": "gradient",
+   "name": "Glacier",
+   "family": "Cool",
+   "tags": [
+    "gradient",
+    "cool",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#001219",
+     "#005F73",
+     "#0A9396",
+     "#94D2BD"
+    ],
+    "angle": 90,
+    "anim": "none",
+    "speed": 12
+   }
+  },
+  {
+   "id": "bg.magenta",
+   "kind": "gradient",
+   "name": "Magenta",
+   "family": "Neon",
+   "tags": [
+    "gradient",
+    "neon",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#1A001A",
+     "#7A0066",
+     "#FF00AA",
+     "#FFB3E6"
+    ],
+    "angle": 0,
+    "anim": "pulse",
+    "speed": 35
+   }
+  },
+  {
+   "id": "bg.amber",
+   "kind": "gradient",
+   "name": "Amber",
+   "family": "Warm",
+   "tags": [
+    "gradient",
+    "warm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#3D1F00",
+     "#92400E",
+     "#F59E0B",
+     "#FEF3C7"
+    ],
+    "angle": 45,
+    "anim": "none",
+    "speed": 12
+   }
+  },
+  {
+   "id": "bg.plum",
+   "kind": "gradient",
+   "name": "Plum",
+   "family": "Dark",
+   "tags": [
+    "gradient",
+    "dark",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#1A0B2E",
+     "#3B0764",
+     "#6B21A8",
+     "#C084FC"
+    ],
+    "angle": 120,
+    "anim": "drift",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.seafoam",
+   "kind": "gradient",
+   "name": "Seafoam",
+   "family": "Calm",
+   "tags": [
+    "gradient",
+    "calm",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#E0F2F1",
+     "#B2DFDB",
+     "#80CBC4",
+     "#4DB6AC"
+    ],
+    "angle": 0,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.copper",
+   "kind": "gradient",
+   "name": "Copper",
+   "family": "Luxury",
+   "tags": [
+    "gradient",
+    "luxury",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#2B1B10",
+     "#7C2D12",
+     "#C2410C",
+     "#FDBA74"
+    ],
+    "angle": 90,
+    "anim": "none",
+    "speed": 12
+   }
+  },
+  {
+   "id": "bg.arctic",
+   "kind": "gradient",
+   "name": "Arctic",
+   "family": "Cool",
+   "tags": [
+    "gradient",
+    "cool",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#F8FAFC",
+     "#CBD5E1",
+     "#64748B",
+     "#0F172A"
+    ],
+    "angle": 180,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.tropical",
+   "kind": "gradient",
+   "name": "Tropical",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#006D77",
+     "#83C5BE",
+     "#FFDDD2",
+     "#E29578"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 20
+   }
+  },
+  {
+   "id": "bg.noir",
+   "kind": "gradient",
+   "name": "Noir",
+   "family": "Dark",
+   "tags": [
+    "gradient",
+    "dark",
+    "radial"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "radial",
+    "colors": [
+     "#000000",
+     "#0A0A0A",
+     "#2B2B2B",
+     "#6B6B6B"
+    ],
+    "angle": 0,
+    "anim": "pulse",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.blush",
+   "kind": "gradient",
+   "name": "Blush",
+   "family": "Pastel",
+   "tags": [
+    "gradient",
+    "pastel",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#FFF1F2",
+     "#FFE4E6",
+     "#FECDD3",
+     "#FDA4AF"
+    ],
+    "angle": 45,
+    "anim": "none",
+    "speed": 8
+   }
+  },
+  {
+   "id": "bg.electric",
+   "kind": "gradient",
+   "name": "Electric",
+   "family": "Neon",
+   "tags": [
+    "gradient",
+    "neon",
+    "four"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "four",
+    "colors": [
+     "#001233",
+     "#0353A4",
+     "#00B4D8",
+     "#90E0EF"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 40
+   }
+  },
+  {
+   "id": "bg.earth",
+   "kind": "gradient",
+   "name": "Earth",
+   "family": "Nature",
+   "tags": [
+    "gradient",
+    "nature",
+    "linear"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "linear",
+    "colors": [
+     "#2F1B0C",
+     "#6B4423",
+     "#A67B5B",
+     "#D2B48C"
+    ],
+    "angle": 90,
+    "anim": "none",
+    "speed": 10
+   }
+  },
+  {
+   "id": "bg.galaxy",
+   "kind": "gradient",
+   "name": "Galaxy",
+   "family": "Dark",
+   "tags": [
+    "gradient",
+    "dark",
+    "radial"
+   ],
+   "sub": "gradient",
+   "bg": {
+    "kind": "radial",
+    "colors": [
+     "#000000",
+     "#1B0033",
+     "#4C1D95",
+     "#EC4899"
+    ],
+    "angle": 0,
+    "anim": "drift",
+    "speed": 30
+   }
+  },
+  {
+   "id": "gen.solid",
+   "kind": "gradient",
+   "name": "Solid Color",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "solid"
+   ],
+   "sub": "generator",
+   "gen": "solid",
+   "color": "#0B0E14"
+  },
+  {
+   "id": "gen.grey-scale",
+   "kind": "gradient",
+   "name": "Grey Scale",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "grey-scale"
+   ],
+   "sub": "generator",
+   "gen": "grey-scale",
+   "color": "#000000"
+  },
+  {
+   "id": "gen.color-bars-smpte",
+   "kind": "gradient",
+   "name": "SMPTE Color Bars",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "color-bars-smpte"
+   ],
+   "sub": "generator",
+   "gen": "color-bars-smpte",
+   "color": "#C0C0C0"
+  },
+  {
+   "id": "gen.color-bars-ebu",
+   "kind": "gradient",
+   "name": "EBU Color Bars",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "color-bars-ebu"
+   ],
+   "sub": "generator",
+   "gen": "color-bars-ebu",
+   "color": "#C0C0C0"
+  },
+  {
+   "id": "gen.checker",
+   "kind": "gradient",
+   "name": "Checkerboard",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "checker"
+   ],
+   "sub": "generator",
+   "gen": "checker",
+   "color": "#101526"
+  },
+  {
+   "id": "gen.grid",
+   "kind": "gradient",
+   "name": "Grid",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "grid"
+   ],
+   "sub": "generator",
+   "gen": "grid",
+   "color": "#101526"
+  },
+  {
+   "id": "gen.noise",
+   "kind": "gradient",
+   "name": "Noise",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "noise"
+   ],
+   "sub": "generator",
+   "gen": "noise",
+   "color": "#101526"
+  },
+  {
+   "id": "gen.countdown",
+   "kind": "gradient",
+   "name": "Countdown",
+   "family": "Generators",
+   "tags": [
+    "generator",
+    "countdown"
+   ],
+   "sub": "generator",
+   "gen": "countdown",
+   "color": "#0B0E14"
+  }
+ ]
+}

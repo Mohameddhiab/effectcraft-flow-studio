@@ -1,0 +1,2039 @@
+{
+ "schema": 1,
+ "kind": "text",
+ "count": 96,
+ "items": [
+  {
+   "id": "text.fade-up",
+   "kind": "text",
+   "name": "Fade Up",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.fade-down",
+   "kind": "text",
+   "name": "Fade Down",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.fade-in-slow",
+   "kind": "text",
+   "name": "Fade In Slow",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "smooth",
+   "duration": 1.6,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.pop-in",
+   "kind": "text",
+   "name": "Pop In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 0
+   },
+   "easing": "outBack",
+   "duration": 0.7,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.scale-up",
+   "kind": "text",
+   "name": "Scale Up",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 40
+   },
+   "easing": "outQuart",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.bounce-in",
+   "kind": "text",
+   "name": "Bounce In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -80
+    ]
+   },
+   "easing": "outBounce",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.elastic-in",
+   "kind": "text",
+   "name": "Elastic In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 20
+   },
+   "easing": "outElastic",
+   "duration": 1.1,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.drop-bounce",
+   "kind": "text",
+   "name": "Drop Bounce",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -120
+    ]
+   },
+   "easing": "outBounce",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-left",
+   "kind": "text",
+   "name": "Slide Left",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     60,
+     0
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-right",
+   "kind": "text",
+   "name": "Slide Right",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     -60,
+     0
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-up",
+   "kind": "text",
+   "name": "Slide Up",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     60
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-down",
+   "kind": "text",
+   "name": "Slide Down",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -60
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.typewriter",
+   "kind": "text",
+   "name": "Typewriter",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "linear",
+   "duration": 1.2,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.blur-reveal",
+   "kind": "text",
+   "name": "Blur Reveal",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 30
+   },
+   "easing": "outQuad",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.tracking-in",
+   "kind": "text",
+   "name": "Tracking In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "tracking": 40
+   },
+   "easing": "outCubic",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.words-slide",
+   "kind": "text",
+   "name": "Words Slide",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     -60,
+     0
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.line-rise",
+   "kind": "text",
+   "name": "Line Rise",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     70
+    ]
+   },
+   "easing": "outQuart",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.spin-words",
+   "kind": "text",
+   "name": "Spin Words",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 40,
+    "rotation": -90
+   },
+   "easing": "outBack",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.flip-x",
+   "kind": "text",
+   "name": "Flip X",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 0,
+    "rotation": 90
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.flip-y",
+   "kind": "text",
+   "name": "Flip Y",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 0,
+    "rotation": -90
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rotate-in",
+   "kind": "text",
+   "name": "Rotate In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "rotation": -180
+   },
+   "easing": "outQuart",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.wave",
+   "kind": "text",
+   "name": "Wave",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     30
+    ]
+   },
+   "easing": "outSine",
+   "duration": 1.0,
+   "smooth": 70,
+   "random": false
+  },
+  {
+   "id": "text.wobble",
+   "kind": "text",
+   "name": "Wobble",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "rotation": 20
+   },
+   "easing": "outElastic",
+   "duration": 1.0,
+   "smooth": 80,
+   "random": false
+  },
+  {
+   "id": "text.random-fade",
+   "kind": "text",
+   "name": "Random Fade",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "linear",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": true
+  },
+  {
+   "id": "text.scramble",
+   "kind": "text",
+   "name": "Scramble",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 10
+   },
+   "easing": "linear",
+   "duration": 1.1,
+   "smooth": 60,
+   "random": true
+  },
+  {
+   "id": "text.glitch-in",
+   "kind": "text",
+   "name": "Glitch In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 14,
+    "position": [
+     6,
+     0
+    ]
+   },
+   "easing": "steps",
+   "duration": 0.7,
+   "smooth": 20,
+   "random": true
+  },
+  {
+   "id": "text.mask-wipe",
+   "kind": "text",
+   "name": "Mask Wipe",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "tracking": -30
+   },
+   "easing": "outExpo",
+   "duration": 1.0,
+   "smooth": 10,
+   "random": false
+  },
+  {
+   "id": "text.unfold",
+   "kind": "text",
+   "name": "Unfold",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 10
+   },
+   "easing": "outQuart",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.stretch-in",
+   "kind": "text",
+   "name": "Stretch In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 140
+   },
+   "easing": "outExpo",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rubber-band",
+   "kind": "text",
+   "name": "Rubber Band",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 30
+   },
+   "easing": "outElastic",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.swing",
+   "kind": "text",
+   "name": "Swing",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "rotation": 35
+   },
+   "easing": "outBack",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.cascade",
+   "kind": "text",
+   "name": "Cascade",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     20,
+     40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 1.2,
+   "smooth": 60,
+   "random": false
+  },
+  {
+   "id": "text.spotlight",
+   "kind": "text",
+   "name": "Spotlight",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "outQuad",
+   "duration": 1.4,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.highlight-sweep",
+   "kind": "text",
+   "name": "Highlight Sweep",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "tracking": 30
+   },
+   "easing": "outExpo",
+   "duration": 1.1,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.karaoke-fill",
+   "kind": "text",
+   "name": "Karaoke Fill",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "outCubic",
+   "duration": 1.0,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.neon-flicker",
+   "kind": "text",
+   "name": "Neon Flicker",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 6
+   },
+   "easing": "steps",
+   "duration": 0.9,
+   "smooth": 10,
+   "random": true
+  },
+  {
+   "id": "text.counter-roll",
+   "kind": "text",
+   "name": "Counter Roll",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     80
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.tilt-in",
+   "kind": "text",
+   "name": "Tilt In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "rotation": 12,
+    "position": [
+     0,
+     30
+    ]
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.drop-in",
+   "kind": "text",
+   "name": "Drop In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 4,
+    "position": [
+     0,
+     -60
+    ]
+   },
+   "easing": "outQuad",
+   "duration": 0.6,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rise-fade",
+   "kind": "text",
+   "name": "Rise Fade",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     24
+    ]
+   },
+   "easing": "outSine",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-blur",
+   "kind": "text",
+   "name": "Slide Blur",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "blur": 18,
+    "position": [
+     -100,
+     0
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.pulse-in",
+   "kind": "text",
+   "name": "Pulse In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 60
+   },
+   "easing": "outElastic",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.compression",
+   "kind": "text",
+   "name": "Compression",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 160
+   },
+   "easing": "outQuart",
+   "duration": 0.7,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.expand",
+   "kind": "text",
+   "name": "Expand",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "scale": 40
+   },
+   "easing": "outCubic",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.offset-in",
+   "kind": "text",
+   "name": "Offset In",
+   "family": "Entrance",
+   "tags": [
+    "entrance",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "in",
+   "from": {
+    "opacity": 0,
+    "position": [
+     20,
+     -20
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.fade-up-out",
+   "kind": "text",
+   "name": "Fade Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.fade-down-out",
+   "kind": "text",
+   "name": "Fade Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.fade-in-slow-out",
+   "kind": "text",
+   "name": "Fade Slow Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "smooth",
+   "duration": 1.6,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.pop-in-out",
+   "kind": "text",
+   "name": "Pop Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 0
+   },
+   "easing": "outBack",
+   "duration": 0.7,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.scale-up-out",
+   "kind": "text",
+   "name": "Scale Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 40
+   },
+   "easing": "outQuart",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.bounce-in-out",
+   "kind": "text",
+   "name": "Bounce Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -80
+    ]
+   },
+   "easing": "outBounce",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.elastic-in-out",
+   "kind": "text",
+   "name": "Elastic Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 20
+   },
+   "easing": "outElastic",
+   "duration": 1.1,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.drop-bounce-out",
+   "kind": "text",
+   "name": "Drop Bounce Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -120
+    ]
+   },
+   "easing": "outBounce",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-left-out",
+   "kind": "text",
+   "name": "Slide Left Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     60,
+     0
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-right-out",
+   "kind": "text",
+   "name": "Slide Right Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     -60,
+     0
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-up-out",
+   "kind": "text",
+   "name": "Slide Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     60
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-down-out",
+   "kind": "text",
+   "name": "Slide Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     -60
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.typewriter-out",
+   "kind": "text",
+   "name": "Typewriter Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "linear",
+   "duration": 1.2,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.blur-reveal-out",
+   "kind": "text",
+   "name": "Blur Reveal Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 30
+   },
+   "easing": "outQuad",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.tracking-in-out",
+   "kind": "text",
+   "name": "Tracking Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "tracking": 40
+   },
+   "easing": "outCubic",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.words-slide-out",
+   "kind": "text",
+   "name": "Words Slide Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     -60,
+     0
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.line-rise-out",
+   "kind": "text",
+   "name": "Line Rise Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     70
+    ]
+   },
+   "easing": "outQuart",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.spin-words-out",
+   "kind": "text",
+   "name": "Spin Words Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 40,
+    "rotation": -90
+   },
+   "easing": "outBack",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.flip-x-out",
+   "kind": "text",
+   "name": "Flip X Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 0,
+    "rotation": 90
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.flip-y-out",
+   "kind": "text",
+   "name": "Flip Y Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 0,
+    "rotation": -90
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rotate-in-out",
+   "kind": "text",
+   "name": "Rotate Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "rotation": -180
+   },
+   "easing": "outQuart",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.wave-out",
+   "kind": "text",
+   "name": "Wave Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     30
+    ]
+   },
+   "easing": "outSine",
+   "duration": 1.0,
+   "smooth": 70,
+   "random": false
+  },
+  {
+   "id": "text.wobble-out",
+   "kind": "text",
+   "name": "Wobble Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "rotation": 20
+   },
+   "easing": "outElastic",
+   "duration": 1.0,
+   "smooth": 80,
+   "random": false
+  },
+  {
+   "id": "text.random-fade-out",
+   "kind": "text",
+   "name": "Random Fade Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "linear",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": true
+  },
+  {
+   "id": "text.scramble-out",
+   "kind": "text",
+   "name": "Scramble Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 10
+   },
+   "easing": "linear",
+   "duration": 1.1,
+   "smooth": 60,
+   "random": true
+  },
+  {
+   "id": "text.glitch-in-out",
+   "kind": "text",
+   "name": "Glitch Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 14,
+    "position": [
+     6,
+     0
+    ]
+   },
+   "easing": "steps",
+   "duration": 0.7,
+   "smooth": 20,
+   "random": true
+  },
+  {
+   "id": "text.mask-wipe-out",
+   "kind": "text",
+   "name": "Mask Wipe Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "tracking": -30
+   },
+   "easing": "outExpo",
+   "duration": 1.0,
+   "smooth": 10,
+   "random": false
+  },
+  {
+   "id": "text.unfold-out",
+   "kind": "text",
+   "name": "Unfold Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 10
+   },
+   "easing": "outQuart",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.stretch-in-out",
+   "kind": "text",
+   "name": "Stretch Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 140
+   },
+   "easing": "outExpo",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rubber-band-out",
+   "kind": "text",
+   "name": "Rubber Band Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 30
+   },
+   "easing": "outElastic",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.swing-out",
+   "kind": "text",
+   "name": "Swing Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "rotation": 35
+   },
+   "easing": "outBack",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.cascade-out",
+   "kind": "text",
+   "name": "Cascade Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     20,
+     40
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 1.2,
+   "smooth": 60,
+   "random": false
+  },
+  {
+   "id": "text.spotlight-out",
+   "kind": "text",
+   "name": "Spotlight Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "outQuad",
+   "duration": 1.4,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.highlight-sweep-out",
+   "kind": "text",
+   "name": "Highlight Sweep Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "tracking": 30
+   },
+   "easing": "outExpo",
+   "duration": 1.1,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.karaoke-fill-out",
+   "kind": "text",
+   "name": "Karaoke Fill Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0
+   },
+   "easing": "outCubic",
+   "duration": 1.0,
+   "smooth": 0,
+   "random": false
+  },
+  {
+   "id": "text.neon-flicker-out",
+   "kind": "text",
+   "name": "Neon Flicker Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 6
+   },
+   "easing": "steps",
+   "duration": 0.9,
+   "smooth": 10,
+   "random": true
+  },
+  {
+   "id": "text.counter-roll-out",
+   "kind": "text",
+   "name": "Counter Roll Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     80
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.tilt-in-out",
+   "kind": "text",
+   "name": "Tilt Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "rotation": 12,
+    "position": [
+     0,
+     30
+    ]
+   },
+   "easing": "outBack",
+   "duration": 0.8,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.drop-in-out",
+   "kind": "text",
+   "name": "Drop Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 4,
+    "position": [
+     0,
+     -60
+    ]
+   },
+   "easing": "outQuad",
+   "duration": 0.6,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.rise-fade-out",
+   "kind": "text",
+   "name": "Rise Fade Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     0,
+     24
+    ]
+   },
+   "easing": "outSine",
+   "duration": 1.2,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.slide-blur-out",
+   "kind": "text",
+   "name": "Slide Blur Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "blur": 18,
+    "position": [
+     -100,
+     0
+    ]
+   },
+   "easing": "outExpo",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.pulse-in-out",
+   "kind": "text",
+   "name": "Pulse Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "words"
+   ],
+   "unit": "words",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 60
+   },
+   "easing": "outElastic",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.compression-out",
+   "kind": "text",
+   "name": "Compression Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 160
+   },
+   "easing": "outQuart",
+   "duration": 0.7,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.expand-out",
+   "kind": "text",
+   "name": "Expand Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "lines"
+   ],
+   "unit": "lines",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "scale": 40
+   },
+   "easing": "outCubic",
+   "duration": 1.0,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.offset-in-out",
+   "kind": "text",
+   "name": "Offset Out",
+   "family": "Exit",
+   "tags": [
+    "exit",
+    "chars"
+   ],
+   "unit": "chars",
+   "mode": "out",
+   "from": {
+    "opacity": 0,
+    "position": [
+     20,
+     -20
+    ]
+   },
+   "easing": "outCubic",
+   "duration": 0.9,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-pulse",
+   "kind": "text",
+   "name": "Pulse",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "scale"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "scale",
+   "period": 1.6,
+   "amount": 4,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-float",
+   "kind": "text",
+   "name": "Float",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "position"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "position",
+   "period": 3.0,
+   "amount": 8,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-shake",
+   "kind": "text",
+   "name": "Shake",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "position"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "position",
+   "period": 0.25,
+   "amount": 3,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-breathe",
+   "kind": "text",
+   "name": "Breathe",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "scale"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "scale",
+   "period": 4.0,
+   "amount": 2,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-shimmer",
+   "kind": "text",
+   "name": "Shimmer",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "opacity"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "opacity",
+   "period": 2.2,
+   "amount": 18,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  },
+  {
+   "id": "text.loop-color-cycle",
+   "kind": "text",
+   "name": "Color Cycle",
+   "family": "Loop",
+   "tags": [
+    "loop",
+    "color"
+   ],
+   "unit": "chars",
+   "mode": "loop",
+   "loop": "color",
+   "period": 6.0,
+   "amount": 0,
+   "easing": "linear",
+   "duration": 0.5,
+   "smooth": 100,
+   "random": false
+  }
+ ]
+}

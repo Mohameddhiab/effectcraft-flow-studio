@@ -1,0 +1,1391 @@
+{
+ "schema": 1,
+ "kind": "effect",
+ "count": 70,
+ "items": [
+  {
+   "id": "fx.motion.shake-light",
+   "kind": "effect",
+   "name": "Shake Light",
+   "family": "Motion",
+   "tags": [
+    "shake",
+    "light"
+   ],
+   "when": "playhead",
+   "duration": 0.6,
+   "ops": [
+    {
+     "op": "shake",
+     "amount": 10,
+     "fps": 12
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.shake-strong",
+   "kind": "effect",
+   "name": "Shake Strong",
+   "family": "Motion",
+   "tags": [
+    "shake",
+    "strong"
+   ],
+   "when": "playhead",
+   "duration": 0.6,
+   "ops": [
+    {
+     "op": "shake",
+     "amount": 34,
+     "fps": 18
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.handheld",
+   "kind": "effect",
+   "name": "Handheld",
+   "family": "Motion",
+   "tags": [
+    "handheld",
+    "camera"
+   ],
+   "when": "playhead",
+   "duration": 2.0,
+   "ops": [
+    {
+     "op": "shake",
+     "amount": 5,
+     "fps": 4
+    },
+    {
+     "op": "shake",
+     "amount": 1.5,
+     "fps": 11
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.zoom-punch",
+   "kind": "effect",
+   "name": "Zoom Punch",
+   "family": "Motion",
+   "tags": [
+    "zoom",
+    "punch"
+   ],
+   "when": "playhead",
+   "duration": 0.35,
+   "ops": [
+    {
+     "op": "punch",
+     "amount": 26
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.slow-push-in",
+   "kind": "effect",
+   "name": "Slow Push-In",
+   "family": "Motion",
+   "tags": [
+    "push",
+    "slow"
+   ],
+   "when": "playhead",
+   "duration": 4.0,
+   "ops": [
+    {
+     "op": "pushin",
+     "amount": 18
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.pull-out",
+   "kind": "effect",
+   "name": "Pull-Out",
+   "family": "Motion",
+   "tags": [
+    "pull",
+    "slow"
+   ],
+   "when": "playhead",
+   "duration": 4.0,
+   "ops": [
+    {
+     "op": "pullout",
+     "amount": 18
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.whip",
+   "kind": "effect",
+   "name": "Whip",
+   "family": "Motion",
+   "tags": [
+    "whip",
+    "fast"
+   ],
+   "when": "playhead",
+   "duration": 0.4,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 0.6,
+     "dy": 0
+    },
+    {
+     "op": "blurdir",
+     "amount": 60,
+     "direction": 0
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.wiggle",
+   "kind": "effect",
+   "name": "Wiggle",
+   "family": "Motion",
+   "tags": [
+    "wiggle",
+    "loop"
+   ],
+   "when": "playhead",
+   "duration": 2.0,
+   "ops": [
+    {
+     "op": "wiggle",
+     "amount": 8,
+     "fps": 3
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.rotate-pulse",
+   "kind": "effect",
+   "name": "Rotate Pulse",
+   "family": "Motion",
+   "tags": [
+    "rotate",
+    "pulse"
+   ],
+   "when": "playhead",
+   "duration": 2.0,
+   "ops": [
+    {
+     "op": "rotatepulse",
+     "amount": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.camera-drift",
+   "kind": "effect",
+   "name": "Camera Drift",
+   "family": "Motion",
+   "tags": [
+    "drift",
+    "camera"
+   ],
+   "when": "playhead",
+   "duration": 2.0,
+   "ops": [
+    {
+     "op": "drift",
+     "amount": 12,
+     "period": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.motion.bounce",
+   "kind": "effect",
+   "name": "Bounce",
+   "family": "Motion",
+   "tags": [
+    "bounce",
+    "entrance"
+   ],
+   "when": "playhead",
+   "duration": 0.6,
+   "ops": [
+    {
+     "op": "bounce",
+     "amount": 60
+    }
+   ]
+  },
+  {
+   "id": "fx.look.teal-orange",
+   "kind": "effect",
+   "name": "Teal & Orange",
+   "family": "Look",
+   "tags": [
+    "look",
+    "cinema"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": 8,
+     "contrast": 12,
+     "shadows": -8,
+     "highlights": 6,
+     "saturation": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.look.cinematic-warm",
+   "kind": "effect",
+   "name": "Cinematic Warm",
+   "family": "Look",
+   "tags": [
+    "look",
+    "warm"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": 14,
+     "contrast": 10,
+     "highlights": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.look.cold-blue",
+   "kind": "effect",
+   "name": "Cold Blue",
+   "family": "Look",
+   "tags": [
+    "look",
+    "cold"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": -18,
+     "contrast": 8,
+     "shadows": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.look.bleach-bypass",
+   "kind": "effect",
+   "name": "Bleach Bypass",
+   "family": "Look",
+   "tags": [
+    "look",
+    "bleach"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "saturation": -55,
+     "contrast": 30,
+     "faded": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.look.bw-contrast",
+   "kind": "effect",
+   "name": "B&W Contrast",
+   "family": "Look",
+   "tags": [
+    "look",
+    "blackwhite"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "bw",
+     "contrast": 24
+    }
+   ]
+  },
+  {
+   "id": "fx.look.bw-soft",
+   "kind": "effect",
+   "name": "B&W Soft",
+   "family": "Look",
+   "tags": [
+    "look",
+    "blackwhite"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "bw",
+     "contrast": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.look.sepia",
+   "kind": "effect",
+   "name": "Sepia",
+   "family": "Look",
+   "tags": [
+    "look",
+    "sepia"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "duotone",
+     "shadow": "#2B1B10",
+     "highlight": "#F0D9B5"
+    }
+   ]
+  },
+  {
+   "id": "fx.look.vintage-fade",
+   "kind": "effect",
+   "name": "Vintage Fade",
+   "family": "Look",
+   "tags": [
+    "look",
+    "vintage"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "faded": 22,
+     "saturation": -18,
+     "temperature": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.look.matte-black",
+   "kind": "effect",
+   "name": "Matte Black",
+   "family": "Look",
+   "tags": [
+    "look",
+    "matte"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "contrast": 18,
+     "blacks": -12,
+     "saturation": -8
+    }
+   ]
+  },
+  {
+   "id": "fx.look.high-key",
+   "kind": "effect",
+   "name": "High Key",
+   "family": "Look",
+   "tags": [
+    "look",
+    "bright"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "exposure": 0.4,
+     "contrast": 6,
+     "highlights": 12
+    }
+   ]
+  },
+  {
+   "id": "fx.look.low-key",
+   "kind": "effect",
+   "name": "Low Key",
+   "family": "Look",
+   "tags": [
+    "look",
+    "dark"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "exposure": -0.4,
+     "contrast": 16,
+     "shadows": -10
+    }
+   ]
+  },
+  {
+   "id": "fx.look.vibrance-pop",
+   "kind": "effect",
+   "name": "Vibrance Pop",
+   "family": "Look",
+   "tags": [
+    "look",
+    "vibrant"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "vibrance": 28,
+     "saturation": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.look.day-for-night",
+   "kind": "effect",
+   "name": "Day for Night",
+   "family": "Look",
+   "tags": [
+    "look",
+    "night"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "exposure": -0.6,
+     "temperature": -20,
+     "shadows": 8,
+     "saturation": -12
+    }
+   ]
+  },
+  {
+   "id": "fx.look.golden-hour",
+   "kind": "effect",
+   "name": "Golden Hour",
+   "family": "Look",
+   "tags": [
+    "look",
+    "golden"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": 22,
+     "highlights": 10,
+     "saturation": 10
+    }
+   ]
+  },
+  {
+   "id": "fx.look.cyberpunk",
+   "kind": "effect",
+   "name": "Cyberpunk",
+   "family": "Look",
+   "tags": [
+    "look",
+    "cyberpunk"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "duotone",
+     "shadow": "#12002B",
+     "highlight": "#5CE1FF"
+    },
+    {
+     "op": "look",
+     "saturation": 16,
+     "contrast": 14
+    }
+   ]
+  },
+  {
+   "id": "fx.look.moody-green",
+   "kind": "effect",
+   "name": "Moody Green",
+   "family": "Look",
+   "tags": [
+    "look",
+    "green"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": -6,
+     "tint": 12,
+     "contrast": 10,
+     "saturation": -10
+    }
+   ]
+  },
+  {
+   "id": "fx.look.pastel",
+   "kind": "effect",
+   "name": "Pastel",
+   "family": "Look",
+   "tags": [
+    "look",
+    "pastel"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "faded": 14,
+     "saturation": -6,
+     "highlights": 8
+    }
+   ]
+  },
+  {
+   "id": "fx.look.warm-social",
+   "kind": "effect",
+   "name": "Warm Social",
+   "family": "Look",
+   "tags": [
+    "look",
+    "warm"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": 12,
+     "vibrance": 18
+    }
+   ]
+  },
+  {
+   "id": "fx.look.cool-social",
+   "kind": "effect",
+   "name": "Cool Social",
+   "family": "Look",
+   "tags": [
+    "look",
+    "cool"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "temperature": -12,
+     "vibrance": 14
+    }
+   ]
+  },
+  {
+   "id": "fx.blur.gaussian",
+   "kind": "effect",
+   "name": "Gaussian Blur",
+   "family": "Blur & Glow",
+   "tags": [
+    "blur",
+    "gaussian"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "blur",
+     "amount": 18,
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.blur.directional",
+   "kind": "effect",
+   "name": "Directional Blur",
+   "family": "Blur & Glow",
+   "tags": [
+    "blur",
+    "directional"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "blurdir",
+     "amount": 24,
+     "direction": 0,
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.blur.radial",
+   "kind": "effect",
+   "name": "Radial Blur",
+   "family": "Blur & Glow",
+   "tags": [
+    "blur",
+    "radial"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "radialblur",
+     "amount": 18,
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.blur.zoom",
+   "kind": "effect",
+   "name": "Zoom Blur",
+   "family": "Blur & Glow",
+   "tags": [
+    "blur",
+    "zoom"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "radialblur",
+     "amount": 26,
+     "type": "zoom",
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.glow.soft",
+   "kind": "effect",
+   "name": "Glow Soft",
+   "family": "Blur & Glow",
+   "tags": [
+    "glow",
+    "soft"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "glow",
+     "radius": 30,
+     "intensity": 1.2
+    }
+   ]
+  },
+  {
+   "id": "fx.glow.strong",
+   "kind": "effect",
+   "name": "Glow Strong",
+   "family": "Blur & Glow",
+   "tags": [
+    "glow",
+    "strong"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "glow",
+     "radius": 80,
+     "intensity": 2.2
+    }
+   ]
+  },
+  {
+   "id": "fx.glow.bloom",
+   "kind": "effect",
+   "name": "Bloom",
+   "family": "Blur & Glow",
+   "tags": [
+    "bloom",
+    "glow"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "glow",
+     "radius": 120,
+     "intensity": 1.6,
+     "threshold": 72
+    }
+   ]
+  },
+  {
+   "id": "fx.glow.dream",
+   "kind": "effect",
+   "name": "Dream Glow",
+   "family": "Blur & Glow",
+   "tags": [
+    "dream",
+    "glow"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "glow",
+     "radius": 60,
+     "intensity": 1.4
+    },
+    {
+     "op": "look",
+     "faded": 8,
+     "saturation": 4
+    }
+   ]
+  },
+  {
+   "id": "fx.style.glitch",
+   "kind": "effect",
+   "name": "Glitch",
+   "family": "Stylised",
+   "tags": [
+    "glitch",
+    "digital"
+   ],
+   "when": "playhead",
+   "duration": 0.8,
+   "ops": [
+    {
+     "op": "glitch",
+     "amount": 40,
+     "fps": 16
+    }
+   ]
+  },
+  {
+   "id": "fx.style.rgb-split",
+   "kind": "effect",
+   "name": "RGB Split",
+   "family": "Stylised",
+   "tags": [
+    "rgb",
+    "split"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "rgbsplit",
+     "amount": 18
+    }
+   ],
+   "approx": true,
+   "note": "Per-channel blur stands in for a spatial split."
+  },
+  {
+   "id": "fx.style.scanlines",
+   "kind": "effect",
+   "name": "Scanlines",
+   "family": "Stylised",
+   "tags": [
+    "scanlines",
+    "crt"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "scanlines",
+     "amount": 34
+    }
+   ]
+  },
+  {
+   "id": "fx.style.vhs",
+   "kind": "effect",
+   "name": "VHS",
+   "family": "Stylised",
+   "tags": [
+    "vhs",
+    "retro"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "scanlines",
+     "amount": 24
+    },
+    {
+     "op": "grain",
+     "amount": 20
+    },
+    {
+     "op": "wave",
+     "height": 6,
+     "constant": true
+    },
+    {
+     "op": "look",
+     "saturation": -8,
+     "faded": 12
+    }
+   ]
+  },
+  {
+   "id": "fx.style.crt",
+   "kind": "effect",
+   "name": "CRT",
+   "family": "Stylised",
+   "tags": [
+    "crt",
+    "retro"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "scanlines",
+     "amount": 40
+    },
+    {
+     "op": "glow",
+     "radius": 20,
+     "intensity": 1.2
+    },
+    {
+     "op": "look",
+     "contrast": 12
+    }
+   ]
+  },
+  {
+   "id": "fx.style.film-grain",
+   "kind": "effect",
+   "name": "Film Grain",
+   "family": "Stylised",
+   "tags": [
+    "grain",
+    "film"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "grain",
+     "amount": 16
+    }
+   ]
+  },
+  {
+   "id": "fx.style.old-film",
+   "kind": "effect",
+   "name": "Old Film",
+   "family": "Stylised",
+   "tags": [
+    "oldfilm",
+    "retro"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "duotone",
+     "shadow": "#2B1B10",
+     "highlight": "#F0D9B5"
+    },
+    {
+     "op": "grain",
+     "amount": 12
+    },
+    {
+     "op": "flicker",
+     "amount": 1.5
+    }
+   ]
+  },
+  {
+   "id": "fx.style.halftone",
+   "kind": "effect",
+   "name": "Halftone",
+   "family": "Stylised",
+   "tags": [
+    "halftone",
+    "print"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "posterize",
+     "levels": 4
+    },
+    {
+     "op": "scanlines",
+     "amount": 18
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "fx.style.posterize",
+   "kind": "effect",
+   "name": "Posterize",
+   "family": "Stylised",
+   "tags": [
+    "posterize",
+    "flat"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "posterize",
+     "levels": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.style.pixelate",
+   "kind": "effect",
+   "name": "Pixelate",
+   "family": "Stylised",
+   "tags": [
+    "pixelate",
+    "mosaic"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "mosaic",
+     "max": 60,
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.style.mosaic",
+   "kind": "effect",
+   "name": "Mosaic",
+   "family": "Stylised",
+   "tags": [
+    "mosaic",
+    "tile"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "mosaic",
+     "max": 24,
+     "constant": true
+    }
+   ]
+  },
+  {
+   "id": "fx.style.duotone",
+   "kind": "effect",
+   "name": "Duotone",
+   "family": "Stylised",
+   "tags": [
+    "duotone",
+    "color"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "duotone",
+     "shadow": "#1A0033",
+     "highlight": "#5CE1FF"
+    }
+   ]
+  },
+  {
+   "id": "fx.style.neon-edge",
+   "kind": "effect",
+   "name": "Neon Edge",
+   "family": "Stylised",
+   "tags": [
+    "neon",
+    "edge"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "findedges"
+    },
+    {
+     "op": "glow",
+     "radius": 18,
+     "intensity": 1.8
+    }
+   ]
+  },
+  {
+   "id": "fx.style.sketch",
+   "kind": "effect",
+   "name": "Sketch",
+   "family": "Stylised",
+   "tags": [
+    "sketch",
+    "line"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "findedges"
+    },
+    {
+     "op": "bw",
+     "contrast": 20
+    }
+   ]
+  },
+  {
+   "id": "fx.style.heat-wave",
+   "kind": "effect",
+   "name": "Heat Wave",
+   "family": "Stylised",
+   "tags": [
+    "heat",
+    "wave"
+   ],
+   "when": "playhead",
+   "duration": 2.0,
+   "ops": [
+    {
+     "op": "wave",
+     "height": 22,
+     "speed": 1.4
+    }
+   ]
+  },
+  {
+   "id": "fx.style.echo-trail",
+   "kind": "effect",
+   "name": "Echo Trail",
+   "family": "Stylised",
+   "tags": [
+    "echo",
+    "trail"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "echo",
+     "count": 4,
+     "intensity": 80
+    }
+   ]
+  },
+  {
+   "id": "fx.style.strobe",
+   "kind": "effect",
+   "name": "Strobe",
+   "family": "Stylised",
+   "tags": [
+    "strobe",
+    "flash"
+   ],
+   "when": "playhead",
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "strobe",
+     "amount": 2.5,
+     "fps": 14
+    }
+   ]
+  },
+  {
+   "id": "fx.style.flicker",
+   "kind": "effect",
+   "name": "Flicker",
+   "family": "Stylised",
+   "tags": [
+    "flicker",
+    "light"
+   ],
+   "when": "playhead",
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "flicker",
+     "amount": 3
+    }
+   ]
+  },
+  {
+   "id": "fx.style.kaleido",
+   "kind": "effect",
+   "name": "Kaleido",
+   "family": "Stylised",
+   "tags": [
+    "kaleido",
+    "mirror"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "kaleido",
+     "segments": 6
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "fx.util.vignette",
+   "kind": "effect",
+   "name": "Vignette",
+   "family": "Utility",
+   "tags": [
+    "vignette",
+    "dark"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "vignette",
+     "amount": -55
+    }
+   ]
+  },
+  {
+   "id": "fx.util.letterbox-239",
+   "kind": "effect",
+   "name": "Letterbox 2.39",
+   "family": "Utility",
+   "tags": [
+    "letterbox",
+    "cinema"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "letterbox",
+     "ratio": 2.39
+    }
+   ]
+  },
+  {
+   "id": "fx.util.letterbox-185",
+   "kind": "effect",
+   "name": "Letterbox 1.85",
+   "family": "Utility",
+   "tags": [
+    "letterbox",
+    "cinema"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "letterbox",
+     "ratio": 1.85
+    }
+   ]
+  },
+  {
+   "id": "fx.util.letterbox-45",
+   "kind": "effect",
+   "name": "Letterbox 4:5",
+   "family": "Utility",
+   "tags": [
+    "letterbox",
+    "social"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "letterbox",
+     "ratio": 0.8
+    }
+   ]
+  },
+  {
+   "id": "fx.util.safe-zone",
+   "kind": "effect",
+   "name": "Safe Zone Overlay",
+   "family": "Utility",
+   "tags": [
+    "safezone",
+    "guide"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "safezone"
+    }
+   ]
+  },
+  {
+   "id": "fx.util.auto-contrast",
+   "kind": "effect",
+   "name": "Auto Contrast",
+   "family": "Utility",
+   "tags": [
+    "contrast",
+    "auto"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "look",
+     "contrast": 14,
+     "shadows": -6,
+     "highlights": 6
+    }
+   ]
+  },
+  {
+   "id": "fx.util.sharpen",
+   "kind": "effect",
+   "name": "Sharpen",
+   "family": "Utility",
+   "tags": [
+    "sharpen",
+    "detail"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "sharpen",
+     "amount": 40
+    }
+   ]
+  },
+  {
+   "id": "fx.util.denoise-light",
+   "kind": "effect",
+   "name": "Light Denoise",
+   "family": "Utility",
+   "tags": [
+    "denoise",
+    "noise"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "denoise",
+     "radius": 2.5
+    }
+   ]
+  },
+  {
+   "id": "fx.util.freeze-frame",
+   "kind": "effect",
+   "name": "Freeze Frame",
+   "family": "Utility",
+   "tags": [
+    "freeze",
+    "time"
+   ],
+   "when": "playhead",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "freeze"
+    }
+   ]
+  },
+  {
+   "id": "fx.util.speed-ramp",
+   "kind": "effect",
+   "name": "Speed Ramp",
+   "family": "Utility",
+   "tags": [
+    "speed",
+    "ramp"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "speedramp"
+    }
+   ],
+   "approx": true,
+   "note": "Expression time remap; tune the key times in the timeline."
+  },
+  {
+   "id": "fx.util.reverse",
+   "kind": "effect",
+   "name": "Reverse Clip",
+   "family": "Utility",
+   "tags": [
+    "reverse",
+    "time"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "reverse"
+    }
+   ]
+  },
+  {
+   "id": "fx.util.mirror",
+   "kind": "effect",
+   "name": "Mirror",
+   "family": "Utility",
+   "tags": [
+    "mirror",
+    "symmetry"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "mirror",
+     "angle": 90
+    }
+   ]
+  },
+  {
+   "id": "fx.util.crop-916",
+   "kind": "effect",
+   "name": "Crop 9:16",
+   "family": "Utility",
+   "tags": [
+    "crop",
+    "vertical"
+   ],
+   "when": "layerStart",
+   "duration": 0.01,
+   "ops": [
+    {
+     "op": "crop",
+     "ratio": 0.5625
+    }
+   ]
+  }
+ ]
+}

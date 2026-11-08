@@ -1,0 +1,1063 @@
+{
+ "schema": 1,
+ "kind": "transition",
+ "count": 55,
+ "items": [
+  {
+   "id": "trans.cross-dissolve",
+   "kind": "transition",
+   "name": "Cross Dissolve",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "dissolve"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.dip-black",
+   "kind": "transition",
+   "name": "Dip to Black",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "black"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "dip",
+     "color": "black",
+     "amount": 9
+    }
+   ]
+  },
+  {
+   "id": "trans.dip-white",
+   "kind": "transition",
+   "name": "Dip to White",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "white"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "dip",
+     "color": "white",
+     "amount": 9
+    }
+   ]
+  },
+  {
+   "id": "trans.dip-color",
+   "kind": "transition",
+   "name": "Dip to Color",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "color"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "dip",
+     "color": "custom",
+     "value": "#5CE1FF",
+     "amount": 7
+    }
+   ]
+  },
+  {
+   "id": "trans.additive",
+   "kind": "transition",
+   "name": "Additive Dissolve",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "additive"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "fade"
+    },
+    {
+     "op": "exposure",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "trans.film-dissolve",
+   "kind": "transition",
+   "name": "Film Dissolve",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "film"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "fade"
+    },
+    {
+     "op": "grain",
+     "amount": 18,
+     "ramp": true
+    }
+   ]
+  },
+  {
+   "id": "trans.blur-dissolve",
+   "kind": "transition",
+   "name": "Blur Dissolve",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "blur"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "fade"
+    },
+    {
+     "op": "blur",
+     "amount": 80
+    }
+   ]
+  },
+  {
+   "id": "trans.luma-fade",
+   "kind": "transition",
+   "name": "Luma Fade",
+   "family": "Fades",
+   "tags": [
+    "fade",
+    "luma"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "levels",
+     "amount": 45
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.slide-left",
+   "kind": "transition",
+   "name": "Slide Left",
+   "family": "Movement",
+   "tags": [
+    "slide",
+    "left"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 1,
+     "dy": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.slide-right",
+   "kind": "transition",
+   "name": "Slide Right",
+   "family": "Movement",
+   "tags": [
+    "slide",
+    "right"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": -1,
+     "dy": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.slide-up",
+   "kind": "transition",
+   "name": "Slide Up",
+   "family": "Movement",
+   "tags": [
+    "slide",
+    "up"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 0,
+     "dy": 1
+    }
+   ]
+  },
+  {
+   "id": "trans.slide-down",
+   "kind": "transition",
+   "name": "Slide Down",
+   "family": "Movement",
+   "tags": [
+    "slide",
+    "down"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 0,
+     "dy": -1
+    }
+   ]
+  },
+  {
+   "id": "trans.push-left",
+   "kind": "transition",
+   "name": "Push Left",
+   "family": "Movement",
+   "tags": [
+    "push",
+    "left"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "push",
+     "dx": 1,
+     "dy": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.push-right",
+   "kind": "transition",
+   "name": "Push Right",
+   "family": "Movement",
+   "tags": [
+    "push",
+    "right"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "push",
+     "dx": -1,
+     "dy": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.push-up",
+   "kind": "transition",
+   "name": "Push Up",
+   "family": "Movement",
+   "tags": [
+    "push",
+    "up"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "push",
+     "dx": 0,
+     "dy": 1
+    }
+   ]
+  },
+  {
+   "id": "trans.push-down",
+   "kind": "transition",
+   "name": "Push Down",
+   "family": "Movement",
+   "tags": [
+    "push",
+    "down"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "push",
+     "dx": 0,
+     "dy": -1
+    }
+   ]
+  },
+  {
+   "id": "trans.whip-left",
+   "kind": "transition",
+   "name": "Whip Pan Left",
+   "family": "Movement",
+   "tags": [
+    "whip",
+    "left"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 1,
+     "dy": 0
+    },
+    {
+     "op": "blurdir",
+     "amount": 120,
+     "direction": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.whip-right",
+   "kind": "transition",
+   "name": "Whip Pan Right",
+   "family": "Movement",
+   "tags": [
+    "whip",
+    "right"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": -1,
+     "dy": 0
+    },
+    {
+     "op": "blurdir",
+     "amount": 120,
+     "direction": 180
+    }
+   ]
+  },
+  {
+   "id": "trans.whip-up",
+   "kind": "transition",
+   "name": "Whip Pan Up",
+   "family": "Movement",
+   "tags": [
+    "whip",
+    "up"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 0,
+     "dy": 1
+    },
+    {
+     "op": "blurdir",
+     "amount": 120,
+     "direction": 90
+    }
+   ]
+  },
+  {
+   "id": "trans.whip-down",
+   "kind": "transition",
+   "name": "Whip Pan Down",
+   "family": "Movement",
+   "tags": [
+    "whip",
+    "down"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "slide",
+     "dx": 0,
+     "dy": -1
+    },
+    {
+     "op": "blurdir",
+     "amount": 120,
+     "direction": 270
+    }
+   ]
+  },
+  {
+   "id": "trans.spin",
+   "kind": "transition",
+   "name": "Spin",
+   "family": "Movement",
+   "tags": [
+    "spin",
+    "rotate"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "spin",
+     "angle": -180,
+     "scale": 30
+    }
+   ]
+  },
+  {
+   "id": "trans.zoom-in",
+   "kind": "transition",
+   "name": "Zoom In",
+   "family": "Movement",
+   "tags": [
+    "zoom",
+    "in"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "zoom",
+     "from": 250
+    }
+   ]
+  },
+  {
+   "id": "trans.zoom-out",
+   "kind": "transition",
+   "name": "Zoom Out",
+   "family": "Movement",
+   "tags": [
+    "zoom",
+    "out"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "zoom",
+     "from": 30
+    }
+   ]
+  },
+  {
+   "id": "trans.zoom-through",
+   "kind": "transition",
+   "name": "Zoom Through",
+   "family": "Movement",
+   "tags": [
+    "zoom",
+    "through"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "zoomthrough"
+    }
+   ]
+  },
+  {
+   "id": "trans.dolly-zoom",
+   "kind": "transition",
+   "name": "Dolly Zoom",
+   "family": "Movement",
+   "tags": [
+    "dolly",
+    "zoom"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "dolly"
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "trans.roll",
+   "kind": "transition",
+   "name": "Roll",
+   "family": "Movement",
+   "tags": [
+    "roll",
+    "move"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "spin",
+     "angle": -90,
+     "scale": 100
+    },
+    {
+     "op": "offset",
+     "x": 1,
+     "y": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.swing",
+   "kind": "transition",
+   "name": "Swing",
+   "family": "Movement",
+   "tags": [
+    "swing",
+    "rotate"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "swing",
+     "angle": 25
+    }
+   ]
+  },
+  {
+   "id": "trans.cube-rotate",
+   "kind": "transition",
+   "name": "Cube Rotate",
+   "family": "Movement",
+   "tags": [
+    "cube",
+    "3d"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "scaleWidth",
+     "from": 0
+    },
+    {
+     "op": "fade"
+    }
+   ],
+   "approx": true,
+   "note": "Approximated with a horizontal squeeze: no true 3D card effect is available."
+  },
+  {
+   "id": "trans.page-peel",
+   "kind": "transition",
+   "name": "Page Peel",
+   "family": "Movement",
+   "tags": [
+    "page",
+    "peel"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wipe",
+     "angle": 45,
+     "feather": 30
+    },
+    {
+     "op": "rotate",
+     "angle": 8
+    }
+   ],
+   "approx": true,
+   "note": "Approximated with a feathered diagonal wipe."
+  },
+  {
+   "id": "trans.iris-circle",
+   "kind": "transition",
+   "name": "Iris Circle",
+   "family": "Shapes",
+   "tags": [
+    "iris",
+    "circle"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "iris",
+     "points": 12,
+     "reverse": true
+    }
+   ]
+  },
+  {
+   "id": "trans.iris-box",
+   "kind": "transition",
+   "name": "Iris Box",
+   "family": "Shapes",
+   "tags": [
+    "iris",
+    "box"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "iris",
+     "points": 4,
+     "reverse": true
+    }
+   ]
+  },
+  {
+   "id": "trans.iris-diamond",
+   "kind": "transition",
+   "name": "Iris Diamond",
+   "family": "Shapes",
+   "tags": [
+    "iris",
+    "diamond"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "iris",
+     "points": 3,
+     "reverse": true
+    }
+   ]
+  },
+  {
+   "id": "trans.clock-wipe",
+   "kind": "transition",
+   "name": "Clock Wipe",
+   "family": "Shapes",
+   "tags": [
+    "clock",
+    "wipe"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "radial",
+     "angle": -90
+    }
+   ]
+  },
+  {
+   "id": "trans.radial-wipe",
+   "kind": "transition",
+   "name": "Radial Wipe",
+   "family": "Shapes",
+   "tags": [
+    "radial",
+    "wipe"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "radial",
+     "angle": 0
+    }
+   ]
+  },
+  {
+   "id": "trans.barn-h",
+   "kind": "transition",
+   "name": "Barn Doors H",
+   "family": "Shapes",
+   "tags": [
+    "barn",
+    "doors"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wipe",
+     "angle": 90,
+     "feather": 2
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "trans.barn-v",
+   "kind": "transition",
+   "name": "Barn Doors V",
+   "family": "Shapes",
+   "tags": [
+    "barn",
+    "doors"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wipe",
+     "angle": 0,
+     "feather": 2
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "trans.split-h",
+   "kind": "transition",
+   "name": "Split H",
+   "family": "Shapes",
+   "tags": [
+    "split",
+    "horizontal"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wipe",
+     "angle": 90,
+     "feather": 12
+    }
+   ]
+  },
+  {
+   "id": "trans.split-v",
+   "kind": "transition",
+   "name": "Split V",
+   "family": "Shapes",
+   "tags": [
+    "split",
+    "vertical"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wipe",
+     "angle": 0,
+     "feather": 12
+    }
+   ]
+  },
+  {
+   "id": "trans.blinds-h",
+   "kind": "transition",
+   "name": "Blinds H",
+   "family": "Shapes",
+   "tags": [
+    "blinds",
+    "horizontal"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "venetian",
+     "direction": "horizontal",
+     "width": 18
+    }
+   ]
+  },
+  {
+   "id": "trans.blinds-v",
+   "kind": "transition",
+   "name": "Blinds V",
+   "family": "Shapes",
+   "tags": [
+    "blinds",
+    "vertical"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "venetian",
+     "direction": "vertical",
+     "width": 18
+    }
+   ]
+  },
+  {
+   "id": "trans.checker",
+   "kind": "transition",
+   "name": "Checker",
+   "family": "Shapes",
+   "tags": [
+    "checker",
+    "blocks"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "mosaic",
+     "max": 220
+    },
+    {
+     "op": "fade"
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "trans.venetian",
+   "kind": "transition",
+   "name": "Venetian",
+   "family": "Shapes",
+   "tags": [
+    "venetian",
+    "blinds"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "venetian",
+     "direction": "vertical",
+     "width": 8
+    }
+   ]
+  },
+  {
+   "id": "trans.glitch",
+   "kind": "transition",
+   "name": "Glitch",
+   "family": "Stylised",
+   "tags": [
+    "glitch",
+    "rgb"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "glitch",
+     "amount": 60,
+     "fps": 16
+    }
+   ]
+  },
+  {
+   "id": "trans.rgb-split",
+   "kind": "transition",
+   "name": "RGB Split",
+   "family": "Stylised",
+   "tags": [
+    "rgb",
+    "split"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "rgbsplit",
+     "amount": 35
+    },
+    {
+     "op": "fade"
+    }
+   ],
+   "approx": true,
+   "note": "Approximated with per-channel blur."
+  },
+  {
+   "id": "trans.flash-through",
+   "kind": "transition",
+   "name": "Flash Through",
+   "family": "Stylised",
+   "tags": [
+    "flash",
+    "white"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "flash",
+     "amount": 6
+    }
+   ]
+  },
+  {
+   "id": "trans.light-leak",
+   "kind": "transition",
+   "name": "Light Leak",
+   "family": "Stylised",
+   "tags": [
+    "light",
+    "leak"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "leak",
+     "amount": 140
+    },
+    {
+     "op": "fade"
+    }
+   ],
+   "approx": true
+  },
+  {
+   "id": "trans.film-burn",
+   "kind": "transition",
+   "name": "Film Burn",
+   "family": "Stylised",
+   "tags": [
+    "film",
+    "burn"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "burn",
+     "amount": 100
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.pixelate",
+   "kind": "transition",
+   "name": "Pixelate",
+   "family": "Stylised",
+   "tags": [
+    "pixelate",
+    "blocks"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "mosaic",
+     "max": 320
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.mosaic",
+   "kind": "transition",
+   "name": "Mosaic",
+   "family": "Stylised",
+   "tags": [
+    "mosaic",
+    "tile"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "mosaic",
+     "max": 120
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.ripple",
+   "kind": "transition",
+   "name": "Ripple",
+   "family": "Stylised",
+   "tags": [
+    "ripple",
+    "wave"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "ripple",
+     "radius": 70
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.wave-warp",
+   "kind": "transition",
+   "name": "Wave Warp",
+   "family": "Stylised",
+   "tags": [
+    "wave",
+    "warp"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "wave",
+     "height": 40
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.shake-cut",
+   "kind": "transition",
+   "name": "Shake Cut",
+   "family": "Stylised",
+   "tags": [
+    "shake",
+    "cut"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "shake",
+     "amount": 45,
+     "fps": 18
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.strobe",
+   "kind": "transition",
+   "name": "Strobe",
+   "family": "Stylised",
+   "tags": [
+    "strobe",
+    "flash"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "strobe",
+     "fps": 14
+    },
+    {
+     "op": "flash",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "id": "trans.luma-wipe",
+   "kind": "transition",
+   "name": "Luma Wipe",
+   "family": "Stylised",
+   "tags": [
+    "luma",
+    "wipe"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "levels",
+     "amount": 60
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  },
+  {
+   "id": "trans.smear",
+   "kind": "transition",
+   "name": "Smear",
+   "family": "Stylised",
+   "tags": [
+    "smear",
+    "motion"
+   ],
+   "duration": 1.0,
+   "ops": [
+    {
+     "op": "smear",
+     "amount": 80
+    },
+    {
+     "op": "fade"
+    }
+   ]
+  }
+ ]
+}

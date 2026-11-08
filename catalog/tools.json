@@ -1,0 +1,303 @@
+{
+ "schema": 1,
+ "kind": "tool",
+ "count": 24,
+ "items": [
+  {
+   "id": "tool.markers.chapters",
+   "kind": "tool",
+   "name": "Chapter Markers",
+   "family": "Markers",
+   "tags": [
+    "marker",
+    "chapter"
+   ],
+   "tool": "marker.chapters",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.markers.beats",
+   "kind": "tool",
+   "name": "Beat Markers",
+   "family": "Markers",
+   "tags": [
+    "marker",
+    "beat",
+    "music"
+   ],
+   "tool": "marker.beats",
+   "needs": "audio"
+  },
+  {
+   "id": "tool.markers.notes",
+   "kind": "tool",
+   "name": "Note Markers",
+   "family": "Markers",
+   "tags": [
+    "marker",
+    "note"
+   ],
+   "tool": "marker.notes",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.layers.rename",
+   "kind": "tool",
+   "name": "Rename Layers",
+   "family": "Layers",
+   "tags": [
+    "rename",
+    "layer"
+   ],
+   "tool": "layer.rename",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.labels",
+   "kind": "tool",
+   "name": "Colour Labels",
+   "family": "Layers",
+   "tags": [
+    "label",
+    "color"
+   ],
+   "tool": "layer.labels",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.nulls",
+   "kind": "tool",
+   "name": "Auto Nulls",
+   "family": "Layers",
+   "tags": [
+    "null",
+    "parent"
+   ],
+   "tool": "layer.nulls",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.anchor",
+   "kind": "tool",
+   "name": "Anchor Snap",
+   "family": "Layers",
+   "tags": [
+    "anchor",
+    "center"
+   ],
+   "tool": "layer.anchor",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.trim",
+   "kind": "tool",
+   "name": "Trim Path",
+   "family": "Layers",
+   "tags": [
+    "trim",
+    "path"
+   ],
+   "tool": "layer.trim",
+   "needs": "shape"
+  },
+  {
+   "id": "tool.layers.sequence",
+   "kind": "tool",
+   "name": "Sequence Layers",
+   "family": "Layers",
+   "tags": [
+    "sequence",
+    "stagger"
+   ],
+   "tool": "layer.sequence",
+   "needs": "two-layers"
+  },
+  {
+   "id": "tool.layers.align-left",
+   "kind": "tool",
+   "name": "Align Left",
+   "family": "Layers",
+   "tags": [
+    "align",
+    "left"
+   ],
+   "tool": "layer.align-left",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.distribute",
+   "kind": "tool",
+   "name": "Distribute",
+   "family": "Layers",
+   "tags": [
+    "distribute",
+    "space"
+   ],
+   "tool": "layer.distribute",
+   "needs": "two-layers"
+  },
+  {
+   "id": "tool.layers.precompose",
+   "kind": "tool",
+   "name": "Pre-compose Clean",
+   "family": "Layers",
+   "tags": [
+    "precompose",
+    "clean"
+   ],
+   "tool": "layer.precompose",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.layers.explode",
+   "kind": "tool",
+   "name": "Text Exploder",
+   "family": "Text",
+   "tags": [
+    "text",
+    "explode",
+    "words"
+   ],
+   "tool": "text.explode",
+   "needs": "text"
+  },
+  {
+   "id": "tool.layers.batch-offset",
+   "kind": "tool",
+   "name": "Batch Offset",
+   "family": "Layers",
+   "tags": [
+    "batch",
+    "offset",
+    "stagger"
+   ],
+   "tool": "layer.batch-offset",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.project.916",
+   "kind": "tool",
+   "name": "Vertical 9:16",
+   "family": "Project",
+   "tags": [
+    "project",
+    "social",
+    "vertical"
+   ],
+   "tool": "project.preset-916",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.project.11",
+   "kind": "tool",
+   "name": "Square 1:1",
+   "family": "Project",
+   "tags": [
+    "project",
+    "social",
+    "square"
+   ],
+   "tool": "project.preset-11",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.project.45",
+   "kind": "tool",
+   "name": "Portrait 4:5",
+   "family": "Project",
+   "tags": [
+    "project",
+    "social",
+    "portrait"
+   ],
+   "tool": "project.preset-45",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.project.169",
+   "kind": "tool",
+   "name": "Landscape 16:9",
+   "family": "Project",
+   "tags": [
+    "project",
+    "video",
+    "landscape"
+   ],
+   "tool": "project.preset-169",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.project.4k",
+   "kind": "tool",
+   "name": "4K UHD",
+   "family": "Project",
+   "tags": [
+    "project",
+    "4k"
+   ],
+   "tool": "project.preset-4k",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.project.safe",
+   "kind": "tool",
+   "name": "Safe Area Guides",
+   "family": "Project",
+   "tags": [
+    "project",
+    "safe",
+    "guide"
+   ],
+   "tool": "project.safe",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.history.repeat",
+   "kind": "tool",
+   "name": "Repeat on Selection",
+   "family": "Workflow",
+   "tags": [
+    "history",
+    "repeat"
+   ],
+   "tool": "history.repeat",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.history.clear",
+   "kind": "tool",
+   "name": "Clear Flow History",
+   "family": "Workflow",
+   "tags": [
+    "history",
+    "clear"
+   ],
+   "tool": "history.clear",
+   "needs": "comp"
+  },
+  {
+   "id": "tool.time.freeze",
+   "kind": "tool",
+   "name": "Freeze Frame",
+   "family": "Time",
+   "tags": [
+    "freeze",
+    "time"
+   ],
+   "tool": "time.freeze",
+   "needs": "layers"
+  },
+  {
+   "id": "tool.time.reverse",
+   "kind": "tool",
+   "name": "Reverse Clip",
+   "family": "Time",
+   "tags": [
+    "reverse",
+    "time"
+   ],
+   "tool": "time.reverse",
+   "needs": "layers"
+  }
+ ]
+}
