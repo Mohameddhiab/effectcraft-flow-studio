@@ -2210,11 +2210,74 @@ function catRemoveItem(item, comp, layers) {
     return hostIsDark();
   }
 
-  function palette() {
-    if (isDarkTheme()) {
-      return { bg: [0.12, 0.12, 0.14, 1], cell: [0.18, 0.18, 0.21, 1], cellHi: [0.24, 0.45, 0.62, 1], text: [0.95, 0.95, 0.97, 1], muted: [0.62, 0.62, 0.66, 1], accent: [0.35, 0.72, 1, 1], cut: [0.9, 0.25, 0.25, 0.4], voice: [0.2, 0.85, 0.4, 0.9] };
+  // ------------------------------------------------------------------ design tokens
+  // Mirrors design/tokens.json, extracted from design/figma/src/index.css. The panel must stay a
+  // single installable file, so it cannot read the JSON at runtime: change both together.
+  var TOKENS = {
+    dark: {
+      bg: "#090d18", bg2: "#101526",
+      surface: ["#151d30", 0.78], surface2: ["#ffffff", 0.055], surface3: ["#ffffff", 0.085],
+      border: ["#ffffff", 0.11], border2: ["#ffffff", 0.17],
+      text: "#f5f7fb", text2: "#a8b0c2", muted: "#6f788c",
+      accent: "#5ce1ff", accent2: "#7b7dff", accentSoft: ["#4ed8ff", 0.13],
+      danger: "#ff5f6d", success: "#44d7a2", warning: "#ffbd59"
+    },
+    light: {
+      bg: "#e8edf6", bg2: "#f5f7fb",
+      surface: ["#ffffff", 0.78], surface2: ["#ffffff", 0.58], surface3: ["#ffffff", 0.9],
+      border: ["#1d2a43", 0.1], border2: ["#1d2a43", 0.17],
+      text: "#111829", text2: "#58647a", muted: "#7d8799",
+      accent: "#087eac", accent2: "#6267ed", accentSoft: ["#0091c3", 0.1],
+      danger: "#ff5f6d", success: "#2fb37a", warning: "#ffbd59"
     }
-    return { bg: [0.95, 0.95, 0.96, 1], cell: [0.88, 0.89, 0.91, 1], cellHi: [0.55, 0.75, 0.95, 1], text: [0.12, 0.12, 0.15, 1], muted: [0.4, 0.4, 0.45, 1], accent: [0.1, 0.45, 0.8, 1], cut: [0.85, 0.2, 0.2, 0.35], voice: [0.1, 0.6, 0.3, 0.9] };
+  };
+  var TOKEN_RADIUS = { xs: 2, sm: 4, md: 5, lg: 7, xl: 8, x2: 9, x3: 10, x4: 11, x5: 12, x6: 13, x7: 14, pill: 20 };
+  var TOKEN_SPACING = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 25];
+
+  function tokens() {
+    return isDarkTheme() ? TOKENS.dark : TOKENS.light;
+  }
+
+  // A token is either "#rrggbb" (opaque) or ["#rrggbb", alpha] as the CSS writes it.
+  function tokenColor(spec) {
+    var rgb = hexToUnit(spec instanceof Array ? spec[0] : spec, [0.5, 0.5, 0.5]);
+    var alpha = spec instanceof Array ? spec[1] : 1;
+    return [rgb[0], rgb[1], rgb[2], alpha];
+  }
+
+  function withAlpha(spec, alpha) {
+    var c = tokenColor(spec);
+    return [c[0], c[1], c[2], alpha];
+  }
+
+  function palette() {
+    var t = tokens();
+    return {
+      bg: tokenColor(t.bg), bg2: tokenColor(t.bg2),
+      surface: tokenColor(t.surface), surface2: tokenColor(t.surface2), surface3: tokenColor(t.surface3),
+      border: tokenColor(t.border), border2: tokenColor(t.border2),
+      cell: tokenColor(t.surface), cellHi: tokenColor(t.accentSoft),
+      text: tokenColor(t.text), text2: tokenColor(t.text2), muted: tokenColor(t.muted),
+      accent: tokenColor(t.accent), accent2: tokenColor(t.accent2),
+      danger: tokenColor(t.danger), success: tokenColor(t.success), warning: tokenColor(t.warning),
+      cut: withAlpha(t.danger, 0.4), voice: withAlpha(t.success, 0.9)
+    };
+  }
+
+  // Glass = translucent fill + a 1 px light top edge (+ optional bottom shade). ScriptUI cannot blur
+  // what is behind the panel, so that is the whole recipe; see docs/design-system.md.
+  function drawGlass(g, x, y, w, h, fill, edge) {
+    g.newPath();
+    g.rectPath(x, y, w, h);
+    g.fillPath(colorBrush(g, fill));
+    g.newPath();
+    g.rectPath(x, y, w, 1);
+    g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+    if (edge) {
+      g.newPath();
+      g.rectPath(x, y + h - 1, w, 1);
+      g.fillPath(colorBrush(g, tokenColor(tokens().border)));
+    }
   }
 
   function colorPen(g, rgba, width) {
@@ -2471,12 +2534,59 @@ function catRemoveItem(item, comp, layers) {
   ui.spacing = 6;
   ui.margins = 8;
 
-  // ------------------------------------------------------------------ header: language & theme
-  var header = ui.add("group");
+  // ------------------------------------------------------------------ top bar
+  // Mirrors the Figma header: a gradient brand mark, the product name and a small subtitle.
+  // ScriptUI has no CSS, so the mark is painted in onDraw and the rest uses host text controls.
+  var header = ui.add("panel");
+  header.orientation = "row";
+  header.alignChildren = ["left", "center"];
   header.alignment = ["fill", "top"];
-  header.alignChildren = ["fill", "center"];
-  var brand = header.add("statictext", undefined, "Flow Studio");
-  brand.alignment = ["left", "center"];
+  header.preferredSize = [-1, 54];
+  header.margins = [10, 6, 10, 6];
+  header.spacing = 8;
+  header.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 320, h = sz[1] || 54;
+    var C = palette();
+    g.newPath();
+    g.rectPath(0, 0, w, h);
+    g.fillPath(colorBrush(g, C.bg2));
+    g.newPath();
+    g.rectPath(0, h - 1, w, 1);
+    g.fillPath(colorBrush(g, C.border));
+  };
+
+  var brandMark = header.add("panel");
+  brandMark.preferredSize = [30, 30];
+  brandMark.minimumSize = [30, 30];
+  brandMark.alignment = ["left", "center"];
+  brandMark.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 30, h = sz[1] || 30;
+    var C = palette();
+    g.newPath();
+    g.rectPath(0, 0, w, h);
+    g.fillPath(colorBrush(g, C.accent));
+    g.newPath();
+    g.rectPath(w - 9, 0, 9, 9);
+    g.fillPath(colorBrush(g, C.accent2));
+    g.drawString("F", colorPen(g, C.bg, 1), Math.floor(w / 2) - 3, Math.floor(h / 2) - 7);
+  };
+
+  var brandBox = header.add("group");
+  brandBox.orientation = "column";
+  brandBox.alignChildren = ["left", "center"];
+  brandBox.spacing = 1;
+  var brand = brandBox.add("statictext", undefined, "Flow Studio");
+  try { brand.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 13); } catch (eBrand) {}
+  var brandSub = brandBox.add("statictext", undefined, "EDITING SUITE");
+  try {
+    brandSub.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
+    brandSub.graphics.foregroundColor = colorPen(brandSub.graphics, palette().muted, 1);
+  } catch (eSub) {}
+
   var headerSpacer = header.add("statictext", undefined, "");
   headerSpacer.alignment = ["fill", "center"];
   var langDrop = header.add("dropdownlist", undefined, ["Fran\u00e7ais", "English", "\u0627\u0644\u0639\u0631\u0628\u064a\u0629"]);
@@ -2617,20 +2727,24 @@ function catRemoveItem(item, comp, layers) {
 
   function say(text) {
     status.text = "\u25cf " + text;
-    setStatusColor(status, [0.15, 0.75, 0.35, 1]);
+    setStatusColor(status, tokenColor(tokens().success));
   }
 
   function warn(text) {
     status.text = "\u25b2 " + text;
-    setStatusColor(status, [0.95, 0.65, 0.15, 1]);
+    setStatusColor(status, tokenColor(tokens().warning));
   }
 
   function fail(text) {
     status.text = "! " + text;
-    setStatusColor(status, [0.95, 0.25, 0.25, 1]);
+    setStatusColor(status, tokenColor(tokens().danger));
   }
 
   var DRAWABLES = [];
+  // The header and its brand mark are created before this list exists; register them now so a
+  // theme switch repaints their onDraw surfaces.
+  registerDraw(header);
+  registerDraw(brandMark);
   function registerDraw(panel) {
     DRAWABLES.push(panel);
     return panel;
@@ -5529,6 +5643,27 @@ function catRemoveItem(item, comp, layers) {
 
   libraryTab.orientation = "column";
   libraryTab.alignChildren = ["fill", "top"];
+
+  // Section heading from the Figma design: a small eyebrow over the screen title, with the live
+  // count on the right. It gives the Library one clear title without spending a tab.
+  var libHead = libraryTab.add("group");
+  libHead.alignment = ["fill", "top"];
+  libHead.alignChildren = ["fill", "center"];
+  var libHeadBox = libHead.add("group");
+  libHeadBox.orientation = "column";
+  libHeadBox.alignChildren = ["left", "center"];
+  libHeadBox.spacing = 1;
+  var libEyebrow = libHeadBox.add("statictext", undefined, "FLOW STUDIO");
+  try {
+    libEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
+    libEyebrow.graphics.foregroundColor = colorPen(libEyebrow.graphics, palette().accent, 1);
+  } catch (eEye) {}
+  var libHeadTitle = libHeadBox.add("statictext", undefined, tr("library"));
+  try { libHeadTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 15); } catch (eTitle) {}
+  var libHeadCount = libHead.add("statictext", undefined, "");
+  libHeadCount.alignment = ["right", "center"];
+  try { libHeadCount.graphics.foregroundColor = colorPen(libHeadCount.graphics, palette().muted, 1); } catch (eCount) {}
+
   var libTop = libraryTab.add("group");
   libTop.alignment = ["fill", "top"];
   var libCat = libTop.add("dropdownlist", undefined, LIB_CATS);
@@ -5687,18 +5822,132 @@ libFamily.onChange = function () {
 catLibraryRelabel();
   // // </flow-catalog-ui>
 
+  function libTint(it) {
+    if (it && it.catalogId) {
+      var citem = catById(it.catalogId);
+      var kind = citem ? citem.kind : "";
+      if (kind === "titles" || kind === "textAnims") return [0.36, 0.88, 1];
+      if (kind === "transitions") return [0.95, 0.5, 0.2];
+      if (kind === "effects") return [0.7, 0.4, 0.95];
+      if (kind === "gradients" || kind === "palettes") return [0.25, 0.8, 0.62];
+      if (kind === "captions") return [0.95, 0.75, 0.25];
+      if (kind === "sfx") return [0.2, 0.8, 0.5];
+      return [0.36, 0.88, 1];
+    }
+    if (it && (it.cat === "Titles" || it.cat === "Generators")) return [0.25, 0.6, 0.95];
+    if (it && it.cat === "Transitions") return [0.95, 0.5, 0.2];
+    if (it && it.cat === "Audio") return [0.2, 0.8, 0.5];
+    return [0.7, 0.4, 0.9];
+  }
+
+  // Miniatures are drawn, not loaded: the repository ships no bitmap assets, and a generated
+  // thumbnail never drifts from the item it represents. The catalogue kind decides the shape.
+  function drawThumb(g, it, x, y, w, h, C) {
+    var t = libTint(it);
+    var solid = [t[0], t[1], t[2], 0.9];
+    drawGlass(g, x, y, w, h, [t[0], t[1], t[2], 0.16], true);
+    g.newPath();
+    g.rectPath(x, y, w, 1);
+    g.fillPath(colorBrush(g, solid));
+    var i;
+    var citem = it && it.catalogId ? catById(it.catalogId) : null;
+    var kind = citem ? citem.kind : "";
+    if (kind === "transitions") {
+      var leftW = Math.max(4, Math.round((w - 11) * 0.55));
+      g.newPath();
+      g.rectPath(x + 4, y + 7, leftW, h - 14);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.6]));
+      g.newPath();
+      g.rectPath(x + 7 + leftW, y + 7, Math.max(3, w - leftW - 11), h - 14);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.22]));
+      return;
+    }
+    if (kind === "sfx" || (it && it.cat === "Audio")) {
+      var bars = [0.3, 0.62, 0.95, 0.45, 0.78, 0.34];
+      for (i = 0; i < bars.length; i++) {
+        var bh = Math.max(3, Math.round((h - 12) * bars[i]));
+        g.newPath();
+        g.rectPath(x + 5 + i * 4, y + h - 6 - bh, 2, bh);
+        g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.85]));
+      }
+      return;
+    }
+    if (kind === "palettes") {
+      var cols = citem && citem.colors ? citem.colors : ["#5ce1ff", "#7b7dff", "#44d7a2", "#ffbd59"];
+      var sw = Math.max(3, Math.floor((w - 8) / Math.max(1, cols.length)));
+      for (i = 0; i < cols.length && i < 5; i++) {
+        var rgb = catColor(cols[i], [0.5, 0.5, 0.5]);
+        g.newPath();
+        g.rectPath(x + 4 + i * sw, y + 6, Math.max(2, sw - 1), h - 12);
+        g.fillPath(colorBrush(g, [rgb[0], rgb[1], rgb[2], 0.95]));
+      }
+      return;
+    }
+    if (kind === "gradients" || (it && it.cat === "Generators")) {
+      var gcols = citem && citem.colors && citem.colors.length ? citem.colors : null;
+      var strip = (w - 8) / 5;
+      for (i = 0; i < 5; i++) {
+        var cr = gcols ? catColor(gcols[Math.min(i, gcols.length - 1)], [t[0], t[1], t[2]]) : [t[0] * (1 - i * 0.12), t[1] * (1 - i * 0.08) + i * 0.06, t[2]];
+        g.newPath();
+        g.rectPath(x + 4 + i * strip, y + 6, Math.max(2, strip), h - 12);
+        g.fillPath(colorBrush(g, [cr[0], cr[1], cr[2], 0.35 + i * 0.13]));
+      }
+      return;
+    }
+    if (kind === "titles" || kind === "textAnims" || (it && it.cat === "Titles")) {
+      g.newPath();
+      g.rectPath(x + 6, y + 10, w - 18, 3);
+      g.fillPath(colorBrush(g, [1, 1, 1, 0.92]));
+      g.newPath();
+      g.rectPath(x + 6, y + 17, w - 26, 2);
+      g.fillPath(colorBrush(g, [1, 1, 1, 0.6]));
+      g.newPath();
+      g.rectPath(x + 6, y + 23, w - 22, 2);
+      g.fillPath(colorBrush(g, [1, 1, 1, 0.35]));
+      return;
+    }
+    if (kind === "captions") {
+      g.newPath();
+      g.rectPath(x + 5, y + h - 15, w - 10, 8);
+      g.fillPath(colorBrush(g, [0.05, 0.06, 0.1, 0.82]));
+      g.newPath();
+      g.rectPath(x + 8, y + h - 12, Math.max(4, w - 26), 2);
+      g.fillPath(colorBrush(g, [1, 1, 1, 0.85]));
+      return;
+    }
+    if (kind === "effects") {
+      var cx = x + Math.floor(w / 2), cy = y + Math.floor(h / 2);
+      g.newPath();
+      g.rectPath(cx - 1, y + 6, 2, Math.max(2, h - 12));
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.9]));
+      g.newPath();
+      g.rectPath(x + 6, cy - 1, Math.max(2, w - 12), 2);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.9]));
+      g.newPath();
+      g.rectPath(x + 7, y + 7, 3, 3);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.55]));
+      g.newPath();
+      g.rectPath(x + w - 10, y + h - 10, 3, 3);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.55]));
+      return;
+    }
+    for (i = 0; i < 3; i++) {
+      g.newPath();
+      g.rectPath(x + 6, y + 8 + i * 6, Math.max(4, (w - 16) * (1 - i * 0.28)), 3);
+      g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.9 - i * 0.25]));
+    }
+  }
+
   var libPreview = libraryTab.add("panel", undefined, tr("preview"));
-  libPreview.preferredSize = [-1, 62];
+  libPreview.preferredSize = [-1, 72];
   libPreview.alignment = ["fill", "top"];
   registerDraw(libPreview);
   libPreview.onDraw = function () {
     var g = this.graphics;
     var sz = this.size;
-    var w = sz[0] || 260, h = sz[1] || 62;
+    var w = sz[0] || 260, h = sz[1] || 72;
     var C = palette();
-    g.newPath();
-    g.rectPath(0, 0, w, h);
-    g.fillPath(colorBrush(g, C.bg));
+    drawGlass(g, 0, 0, w, h, C.surface, true);
     // onDraw replaces the native panel frame, so the panel's own label is drawn here.
     g.drawString(tr("preview"), colorPen(g, C.muted, 1), 12, 3);
     var it = libSelectedItem();
@@ -5708,13 +5957,9 @@ catLibraryRelabel();
     }
     g.drawString("[" + it.cat + "] " + it.name, colorPen(g, C.accent, 1), 12, 20);
     g.drawString(it.sub, colorPen(g, C.text, 1), 12, 37);
-    if (it.disabled) g.drawString(String(it.disabledReason || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 52);
-    var swW = 28, swH = 28;
-    var swX = w - swW - 12, swY = 18;
-    var colB = it.cat === "Catalogue" ? [0.36, 0.88, 1, 1] : it.cat === "Titles" || it.cat === "Generators" ? [0.25, 0.6, 0.95, 1] : it.cat === "Transitions" ? [0.95, 0.5, 0.2, 1] : it.cat === "Audio" ? [0.2, 0.8, 0.5, 1] : [0.7, 0.4, 0.9, 1];
-    g.newPath();
-    g.rectPath(swX, swY, swW, swH);
-    g.fillPath(colorBrush(g, colB));
+    g.drawString(String(it.tags || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 54);
+    if (it.disabled) g.drawString(String(it.disabledReason || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 64);
+    drawThumb(g, it, w - 52, 14, 40, 40, C);
   };
 
   var LIB_PAGE = 6;
@@ -5744,17 +5989,27 @@ catLibraryRelabel();
         var C = palette();
         var idx = this._itemIndex;
         var it = idx >= 0 && idx < libShown.length ? libShown[idx] : null;
-        g.newPath();
-        g.rectPath(0, 0, w, h);
-        g.fillPath(colorBrush(g, idx === libSel ? C.cellHi : C.cell));
-        if (!it) return;
+        var on = !!it && idx === libSel;
+        if (!it) {
+          g.newPath();
+          g.rectPath(1, 1, Math.max(1, w - 2), Math.max(1, h - 2));
+          g.strokePath(colorPen(g, [C.border[0], C.border[1], C.border[2], 0.5], 1));
+          return;
+        }
+        drawGlass(g, 1, 1, Math.max(1, w - 2), Math.max(1, h - 2), on ? C.cellHi : C.cell, true);
         var favs = libFavorites();
-        var colB = it.cat === "Catalogue" ? [0.36, 0.88, 1, 1] : it.cat === "Titles" || it.cat === "Generators" ? [0.25, 0.6, 0.95, 1] : it.cat === "Transitions" ? [0.95, 0.5, 0.2, 1] : it.cat === "Audio" ? [0.2, 0.8, 0.5, 1] : [0.7, 0.4, 0.9, 1];
+        var tint = libTint(it);
         g.newPath();
-        g.rectPath(6, 8, 28, 28);
-        g.fillPath(colorBrush(g, colB));
-        g.drawString(String(it.name).substr(0, 20), colorPen(g, it.disabled ? C.muted : C.text, 1), 40, 8);
-        g.drawString(String(it.sub || "").substr(0, 22), colorPen(g, C.muted, 1), 40, 26);
+        g.rectPath(1, 1, 3, Math.max(1, h - 2));
+        g.fillPath(colorBrush(g, [tint[0], tint[1], tint[2], 0.9]));
+        if (on) {
+          g.newPath();
+          g.rectPath(1, 1, Math.max(1, w - 2), Math.max(1, h - 2));
+          g.strokePath(colorPen(g, [tint[0], tint[1], tint[2], 0.65], 1));
+        }
+        drawThumb(g, it, 8, 10, 32, 32, C);
+        g.drawString(String(it.name).substr(0, 20), colorPen(g, it.disabled ? C.muted : C.text, 1), 46, 8);
+        g.drawString(String(it.sub || "").substr(0, 22), colorPen(g, C.muted, 1), 46, 26);
         if (it.disabled) g.drawString("!", colorPen(g, C.muted, 1), w - 16, h - 16);
         if (favs[it.cat + "|" + it.name]) g.drawString("★", colorPen(g, [1, 0.8, 0.2, 1], 1), w - 16, 8);
       };
@@ -5830,6 +6085,7 @@ catLibraryRelabel();
     libPage = 0;
     libSel = 0;
     libRefreshCells();
+    if (libHeadCount) libHeadCount.text = libShown.length + " / " + items.length;
     save("lastLibCat", cat);
     say(libShown.length + " élément" + (libShown.length === 1 ? "" : "s") + " dans " + LIB_CATS[cat] + ".");
   }
