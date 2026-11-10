@@ -2467,6 +2467,77 @@ function catRemoveItem(item, comp, layers) {
     return g.newBrush(g.BrushType.SOLID_COLOR, rgba);
   }
 
+  // ------------------------------------------------------------------ catalogue images
+  // assets/thumbs/<slug>@2x.png holds one generated illustration per catalogue item. The
+  // installer copies the folder to <settings>/FlowStudio/assets/thumbs; when it is missing the
+  // panel falls back to the drawn miniatures, so a bare .jsx still works.
+  var THUMB_DIR = null;
+  var THUMB_CACHE = {};
+
+  function thumbSlug(id) {
+    return String(id).replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase();
+  }
+
+  function thumbFolder() {
+    if (THUMB_DIR !== null) return THUMB_DIR;
+    THUMB_DIR = "";
+    var cands = [];
+    // Installed layout: <settings>/Scripts/ScriptUI Panels/Flow Studio.jsx next to
+    // <settings>/FlowStudio/assets/thumbs.
+    try {
+      var here = $.fileName ? String($.fileName) : "";
+      if (here) {
+        cands.push(here.replace(/\\/g, "/").replace(/\/[^\/]+$/, "/../../FlowStudio/assets/thumbs"));
+      }
+    } catch (e0) {}
+    // Development layout: the app runs from the repository root.
+    try { cands.push(Folder.current.fsName + "/assets/thumbs"); } catch (e1) {}
+    try { cands.push(Folder.current.fsName + "/FlowStudio/assets/thumbs"); } catch (e2) {}
+    try {
+      var docs = Folder.myDocuments.fsName.replace(/\\/g, "/");
+      var home = docs.replace(/\/Documents$/i, "");
+      cands.push(home + "/AppData/Roaming/EffectCraft/FlowStudio/assets/thumbs");
+    } catch (e3) {}
+    for (var i = 0; i < cands.length; i++) {
+      try {
+        var f = new Folder(cands[i]);
+        if (f.exists) { THUMB_DIR = cands[i]; break; }
+      } catch (e5) {}
+    }
+    return THUMB_DIR;
+  }
+
+  function thumbImage(id) {
+    if (!id) return null;
+    var key = String(id);
+    if (THUMB_CACHE.hasOwnProperty(key)) return THUMB_CACHE[key];
+    var img = null;
+    var dir = thumbFolder();
+    if (dir) {
+      try {
+        var file = new File(dir + "/" + thumbSlug(id) + "@2x.png");
+        if (file.exists) img = ScriptUI.newImage(file);
+      } catch (e) { img = null; }
+    }
+    THUMB_CACHE[key] = img;
+    return img;
+  }
+
+  // Built-in library lists carry no catalogue id; match on kind + name so they show a picture too.
+  function thumbIdFor(it) {
+    if (!it) return "";
+    if (it.catalogId) return it.catalogId;
+    var key = it.cat === "Titles" ? "titles" : it.cat === "Effects" ? "effects" :
+      it.cat === "Transitions" ? "transitions" : it.cat === "Audio" ? "sfx" :
+      it.cat === "Generators" ? "gradients" : "";
+    if (!key) return "";
+    var list = catItems(key);
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].name).toLowerCase() === String(it.name).toLowerCase()) return list[i].id;
+    }
+    return "";
+  }
+
   // ------------------------------------------------------------------ small helpers
 
   function num(text, fallback) {
@@ -2766,7 +2837,7 @@ function catRemoveItem(item, comp, layers) {
   brandBox.spacing = 1;
   var brand = brandBox.add("statictext", undefined, "Flow Studio");
   try { brand.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 13); } catch (eBrand) {}
-  var brandSub = brandBox.add("statictext", undefined, "EDITING SUITE");
+  var brandSub = brandBox.add("statictext", undefined, "EFFECTCRAFT");
   try {
     brandSub.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
     brandSub.graphics.foregroundColor = colorPen(brandSub.graphics, palette().muted, 1);
@@ -2883,6 +2954,8 @@ function catRemoveItem(item, comp, layers) {
 
   var libraryTab = tabs.add("tab", undefined, "Library");
   libraryTab.margins = [0, 26, 0, 0];
+  libraryTab.alignment = ["fill", "fill"];
+  libraryTab.preferredSize = [-1, -1];
   var montageTab = tabs.add("tab", undefined, "Montage");
   var animTab = tabs.add("tab", undefined, "Animer");
   var lookTab = tabs.add("tab", undefined, "Look");
@@ -3029,6 +3102,31 @@ function catRemoveItem(item, comp, layers) {
   // host has given the panel a size, so a headless run never guesses.
   function applyResponsive(width) {
     var w = width > 0 ? width : panelWidth();
+    // The host sizes a tabbed panel from its active tab's preferred width; keep the gallery and the
+    // preview at the pane width so the Library fills the dock instead of shrink-wrapping. This runs
+    // before the `w > 0` guard: on a docked panel `ui.size` can stay 0 while `bounds` are live.
+    try {
+      // `tabs.bounds` reports the tab strip, which can be narrower than the content area; the
+      // preview panel always fills that area, so take the wider of the two.
+      var tabW = Math.max(
+        tabs && tabs.bounds ? tabs.bounds[2] : 0,
+        libPreview && libPreview.bounds ? libPreview.bounds[2] : 0
+      );
+      var inner = tabW > 60 ? Math.max(200, tabW - 24) : 0;
+      if (inner) {
+        if (libGridPanel) libGridPanel.preferredSize = [inner, 268];
+        if (libPreview) libPreview.preferredSize = [inner, 92];
+        // Two cards share the width; a group otherwise keeps its children's minimum.
+        var cardW = Math.max(90, Math.floor((inner - 6) / 2));
+        if (libCards && libCards.length) {
+          for (var ci = 0; ci < libCards.length; ci++) {
+            libCards[ci].card.preferredSize = [cardW, -1];
+            libCards[ci].img.preferredSize = [cardW, 84];
+            libCards[ci].btn.preferredSize = [cardW, 24];
+          }
+        }
+      }
+    } catch (eWidth) {}
     if (!(w > 0)) return false;
     var compact = w < COMPACT_WIDTH;
     var narrow = w < NARROW_WIDTH;
@@ -6098,24 +6196,111 @@ function catRemoveItem(item, comp, layers) {
   libHeadBox.orientation = "column";
   libHeadBox.alignChildren = ["left", "center"];
   libHeadBox.spacing = 1;
-  var libEyebrow = libHeadBox.add("statictext", undefined, "FLOW STUDIO");
+  var libEyebrow = libHeadBox.add("statictext", undefined, "COLLECTION");
   try {
     libEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
     libEyebrow.graphics.foregroundColor = colorPen(libEyebrow.graphics, palette().accent, 1);
   } catch (eEye) {}
-  var libHeadTitle = libHeadBox.add("statictext", undefined, tr("library"));
-  try { libHeadTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 15); } catch (eTitle) {}
+  var libHeadTitle = libHeadBox.add("statictext", undefined,
+    LANG === "fr" ? "Biblioth\u00e8que cr\u00e9ative" :
+    LANG === "ar" ? "\u0645\u0643\u062a\u0628\u0629 \u0625\u0628\u062f\u0627\u0639\u064a\u0629" : "Creative library");
+  try { libHeadTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 17); } catch (eTitle) {}
   var libHeadCount = libHead.add("statictext", undefined, "");
   libHeadCount.alignment = ["right", "center"];
   try { libHeadCount.graphics.foregroundColor = colorPen(libHeadCount.graphics, palette().muted, 1); } catch (eCount) {}
 
   var libTop = libraryTab.add("group");
   libTop.alignment = ["fill", "top"];
+  libTop.alignChildren = ["fill", "center"];
+  libTop.spacing = 4;
   var libCat = libTop.add("dropdownlist", undefined, LIB_CATS);
   libCat.selection = 0;
+  libCat.visible = false;
+  // A drawn magnifier: the Unicode glyphs render inconsistently across host fonts.
+  var libSearchIcon = libTop.add("panel");
+  libSearchIcon.preferredSize = [16, 16];
+  libSearchIcon.minimumSize = [16, 16];
+  libSearchIcon.alignment = ["left", "center"];
+  libSearchIcon.onDraw = function () {
+    try {
+      var g = this.graphics;
+      var C = palette();
+      g.newPath();
+      g.ellipsePath(2, 2, 9, 9);
+      g.strokePath(colorPen(g, C.muted, 1));
+      g.newPath();
+      g.moveTo(10, 10);
+      g.lineTo(14, 14);
+      g.strokePath(colorPen(g, C.muted, 1));
+    } catch (e) {}
+  };
+  registerDraw(libSearchIcon);
   var libSearch = libTop.add("edittext", undefined, "");
   libSearch.alignment = ["fill", "center"];
-  libSearch.minimumSize = [90, -1];
+  libSearch.preferredSize = [220, -1];
+  libSearch.minimumSize = [80, -1];
+  var libSearchSpacer = libTop.add("statictext", undefined, "");
+  libSearchSpacer.alignment = ["fill", "center"];
+  var libSearchKey = libTop.add("statictext", undefined, "\u2318K");
+  try { libSearchKey.graphics.foregroundColor = colorPen(libSearchKey.graphics, palette().muted, 1); } catch (eSk) {}
+
+  // Category chips replace the native dropdown: drawable pills with an accent underline, the
+  // shape the Figma Library uses. The dropdown stays alive (hidden) as the selection model.
+  var libChipNames = [
+    catTr("titles"), catTr("effects"), catTr("transitions"), catTr("gradients"),
+    catTr("sfx"),
+    LANG === "fr" ? "\u2605 Favoris" : LANG === "ar" ? "\u2605 \u0627\u0644\u0645\u0641\u0636\u0644\u0629" : "\u2605 Favorites",
+    "Scripts", catTr("catalogue")
+  ];
+  var libChipBtns = [];
+  var libChipRows = [libraryTab.add("group"), libraryTab.add("group")];
+  for (var libCr = 0; libCr < libChipRows.length; libCr++) {
+    libChipRows[libCr].orientation = "row";
+    libChipRows[libCr].alignment = ["fill", "center"];
+    libChipRows[libCr].alignChildren = ["left", "center"];
+    libChipRows[libCr].spacing = 4;
+  }
+  for (var libCi = 0; libCi < libChipNames.length; libCi++) {
+    (function (idx) {
+      var chip = libChipRows[idx < 4 ? 0 : 1].add("button", undefined, "");
+      chip.preferredSize = [64, 22];
+      chip.minimumSize = [46, 22];
+      chip.alignment = ["left", "center"];
+      chip._idx = idx;
+      chip._label = libChipNames[idx] || "";
+      chip._on = false;
+      chip.onDraw = function () {
+        var g = this.graphics;
+        var sz = this.size;
+        var w = sz[0] || 64, h = sz[1] || 22;
+        var C = palette();
+        g.newPath();
+        g.rectPath(0, 0, w, h);
+        // onDraw does not paint the parent, so the pill must be opaque over the native button.
+        g.fillPath(colorBrush(g, this._on ? C.surface : [C.surface[0], C.surface[1], C.surface[2], 1]));
+        if (this._on) {
+          g.newPath();
+          g.rectPath(0, h - 2, w, 2);
+          g.fillPath(colorBrush(g, C.accent));
+        }
+        var label = this._label || libChipNames[this._idx] || "";
+        g.drawString(String(label).substr(0, 14), colorPen(g, this._on ? C.accent : C.text, 1), 8, Math.floor(h / 2) - 5);
+      };
+      chip.onClick = function () {
+        libCat.selection = this._idx;
+        libRefresh();
+      };
+      libChipBtns.push(chip);
+    })(libCi);
+  }
+  function libChipSync() {
+    var sel = libCat.selection ? libCat.selection.index : 0;
+    for (var i = 0; i < libChipBtns.length; i++) {
+      libChipBtns[i]._on = i === sel;
+      try { libChipBtns[i].notify("onDraw"); } catch (e) {}
+    }
+  }
+  libChipSync();
 
 
 
@@ -6293,8 +6478,122 @@ catLibraryRelabel();
     return [0.7, 0.4, 0.9];
   }
 
-  // Miniatures are drawn, not loaded: the repository ships no bitmap assets, and a generated
-  // thumbnail never drifts from the item it represents. The catalogue kind decides the shape.
+  // A card picture: a small dusk scene (sky gradient, sun, skyline, water) with a per-kind overlay.
+  // This is the ScriptUI rendering of assets/thumbs/*.png, so a gallery card always has a picture
+  // even when the host cannot read files.
+  function drawSceneThumb(g, it, x, y, w, h, C) {
+    var citem = it && it.catalogId ? catById(it.catalogId) : null;
+    var kind = citem ? catKindKey(citem.kind) : "";
+    var t = libTint(it);
+    var seed = 0;
+    var s = String((it && (it.catalogId || it.name)) || "");
+    for (var si = 0; si < s.length; si++) seed = (seed * 31 + s.charCodeAt(si)) >>> 0;
+    if (!seed) seed = 7;
+
+    var sky1 = [0.04 + t[0] * 0.04, 0.05 + t[1] * 0.05, 0.10 + t[2] * 0.06, 1];
+    var sky2 = [0.16 + t[0] * 0.28, 0.10 + t[1] * 0.16, 0.14 + t[2] * 0.15, 1];
+    var sun = [1.0, 0.72, 0.42, 0.95];
+    if (kind === "sfx" || (it && it.cat === "Audio")) {
+      sky1 = [0.04, 0.10, 0.10, 1]; sky2 = [0.08, 0.24, 0.20, 1]; sun = [0.55, 0.95, 0.75, 0.9];
+    } else if (kind === "effects") {
+      sky1 = [0.07, 0.04, 0.13, 1]; sky2 = [0.23, 0.10, 0.31, 1]; sun = [0.75, 0.55, 1, 0.9];
+    } else if (kind === "widgets") {
+      sky1 = [0.06, 0.05, 0.14, 1]; sky2 = [0.16, 0.13, 0.32, 1]; sun = [0.65, 0.62, 1, 0.9];
+    } else if (kind === "titles" || kind === "textAnims") {
+      sky1 = [0.03, 0.04, 0.08, 1]; sky2 = [0.09, 0.11, 0.20, 1]; sun = [1, 0.85, 0.55, 0.9];
+    } else if (kind === "captions") {
+      sky1 = [0.09, 0.06, 0.06, 1]; sky2 = [0.20, 0.11, 0.09, 1]; sun = [1, 0.72, 0.40, 0.9];
+    } else if (kind === "palettes" || kind === "gradients") {
+      sky1 = [0.05, 0.06, 0.09, 1]; sky2 = [0.14, 0.16, 0.22, 1]; sun = [1, 1, 1, 0.8];
+    }
+
+    var hz = y + Math.floor(h * 0.62);
+    try {
+      var br = g.newBrush(g.BrushType.LINEAR_GRADIENT, [sky1, sky2], [0, 1]);
+      g.newPath(); g.rectPath(x, y, Math.max(1, w), Math.max(1, hz - y)); g.fillPath(br);
+    } catch (eSky) {
+      g.newPath(); g.rectPath(x, y, Math.max(1, w), Math.max(1, hz - y)); g.fillPath(colorBrush(g, sky2));
+    }
+
+    var sx = x + Math.floor(w * (0.28 + ((seed >>> 3) % 40) / 100));
+    var sy = y + Math.floor((hz - y) * 0.58);
+    var sr = Math.max(3, Math.floor(w * 0.075));
+    try {
+      g.newPath(); g.ellipsePath(sx - sr, sy - sr, sr * 2, sr * 2); g.fillPath(colorBrush(g, sun));
+    } catch (eSun) {}
+
+    g.newPath(); g.rectPath(x, hz, Math.max(1, w), Math.max(1, y + h - hz)); g.fillPath(colorBrush(g, [0.02, 0.03, 0.05, 1]));
+    g.newPath(); g.rectPath(sx - sr, hz + 1, sr * 2, Math.max(1, Math.floor(h * 0.035)));
+    g.fillPath(colorBrush(g, [sun[0], sun[1], sun[2], 0.22]));
+
+    var blocks = 12;
+    var bw = w / blocks;
+    for (var b = 0; b < blocks; b++) {
+      var r = ((seed >>> (b % 24)) ^ (((b + 1) * 2654435761) % 4294967296)) >>> 0;
+      var bh = Math.floor((0.05 + (r % 100) / 100 * 0.15) * h);
+      g.newPath();
+      g.rectPath(Math.round(x + b * bw), hz - bh, Math.max(1, Math.round(bw) - 1), bh);
+      g.fillPath(colorBrush(g, [0.03, 0.04, 0.07, 0.96]));
+    }
+
+    var accent = [t[0], t[1], t[2], 0.9];
+    if (kind === "transitions" || (it && it.cat === "Transitions")) {
+      var seam = x + Math.floor(w * 0.56);
+      g.newPath(); g.rectPath(seam, y, Math.max(1, x + w - seam), h); g.fillPath(colorBrush(g, [0.03, 0.04, 0.08, 0.42]));
+      g.newPath(); g.rectPath(seam, y, 1, h); g.fillPath(colorBrush(g, accent));
+    } else if (kind === "effects" || (it && it.cat === "Effects")) {
+      for (var e = 0; e < 3; e++) {
+        g.newPath(); g.rectPath(x, y + Math.floor(h * (0.16 + e * 0.17)), w, 2 + e);
+        g.fillPath(colorBrush(g, [accent[0], accent[1], accent[2], 0.16 + e * 0.06]));
+      }
+      try { g.newPath(); g.ellipsePath(x + Math.floor(w * 0.62), y + Math.floor(h * 0.30), Math.floor(w * 0.20), Math.floor(w * 0.20)); g.fillPath(colorBrush(g, [accent[0], accent[1], accent[2], 0.24])); } catch (e2) {}
+    } else if (kind === "titles" || kind === "textAnims" || (it && it.cat === "Titles")) {
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.18), y + Math.floor(h * 0.30), Math.floor(w * 0.46), Math.max(2, Math.floor(h * 0.075))); g.fillPath(colorBrush(g, [1, 1, 1, 0.94]));
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.22), y + Math.floor(h * 0.43), Math.floor(w * 0.30), Math.max(1, Math.floor(h * 0.04))); g.fillPath(colorBrush(g, [1, 1, 1, 0.66]));
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.22), y + Math.floor(h * 0.51), Math.floor(w * 0.36), Math.max(1, Math.floor(h * 0.032))); g.fillPath(colorBrush(g, [1, 1, 1, 0.38]));
+    } else if (kind === "captions") {
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.08), y + Math.floor(h * 0.74), Math.floor(w * 0.84), Math.floor(h * 0.15)); g.fillPath(colorBrush(g, [0.02, 0.03, 0.05, 0.78]));
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.12), y + Math.floor(h * 0.79), Math.floor(w * 0.50), Math.max(1, Math.floor(h * 0.035))); g.fillPath(colorBrush(g, [1, 1, 1, 0.92]));
+    } else if (kind === "palettes") {
+      var cols = citem && citem.colors ? citem.colors : null;
+      var n = cols ? Math.min(5, cols.length) : 4;
+      var sw = w / Math.max(1, n);
+      for (var p = 0; p < n; p++) {
+        var rgb = cols ? catColor(cols[p], [0.5, 0.5, 0.5]) : [t[0], t[1], t[2]];
+        g.newPath(); g.rectPath(Math.round(x + p * sw), y + Math.floor(h * 0.20), Math.max(2, Math.round(sw)), Math.floor(h * 0.60));
+        g.fillPath(colorBrush(g, [rgb[0], rgb[1], rgb[2], 0.86]));
+      }
+    } else if (kind === "gradients" || (it && it.cat === "Generators")) {
+      var gcols = citem && citem.colors && citem.colors.length ? citem.colors : null;
+      for (var q = 0; q < 5; q++) {
+        var gc = gcols ? catColor(gcols[Math.min(q, gcols.length - 1)], [t[0], t[1], t[2]]) : [t[0], t[1], t[2]];
+        g.newPath(); g.rectPath(Math.round(x + q * (w / 5)), y, Math.max(2, Math.round(w / 5)), h);
+        g.fillPath(colorBrush(g, [gc[0], gc[1], gc[2], 0.16 + q * 0.07]));
+      }
+    } else if (kind === "sfx" || (it && it.cat === "Audio")) {
+      var bars = 26;
+      var mid = y + Math.floor(h * 0.52);
+      for (var sb = 0; sb < bars; sb++) {
+        var amp = Math.abs(Math.sin(sb * 0.7 + ((seed >>> (sb % 20)) % 10) * 0.3));
+        var bh2 = Math.max(1, Math.round(amp * h * 0.26));
+        g.newPath(); g.rectPath(Math.round(x + (sb + 0.5) * (w / bars)), mid - bh2, Math.max(1, Math.round(w / bars) - 2), bh2 * 2);
+        g.fillPath(colorBrush(g, [t[0], t[1], t[2], 0.85]));
+      }
+    } else if (kind === "widgets") {
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.20), y + Math.floor(h * 0.26), Math.floor(w * 0.60), Math.floor(h * 0.48)); g.fillPath(colorBrush(g, [0.05, 0.06, 0.10, 0.6]));
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.20), y + Math.floor(h * 0.26), Math.floor(w * 0.60), 2); g.fillPath(colorBrush(g, accent));
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.23), y + Math.floor(h * 0.36), Math.floor(w * 0.27), 3); g.fillPath(colorBrush(g, [1, 1, 1, 0.9]));
+    } else if (kind === "tools") {
+      try {
+        g.newPath(); g.ellipsePath(x + Math.floor(w * 0.40), y + Math.floor(h * 0.36), Math.floor(w * 0.20), Math.floor(w * 0.20));
+        g.strokePath(colorPen(g, accent, 2));
+      } catch (e3) {}
+    } else {
+      g.newPath(); g.rectPath(x + Math.floor(w * 0.15), y + Math.floor(h * 0.20), Math.floor(w * 0.70), 2); g.fillPath(colorBrush(g, accent));
+    }
+  }
+
+  // Small drawn miniatures used by the preview strip.
   function drawThumb(g, it, x, y, w, h, C) {
     var t = libTint(it);
     var solid = [t[0], t[1], t[2], 0.9];
@@ -6416,7 +6715,7 @@ catLibraryRelabel();
   }
 
   var libPreview = libraryTab.add("panel", undefined, tr("preview"));
-  libPreview.preferredSize = [-1, 72];
+  libPreview.preferredSize = [-1, 92];
   libPreview.alignment = ["fill", "top"];
   registerDraw(libPreview);
   libPreview.onDraw = function () {
@@ -6426,69 +6725,103 @@ catLibraryRelabel();
     var C = palette();
     drawGlass(g, 0, 0, w, h, C.surface, true);
     // onDraw replaces the native panel frame, so the panel's own label is drawn here.
-    g.drawString(tr("preview"), colorPen(g, C.muted, 1), 12, 3);
+    g.drawString(LANG === "fr" ? "S\u00c9LECTION" : LANG === "ar" ? "\u0627\u0644\u0627\u062e\u062a\u064a\u0627\u0631" : "SELECTION", colorPen(g, C.accent, 1), 12, 3);
     var it = libSelectedItem();
     if (!it) {
       g.drawString(tr("previewEmpty"), colorPen(g, C.muted, 1), 15, Math.floor(h / 2 + 2));
       return;
     }
-    g.drawString("[" + it.cat + "] " + it.name, colorPen(g, C.accent, 1), 12, 20);
-    g.drawString(it.sub, colorPen(g, C.text, 1), 12, 37);
-    g.drawString(String(it.tags || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 54);
-    if (it.disabled) g.drawString(String(it.disabledReason || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 64);
-    drawThumb(g, it, w - 52, 14, 40, 40, C);
+    g.drawString(String(it.name).substr(0, 34), colorPen(g, C.text, 1), 12, 22);
+    g.drawString(String(it.sub || "").substr(0, 40), colorPen(g, C.text2, 1), 12, 42);
+    g.drawString(String(it.tags || "").substr(0, 48), colorPen(g, C.muted, 1), 12, 59);
+    if (it.disabled) g.drawString(String(it.disabledReason || "").substr(0, 44), colorPen(g, C.muted, 1), 12, 76);
+    drawThumb(g, it, w - 54, 18, 42, 42, C);
   };
 
   var LIB_PAGE = 6;
   var libPage = 0;
   var libSel = 0;
   var libCells = [];
+  var libCards = [];
   var libGridPanel = libraryTab.add("panel");
   libGridPanel.orientation = "column";
   libGridPanel.alignChildren = ["fill", "top"];
   libGridPanel.alignment = ["fill", "top"];
-  libGridPanel.margins = [6, 20, 6, 6];
-  libGridPanel.spacing = 4;
-  libGridPanel.preferredSize = [-1, 190];
+  libGridPanel.margins = [6, 4, 6, 6];
+  libGridPanel.spacing = 6;
+  libGridPanel.preferredSize = [-1, 268];
+
+  // A card is a picture plus a title button. The picture is a real image control when the host
+  // supports one (and assets/thumbs is installed); otherwise it is a drawn miniature panel, so the
+  // gallery still renders on a bare .jsx.
+  function libCardThumb(card) {
+    var img = card.add("panel");
+    img.preferredSize = [140, 84];
+    img.minimumSize = [100, 60];
+    img.alignment = ["fill", "top"];
+    img._flowImage = false;
+    img.onDraw = function () {
+      var g = this.graphics;
+      var sz = this.size;
+      var w = sz[0] || 140, h = sz[1] || 84;
+      var C = palette();
+      var idx = this._itemIndex;
+      var it = idx >= 0 && idx < libShown.length ? libShown[idx] : null;
+      if (!it) {
+        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.fillPath(colorBrush(g, C.surface));
+        return;
+      }
+      drawSceneThumb(g, it, 0, 0, Math.max(1, w), Math.max(1, h), C);
+      if (it.disabled) {
+        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.fillPath(colorBrush(g, [0, 0, 0, 0.45]));
+      }
+      if (idx === libSel) {
+        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.strokePath(colorPen(g, C.accent, 2));
+      }
+    };
+    registerDraw(img);
+    return img;
+  }
+
   for (var libRow = 0; libRow < 3; libRow++) {
     var libRowG = libGridPanel.add("group");
-    libRowG.alignment = ["fill", "center"];
-    libRowG.alignChildren = ["fill", "center"];
+    libRowG.orientation = "row";
+    libRowG.alignment = ["fill", "top"];
+    libRowG.alignChildren = ["fill", "top"];
+    libRowG.spacing = 6;
     for (var libCol = 0; libCol < 2; libCol++) {
-      var libCell = libRowG.add("button", undefined, "");
+      var libCard = libRowG.add("group");
+      libCard.orientation = "column";
+      libCard.alignChildren = ["fill", "top"];
+      libCard.alignment = ["fill", "top"];
+      libCard.spacing = 2;
+      var libImg = libCardThumb(libCard);
+      var libCell = libCard.add("button", undefined, "");
       libCell.alignment = ["fill", "center"];
-      libCell.preferredSize = [140, 52];
+      libCell.preferredSize = [140, 24];
+      libCell.minimumSize = [100, 20];
       libCell._itemIndex = -1;
       libCell.onDraw = function () {
         var g = this.graphics;
         var sz = this.size;
-        var w = sz[0] || 140, h = sz[1] || 52;
+        var w = sz[0] || 140, h = sz[1] || 24;
         var C = palette();
         var idx = this._itemIndex;
         var it = idx >= 0 && idx < libShown.length ? libShown[idx] : null;
         var on = !!it && idx === libSel;
-        if (!it) {
-          g.newPath();
-          g.rectPath(1, 1, Math.max(1, w - 2), Math.max(1, h - 2));
-          g.strokePath(colorPen(g, [C.border[0], C.border[1], C.border[2], 0.5], 1));
-          return;
-        }
-        drawGlass(g, 1, 1, Math.max(1, w - 2), Math.max(1, h - 2), on ? C.cellHi : C.cell, true);
-        var favs = libFavorites();
-        var tint = libTint(it);
         g.newPath();
-        g.rectPath(1, 1, 3, Math.max(1, h - 2));
-        g.fillPath(colorBrush(g, [tint[0], tint[1], tint[2], 0.9]));
+        g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+        g.fillPath(colorBrush(g, on ? C.cellHi : C.cell));
         if (on) {
           g.newPath();
-          g.rectPath(1, 1, Math.max(1, w - 2), Math.max(1, h - 2));
-          g.strokePath(colorPen(g, [tint[0], tint[1], tint[2], 0.65], 1));
+          g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+          g.strokePath(colorPen(g, C.accent, 1));
         }
-        drawThumb(g, it, 8, 10, 32, 32, C);
-        g.drawString(String(it.name).substr(0, 20), colorPen(g, it.disabled ? C.muted : C.text, 1), 46, 8);
-        g.drawString(String(it.sub || "").substr(0, 22), colorPen(g, C.muted, 1), 46, 26);
-        if (it.disabled) g.drawString("!", colorPen(g, C.muted, 1), w - 16, h - 16);
-        if (favs[it.cat + "|" + it.name]) g.drawString("★", colorPen(g, [1, 0.8, 0.2, 1], 1), w - 16, 8);
+        if (!it) return;
+        var favs = libFavorites();
+        g.drawString(String(it.name).substr(0, 22), colorPen(g, it.disabled ? C.muted : C.text, 1), 6, 8);
+        g.drawString(String(it.sub || "").substr(0, 18), colorPen(g, C.muted, 1), 6, 17);
+        if (favs[it.cat + "|" + it.name]) g.drawString("★", colorPen(g, [1, 0.8, 0.2, 1], 1), w - 14, 8);
       };
       libCell.onClick = function () {
         var idx = this._itemIndex;
@@ -6499,9 +6832,13 @@ catLibraryRelabel();
         this._lastIndex = idx;
         libSel = idx;
         try { libPreview.notify("onDraw"); } catch (e) {}
+        for (var c = 0; c < libCells.length; c++) {
+          try { libCells[c].btn.notify("onDraw"); } catch (e2) {}
+        }
         if (again) libRun();
       };
-      libCells.push(libCell);
+      libCells.push({ img: libImg, btn: libCell });
+      libCards.push({ card: libCard, img: libImg, btn: libCell });
     }
   }
 
@@ -6538,8 +6875,18 @@ catLibraryRelabel();
     if (libPage >= pages) libPage = pages - 1;
     if (libPage < 0) libPage = 0;
     for (var i = 0; i < libCells.length; i++) {
-      libCells[i]._itemIndex = libPage * LIB_PAGE + i;
-      try { libCells[i].notify("onDraw"); } catch (e) {}
+      var cell = libCells[i];
+      var idx = libPage * LIB_PAGE + i;
+      var it = idx >= 0 && idx < libShown.length ? libShown[idx] : null;
+      cell.btn._itemIndex = idx;
+      cell.img._itemIndex = idx;
+      if (cell.img._flowImage) {
+        var pic = thumbImage(thumbIdFor(it));
+        try { cell.img.image = pic; } catch (eImg) {}
+      } else {
+        try { cell.img.notify("onDraw"); } catch (eDraw) {}
+      }
+      try { cell.btn.notify("onDraw"); } catch (eBtn) {}
     }
     libPageLabel.text = (libPage + 1) + " / " + pages;
     libPager.visible = count > LIB_PAGE;
@@ -6563,6 +6910,7 @@ catLibraryRelabel();
     libSel = 0;
     libRefreshCells();
     if (libHeadCount) libHeadCount.text = libShown.length + " / " + items.length;
+    libChipSync();
     save("lastLibCat", cat);
     say(libShown.length + " élément" + (libShown.length === 1 ? "" : "s") + " dans " + LIB_CATS[cat] + ".");
   }

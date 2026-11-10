@@ -294,6 +294,12 @@ async function main() {
   fs.rmSync(config, { recursive: true, force: true });
   fs.mkdirSync(panelDir, { recursive: true });
   fs.copyFileSync(a.panel, path.join(panelDir, path.basename(a.panel)));
+  // The installer copies the catalogue pictures next to the panel; do the same here so the
+  // screenshots show the real cards rather than the drawn fallback.
+  const thumbsSource = path.join(root, 'assets', 'thumbs');
+  if (fs.existsSync(thumbsSource)) {
+    fs.cpSync(thumbsSource, path.join(config, 'FlowStudio', 'assets', 'thumbs'), { recursive: true });
+  }
 
   const port = a.port || (await freePort());
   const env = { ...process.env, EFFECTCRAFT_CONFIG_DIR: config };
@@ -445,18 +451,23 @@ async function main() {
       let lastError;
       // Capture the panel element itself: it is resolved from the live layout, so a hidden app
       // window or a panel that moved does not turn the shot into an empty desktop grab.
-      for (let attempt = 1; attempt <= 4; attempt++) {
+      for (let attempt = 1; attempt <= 8; attempt++) {
         try {
+          // A host can lose the foreground between shots; raise the app before grabbing.
+          try { await ctl.call('ui.focus'); } catch (eFocus) {}
+          await sleep(300);
           r = await ctl.call('ui.screenshot', { path: full, id: `scriptui.${win}` });
           if (r && r.width) break;
           lastError = new Error('no image');
         } catch (e) {
           lastError = e;
           if (/covered or minimized/i.test(e.message)) {
+            // The whole app can be minimized, not just covered: restore it before focusing.
+            try { await ctl.call('window.maximizeApp', {}); } catch (e3) {}
             try {
               await ctl.call('ui.focus');
             } catch (e2) {}
-            await sleep(1200);
+            await sleep(1400);
           }
         }
         await sleep(600);

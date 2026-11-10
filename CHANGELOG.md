@@ -1,5 +1,11 @@
 # Changelog## Unreleased
 
+- Library (Figma): the screen now mirrors the design export — `COLLECTION` eyebrow, « Bibliothèque
+  créative », search with a drawn magnifier and `⌘K`, eight category chips, a 3 × 2 grid of
+  illustrated cards and a `SÉLECTION` preview sheet. See `docs/images/flow-studio-after-library.png`.
+- Catalogue images: `scripts/gen_thumbs.js` now renders every one of the 525 presets as a
+  deterministic dusk scene (200×120, ~0,9 Mo total) with a manifest; the panel paints the same scene
+  in `onDraw` and `flow-install` copies the gallery next to the panel.
 - Catalogue: 525 validated presets (60 titles, 25 UI widgets, 96 text animations, 55 transitions,
   70 effects,
   50 gradients, 30 palettes, 34 captions, 84 sounds, 21 tools) with kind/family filters, search, recents and
@@ -7,7 +13,7 @@
   and plural kinds, so each card is tinted and drawn for its own type.
 - Design tokens: verified 100 % mappage between `design/tokens.json` and `Flow Studio.jsx` TOKENS object (colours, rayons, espacements, typographie, recette glass). Voir `docs/design-system.md`.
 - Panel captures: offscreen harness `scripts/panel_snapshot.js` capture chaque écran à 298 / 320 / 400 / 460 pt, thèmes sombre et clair, via `--control` canal JSON-lignes. Voir `scripts/panel_snapshot.js`.
-- Miniatures catalogue: 59 PNGs générés en `assets/thumbs/<kind>-<id>@2x.png` (< 3 Mo total) pour transitions, effets, générateurs, sons et titres, avec chargement à la demande et cache.
+- Miniatures catalogue: 525 PNGs générés en `assets/thumbs/<slug>@2x.png` (200×120, ~0,9 Mo total) pour les dix familles (titres, widgets, animations de texte, transitions, effets, dégradés, palettes, sous-titres, sons, outils), avec manifeste et installation à côté du panel.
 - Smoke suite: 227 checks (widgets, sons, profils de silence, Whisper, catalogue, tokens de design, layout étroit à 298 / 320 / 400 / 460 pt).
 - UI widgets: 25 original data-driven badges, buttons, progress, notifications, stats and overlays built from
   shape and text parts with keyframed entrances; no plug-in or native effect required.

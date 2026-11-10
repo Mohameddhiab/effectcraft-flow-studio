@@ -24,7 +24,7 @@ and opens on a short welcome screen the first time.
 
 | Category | Sub-tabs | What it does |
 |---|---|---|
-| **Library** | Unified browser | 525 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
+| **Library** | Unified browser | 525 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a Figma-style screen: `COLLECTION` eyebrow, **Bibliothèque créative**, search with `⌘K`, eight category chips, a 3 × 2 illustrated-card grid and a `SÉLECTION` preview sheet, with recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
 | | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
@@ -177,9 +177,13 @@ panel and are not duplicated into packs; user styles, text animations and backgr
 
 ## Library, text, background, effects and sounds
 
-- **Library** (first tab): one place, like DaVinci Resolve's Effects Library. Categories Titles, Effects,
-  Transitions (18), Generators, Audio, Favorites and AE Scripts; search box; 2-column grid with six items
-  per page and a pager; double-click or **Add to timeline**; **★ Favorite**.
+- **Library** (first tab): one place, like DaVinci Resolve's Effects Library. The screen follows the
+  Figma export: a `COLLECTION` eyebrow, the **Bibliothèque créative** title, a search field with a drawn
+  magnifier and `⌘K`, eight category chips (Titres, Effets, Transitions, Dégradés, Sons, Favoris,
+  Scripts, Catalogue), a 3 × 2 grid of illustrated cards and a `SÉLECTION` preview sheet with the
+  duration/side/strength controls and **Ajouter à la timeline**. Double-click a card or use the button;
+  **★ Favori** keeps it. Categories Titles, Effects, Transitions (18), Generators, Audio, Favorites and
+  AE Scripts; the pager shows six cards per page.
   Titles land at the playhead with their animation; effects go on the selected layers (or a new adjustment layer
   when nothing is selected); transitions go on the start/end of the selected layers (overlap two clips and put
   a transition on the top one); generators land at the playhead (gradients at the bottom); audio adds sounds at

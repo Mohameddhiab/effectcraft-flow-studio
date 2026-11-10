@@ -40,5 +40,17 @@ if (Test-Path $sfxSource) {
 } else {
     Write-Host "No assets/sfx-pack found alongside the panel; sounds will fall back to built-in."
 }
+# Catalogue thumbnails: copied to <settings>/FlowStudio/assets/thumbs so the Library
+# shows a picture for every preset. Without them the panel keeps its drawn miniatures.
+$thumbSource = Join-Path $root "assets\thumbs"
+$thumbDest = Join-Path $config "FlowStudio\assets\thumbs"
+if (Test-Path $thumbSource) {
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $thumbDest) | Out-Null
+    if (Test-Path $thumbDest) { Remove-Item -Recurse -Force $thumbDest }
+    Copy-Item -Recurse -Force $thumbSource $thumbDest
+    Write-Host "Installed catalogue thumbnails: $thumbDest"
+} else {
+    Write-Host "No assets/thumbs found alongside the panel; cards fall back to drawn miniatures."
+}
 Write-Host "Restart EffectCraft, then open Window > Flow Studio.jsx."
 Write-Host "Optional helper (silence, captions, sounds, models): run effectcraft-flow-helper.exe serve."
