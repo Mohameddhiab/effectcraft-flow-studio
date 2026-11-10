@@ -112,6 +112,18 @@ function pump(n) {
   var alayer = comp.layers.add(item);
   alayer.selected = true;
   solid.selected = false;
+  // Named detection profiles (data, not a model): each sets the detector and timings.
+  var profDrop = dropWith("Standard");
+  check("4 silence profiles", profDrop.items.length === 4 && profDrop.items[3].text === "Musique", profDrop.items.length);
+  pick("Podcast");
+  var pp = F.silenceParams();
+  check("Podcast profile sets adaptive -33 dB / 0.35 s", pp.profile === 1 && pp.engine === 0 && pp.thresholdDb === -33 && pp.minSilence === 0.35 && pp.padBefore === 0.08 && pp.padAfter === 0.08, JSON.stringify(pp));
+  pick("Musique");
+  var mp = F.silenceParams();
+  check("Musique profile sets fixed -45 dB / 1.0 s", mp.profile === 3 && mp.engine === 1 && mp.thresholdDb === -45 && mp.minSilence === 1.0 && mp.padBefore === 0.05 && mp.padAfter === 0.2, JSON.stringify(mp));
+  pick("Standard");
+  var sp2 = F.silenceParams();
+  check("Standard profile restores adaptive -35 dB / 0.4 s", sp2.profile === 0 && sp2.engine === 0 && sp2.thresholdDb === -35 && sp2.minSilence === 0.4, JSON.stringify(sp2));
   button("Analyze").onClick();
   pump();
   check("silence analysis finished", /done\./.test(F.status()), F.status());
@@ -339,7 +351,9 @@ function pump(n) {
   check("remove clears every Flow effect", fxSolid.property("ADBE Effect Parade").numProperties === 0, fxSolid.property("ADBE Effect Parade").numProperties);
 
   // ---- Sounds (pack via sfx.pack.list; built-in stays the fallback)
-  pick("Pack");
+  check("sound source offers pack / built-in / my folder", F.sfxSource.items.length === 3, F.sfxSource.items.length);
+  F.sfxSource.selection = 0;
+  F.sfxSource.onChange();
   F.loadSounds();
   check("pack sounds listed", /sons du pack/.test(F.status()), F.status());
   var sl = all(F.ui, "listbox").filter(function (l) { return l.items.length === 84; })[0];
@@ -449,11 +463,11 @@ function pump(n) {
   check("gradient generator goes to the bottom", comp.layer(comp.numLayers).comment === "flow:bg", F.status());
 
   libGo("Audio");
-  check("audio list has tools and 20 sounds", libCount() === 25, libCount());
+  check("audio list has tools and 84 sounds", libCount() === 89, libCount());
   deselectAll();
   comp.time = 3;
   var ab = comp.numLayers;
-  libPick("Whoosh");
+  libPick("Sweep down");
   button("Add to timeline").onClick();
   var wl = comp.layer(1);
   check("sound placed at the playhead from the library", comp.numLayers === ab + 1 && wl.comment === "flow:sfx" && near(wl.startTime, 3, 0.02), F.status());
@@ -473,10 +487,10 @@ function pump(n) {
 
   // favourites and search
   libGo("Audio");
-  libPick("Whoosh");
+  libPick("Sweep down");
   button("★ Favorite").onClick();
   libGo("Favorites ★");
-  check("favourite shows in Favorites", libCount() === 1 && /Whoosh/.test(F.libShown()[0].name), libCount());
+  check("favourite shows in Favorites", libCount() === 1 && /Sweep down/.test(F.libShown()[0].name), libCount());
   button("★ Favorite").onClick();
   check("un-favourite empties it", libCount() === 0, libCount());
   libGo("Effects");

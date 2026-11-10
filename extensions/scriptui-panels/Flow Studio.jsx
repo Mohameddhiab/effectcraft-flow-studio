@@ -2034,8 +2034,9 @@ function catRemoveItem(item, comp, layers) {
       "saveAs": "Enregistrer sous", "karaokeMode": "Karaok\u00e9",
       "karaokeOff": "D\u00e9sactiv\u00e9 (Classique)", "karaokeHormozi": "Hormozi (Pop jaune)",
       "karaokeWordPop": "Word Pop (\u00c9chelle)", "karaokeHighlight": "Karaoke (Surlignage)",
-      "sensNormal": "Normale (Recommand\u00e9)", "sensStrict": "Stricte (Garder plus de voix)",
-      "sensAggressive": "Agressive (Couper un maximum)", "modeRipple": "Couper et raccorder (Ripple)",
+      "modeRipple": "Couper et raccorder (Ripple)",
+      "pack de sons": "Pack de sons", "integres (d'origine)": "Int\u00e9gr\u00e9s (d'origine)",
+      "mon dossier": "Mon dossier",
       "modeMarkers": "Marqueurs seulement", "engineAdaptive": "Adaptatif (pi\u00e8ces bruyantes)",
       "engineFixed": "Seuil fixe", "prevPage": "\u2039 Pr\u00e9c\u00e9dent", "nextPage": "Suivant \u203a",
       "preview": "Aper\u00e7u", "waveform": "Aper\u00e7u de la forme d'onde",
@@ -2078,8 +2079,9 @@ function catRemoveItem(item, comp, layers) {
       "saveAs": "Save as", "karaokeMode": "Karaoke mode",
       "karaokeOff": "Off (Classic)", "karaokeHormozi": "Hormozi (yellow pop)",
       "karaokeWordPop": "Word Pop (scale)", "karaokeHighlight": "Karaoke (highlight)",
-      "sensNormal": "Normal (recommended)", "sensStrict": "Strict (keep more speech)",
-      "sensAggressive": "Aggressive (cut more)", "modeRipple": "Cut and ripple",
+      "modeRipple": "Cut and ripple",
+      "pack de sons": "Sound pack", "integres (d'origine)": "Built-in (original)",
+      "mon dossier": "My folder",
       "modeMarkers": "Markers only", "engineAdaptive": "Adaptive (noisy rooms)",
       "engineFixed": "Fixed threshold", "prevPage": "\u2039 Previous", "nextPage": "Next \u203a",
       "preview": "Preview", "waveform": "Waveform preview",
@@ -2127,8 +2129,10 @@ function catRemoveItem(item, comp, layers) {
       "saveAs": "\u062d\u0641\u0638 \u0628\u0627\u0633\u0645", "karaokeMode": "\u0643\u0627\u0631\u064a\u0648\u0643\u064a",
       "karaokeOff": "\u0645\u0639\u0637\u0644 (\u0643\u0644\u0627\u0633\u064a\u0643\u064a)", "karaokeHormozi": "\u0647\u0648\u0631\u0645\u0648\u0632\u064a (\u0623\u0635\u0641\u0631)",
       "karaokeWordPop": "\u0643\u0644\u0645\u0629 \u0645\u0646\u0628\u062b\u0642\u0629", "karaokeHighlight": "\u0643\u0627\u0631\u064a\u0648\u0643\u064a (\u062a\u0645\u064a\u064a\u0632)",
-      "sensNormal": "\u0639\u0627\u062f\u064a (\u0645\u0648\u0635\u0649 \u0628\u0647)", "sensStrict": "\u0635\u0627\u0631\u0645 (\u0627\u0644\u0627\u062d\u062a\u0641\u0627\u0638 \u0628\u0645\u0632\u064a\u062f \u0645\u0646 \u0627\u0644\u0635\u0648\u062a)",
-      "sensAggressive": "\u0642\u0648\u064a (\u0642\u0635 \u0623\u0643\u0628\u0631)", "modeRipple": "\u0642\u0635 \u0648\u0631\u0628\u0637",
+      "modeRipple": "\u0642\u0635 \u0648\u0631\u0628\u0637",
+      "pack de sons": "\u062d\u0632\u0645\u0629 \u0627\u0644\u0623\u0635\u0648\u0627\u062a",
+      "integres (d'origine)": "\u0627\u0644\u0645\u062f\u0645\u062c\u0629 (\u0627\u0644\u0623\u0635\u0644\u064a\u0629)",
+      "mon dossier": "\u0645\u062c\u0644\u062f\u064a",
       "modeMarkers": "\u0639\u0644\u0627\u0645\u0627\u062a \u0641\u0642\u0637", "engineAdaptive": "\u062a\u0643\u064a\u0641\u064a (\u063a\u0631\u0641 \u0635\u0627\u062e\u0628\u0629)",
       "engineFixed": "\u0639\u062a\u0628\u0629 \u062b\u0627\u0628\u062a\u0629", "prevPage": "\u2039 \u0627\u0644\u0633\u0627\u0628\u0642",
       "nextPage": "\u0627\u0644\u062a\u0627\u0644\u064a \u203a", "preview": "\u0645\u0639\u0627\u064a\u0646\u0629",
@@ -3243,13 +3247,26 @@ function catRemoveItem(item, comp, layers) {
     g.strokePath(penT);
   };
 
-  var silSens = dropdown(silenceTab, "Sensibilité", ["Normale (Recommandé)", "Stricte (Garder plus de voix)", "Agressive (Couper un maximum)"], 0);
-  silSens.onChange = function () {
-    if (silSens.selection.index === 0) { silDb.set(-35); silMin.set(0.4); }
-    else if (silSens.selection.index === 1) { silDb.set(-42); silMin.set(0.6); }
-    else { silDb.set(-28); silMin.set(0.25); }
-    save("silSens", silSens.selection.index);
-  };
+  // Named detection profiles (not a model): each one sets the detector and the timings.
+  var SIL_PROFILES = [
+    { name: "Standard", engine: 0, db: -35, min: 0.4, before: 0.1, after: 0.1 },
+    { name: "Podcast", engine: 0, db: -33, min: 0.35, before: 0.08, after: 0.08 },
+    { name: "Interview", engine: 0, db: -38, min: 0.6, before: 0.15, after: 0.15 },
+    { name: "Musique", engine: 1, db: -45, min: 1.0, before: 0.05, after: 0.2 }
+  ];
+  var silProfileNames = [];
+  for (var sp = 0; sp < SIL_PROFILES.length; sp++) silProfileNames.push(SIL_PROFILES[sp].name);
+  var silProfile = dropdown(silenceTab, "Profil", silProfileNames, 0);
+  function silApplyProfile(index) {
+    var p = SIL_PROFILES[clamp(index, 0, SIL_PROFILES.length - 1)];
+    silEngine.selection = p.engine;
+    silDb.set(p.db);
+    silMin.set(p.min);
+    silPadBefore.set(p.before);
+    silPadAfter.set(p.after);
+    save("silProfile", index);
+  }
+  silProfile.onChange = function () { silApplyProfile(silProfile.selection.index); };
 
   var silMode = dropdown(silenceTab, "Action", ["Couper et raccorder (Ripple)", "Marqueurs seulement"], 0);
   silMode.onChange = function () { save("silMode", silMode.selection.index); };
@@ -3279,8 +3296,8 @@ function catRemoveItem(item, comp, layers) {
   var silPadAfter = slider(silAdvPanel, "Marge après (s)", 0.1, 0, 1, function (v) { save("silPadAfter", v); });
 
   (function restoreSilence() {
-    var sens = parseInt(setting("silSens", "0"), 10);
-    if (sens >= 0 && sens < 3) silSens.selection = sens;
+    var prof = parseInt(setting("silProfile", "0"), 10);
+    if (prof >= 0 && prof < SIL_PROFILES.length) silProfile.selection = prof;
     var mode = parseInt(setting("silMode", "0"), 10);
     if (mode >= 0 && mode < 2) silMode.selection = mode;
     silKeep.value = setting("silKeep", "1") !== "0";
@@ -5032,7 +5049,7 @@ function catRemoveItem(item, comp, layers) {
   var sfxImported = {};
   soundsTab.orientation = "column";
   soundsTab.alignChildren = ["fill", "top"];
-  var sfxSource = dropdown(soundsTab, "Source", ["Pack", "Intégrés (d'origine)", "Mon dossier"], 0);
+  var sfxSource = dropdown(soundsTab, "Source", ["Pack de sons", "Intégrés (d'origine)", "Mon dossier"], 0);
   var sfxFolder = field(soundsTab, "Mon dossier", setting("sfxFolder", ""), 170);
   var sfxScan = addBtn(soundsTab, "Scanner mon dossier", "Scan my folder", false);
   var sfxList = soundsTab.add("listbox", undefined, []);
@@ -5079,12 +5096,15 @@ function catRemoveItem(item, comp, layers) {
     sfxOnSelect();
   }
 
-  function sfxLoadPack() {
+  function sfxLoadPack(quiet) {
     var r = helper({ op: "sfx.pack.list" });
-    if (!r.ok) return fail("Pack: " + r.error);
+    if (!r.ok) {
+      if (quiet) { sfxFill([]); return; }
+      return fail("Pack: " + r.error);
+    }
     if (r.missing) {
       sfxFill([]);
-      say("Pack introuvable: placez assets/sfx-pack (catalog.json + wav/) puis relancez le helper.");
+      if (!quiet) say("Pack introuvable: placez assets/sfx-pack (catalog.json + wav/) puis relancez le helper.");
       return;
     }
     var items = [];
@@ -5143,7 +5163,7 @@ function catRemoveItem(item, comp, layers) {
   }
 
   // Default source: the pack. Silent when the helper isn't running yet.
-  sfxLoadPack();
+  sfxLoadPack(true);
 
   function sfxFootage(path) {
     var cached = sfxImported[path];
@@ -6332,7 +6352,19 @@ catLibraryRelabel();
     lastPackPath: function () { return packPath.text; },
     lastPackJson: function () { return packBox.text; },
     sfxFolder: sfxFolder,
+    sfxSource: sfxSource,
     loadSounds: sfxLoadPack,
+    silenceParams: function () {
+      return {
+        profile: silProfile.selection ? silProfile.selection.index : 0,
+        engine: silEngine.selection ? silEngine.selection.index : 0,
+        thresholdDb: silDb.get(),
+        minSilence: silMin.get(),
+        padBefore: silPadBefore.get(),
+        padAfter: silPadAfter.get()
+      };
+    },
+    silenceProfiles: function () { return SIL_PROFILES.slice(); },
     textBuiltin: TEXT_BUILTIN,
     bgBuiltin: BG_BUILTIN,
     addTextAnimation: addTextAnimation,

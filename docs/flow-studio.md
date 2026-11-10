@@ -27,7 +27,7 @@ and opens on a short welcome screen the first time.
 | **Library** | Unified browser | 503 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
-| | Sounds | 20 original synthesised sound effects with instant playhead insertion and custom folder scanning. |
+| | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
 | **Animer** | Ease | 37 easing curves with an onDraw preview, applied to selected properties or intro animations. |
 | | Expressions | Searchable expression library with parameter sliders and a code view. |
 | | Text | 10 modular text animators, custom presets and JSON import/export. |
@@ -139,7 +139,8 @@ catalog entry; a pinned digest is then checked on every install.
 - **Silence** (`Montage ▸ Silence`): analyses the selected audio or video layer and draws its waveform
   with silent zones in red, speech in green and the threshold as an orange line. **Analyser les silences**
   fills the result, then **Couper les silences** either ripples the kept sections or only places markers.
-  Sensitivity, minimum silence, padding, detector and the advanced threshold are persisted.
+  Named profiles (**Standard**, **Podcast**, **Interview**, **Musique**) set the detector and timings;
+  minimum silence, padding, detector and threshold are persisted.
 - **Captions** (`Montage ▸ Captions`): **Générer depuis le calque** transcribes the selected layer with
   Whisper; **Importer un fichier de sous-titres** accepts `.srt` and `.vtt`; **Exporter SRT** and
   **Exporter ASS** write to the helper's exports folder. The style editor has a live swatch, font,
@@ -182,10 +183,11 @@ panel and are not duplicated into packs; user styles, text animations and backgr
 - **Effects**: 16 effects built from EffectCraft's own effects (Shake, Zoom Punch, Flash, Strobe, Glow Pop,
   Blur In/Out, Fade In/Out, Pixel Reveal, Glitch, Old Film, Teal & Orange, Heat Wave, Echo Trail, Vibrance Pop),
   with strength, duration, start (layer start / playhead / layer end) and easing. All named `Flow: …`.
-- **Sounds**: 20 original sound effects synthesised by `overlay/crates/flow/src/sfx.rs` (no samples, no licence needed),
-  written as WAV files into `<settings>/FlowStudio/sfx`. Add at the playhead or at the start of each selected
-  layer. Famous branded/meme sounds are other people's recordings and are not bundled: put the ones you own in
-  a folder and use **Scan my folder**.
+- **Sounds**: 84 original CC0 sound effects in `assets/sfx-pack` (synthesised by
+  `scripts/build_sfx_pack.py`; `sfx.pack.list` validates and serves them), each with 64 waveform peaks drawn in
+  the panel. The 20 effects synthesised by `overlay/crates/flow/src/sfx.rs` remain the fallback when the pack is
+  absent. Add at the playhead or at the start of each selected layer. Famous branded/meme sounds are other
+  people's recordings and are not bundled: put the ones you own in a folder and use **Scan my folder**.
 
 
 ## Command line
