@@ -48,7 +48,9 @@ and opens on a short welcome screen the first time.
 - **Responsive layout.** Rows, fields, sliders and grids use `alignment = ["fill", …]` with
   `preferredSize`/`minimumSize` floors; there are no fixed panel widths, only minimums. The Library grid
   is 3 rows × 2 columns and the caption-style grid is 4 × 2. A tabbed panel's preferred height follows the
-  tab it shows, and a docked panel's `fill` rows share the width the fixed ones leave.
+  tab it shows, and a docked panel's `fill` rows share the width the fixed ones leave. Below 400 pt the
+  header stacks and the tabs switch to short labels; below 360 pt the welcome actions stack. A dock can be
+  as narrow as the 298 pt EffectCraft gives it, so that width is the tested floor, not 320.
 - **Status and progress.** The status line uses green for success, orange for warnings and red for
   failures; helper jobs draw a real progress bar driven by the helper's progress messages.
 - **Theme and language.** The header has a language menu (`Français`, `English`, `العربية`) and a theme
@@ -230,7 +232,7 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   pane-resize redraw (**128 tests**). The app-level changes and these tests live in the development
   fork; this repository ships the panel, the overlay and the smoke suite.
 - `flow-install/tests/smoke-test.jsx` drives the real panel in EffectCraft through
-  `effectcraft-cli`: **217 checks**, including the welcome screen, five top tabs, one primary action
+  `effectcraft-cli`: **227 checks**, including the welcome screen, five top tabs, one primary action
   per leaf screen, English/Arabic switching, dark/light themes, library grid and paging, eight style
   thumbnails, pack file round-trip, ASS karaoke tags, beat markers, AE scripts, Arabic RTL captions,
   the 84-sound pack, the silence profiles, the Whisper check and the UI widget catalogue.

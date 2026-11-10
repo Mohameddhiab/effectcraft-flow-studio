@@ -15,7 +15,8 @@
 - Design: `design/tokens.json` and `docs/design-system.md` publish the colours, radii, spacing, type sizes
   and glass recipe the panel mirrors; the smoke suite pins them so a silent drift fails. The light theme's
   success colour now matches the design (`#44d7a2`).
-- Smoke suite: 217 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens).
+- Smoke suite: 227 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens,
+  narrow-dock layout at 298 / 320 / 400 / 460 pt).
 
 ## 3.0.0 — 2026-11-08
 

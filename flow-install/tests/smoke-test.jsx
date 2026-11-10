@@ -752,7 +752,28 @@ function pump(n) {
   check("v3 one primary action per screen", primaryProblems.length === 0, primaryProblems.join(", "));
   check("v3 welcome has one primary action", all(F.welcome, "button").filter(function (b) { return b.isPrimary === true; }).length === 1, "welcome primaries");
 
-  // 8. Arabic captions are right-justified and placed against the right edge.
+  // 8. Narrow docks: 298 pt is the pane EffectCraft really gives the panel; 320, 400 and 460 are
+  // the design breakpoints. The header stacks, the welcome buttons stack and tab labels shorten.
+  var narrowAt298 = F.layout(298);
+  check("v3 298 pt layout applies", narrowAt298 === true, narrowAt298);
+  check("v3 298 pt header stacks", F.headerMode() === "column", F.headerMode());
+  check("v3 298 pt welcome buttons stack", F.welcomeButtonsMode() === "column", F.welcomeButtonsMode());
+  check("v3 298 pt tab strip fits", F.tabStripWidth() <= 298 - 16, F.tabStripWidth());
+  var welcomeLines = String(F.welcomeBody.text).split("\n");
+  var widestLine = 0;
+  for (var wl = 0; wl < welcomeLines.length; wl++) widestLine = Math.max(widestLine, welcomeLines[wl].length);
+  check("v3 298 pt welcome copy wraps", widestLine * 7 + 4 <= 298 - 40, widestLine);
+  F.layout(320);
+  check("v3 320 pt tab strip fits", F.tabStripWidth() <= 320 - 16, F.tabStripWidth());
+  F.layout(400);
+  check("v3 400 pt uses full tab labels", F.mainTabs.children[0].text === "Library" && F.mainTabs.children[4].text === "Settings", F.mainTabs.children[0].text + "/" + F.mainTabs.children[4].text);
+  check("v3 400 pt header is one row", F.headerMode() === "row" && F.welcomeButtonsMode() === "row", F.headerMode() + "/" + F.welcomeButtonsMode());
+  F.layout(460);
+  check("v3 460 pt keeps full tab labels", F.mainTabs.children[0].text === "Library" && F.tabStripWidth() <= 460 - 16, F.tabStripWidth());
+  F.layout(1200);
+  check("v3 wide panel restores full labels", F.mainTabs.children[0].text === "Library" && F.headerMode() === "row", F.mainTabs.children[0].text + "/" + F.headerMode());
+
+  // 9. Arabic captions are right-justified and placed against the right edge.
   var karoMode = all(F.ui, "dropdownlist").filter(function (d) { return d._en === "Karaoke Mode"; })[0];
   if (karoMode) karoMode.selection = 0;
   F.setCaptions([{ start: 1, end: 2.5, words: [

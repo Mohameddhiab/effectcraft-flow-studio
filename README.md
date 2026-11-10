@@ -134,11 +134,12 @@ inside its `FlowStudio` folder and never listens on a public interface.
 
 ## Tests
 
-- **217-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
+- **227-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
   top tabs, one primary action per leaf screen, English/Arabic switching, dark/light themes, library
   grid and paging, eight style thumbnails, pack round-trip, ASS karaoke tags, beat markers, AE
-  scripts, Arabic RTL captions, the 84-sound pack, silence profiles, the Whisper check and the UI
-  widget catalogue. It passed **217 / 0** in the development fork.
+  scripts, Arabic RTL captions, the 84-sound pack, silence profiles, the Whisper check, the UI
+  widget catalogue and the narrow-dock layout (298 / 320 / 400 / 460 pt). It passed **227 / 0** in
+  the development fork.
 - **`cargo test -p effectcraft-flow`** covers the pure Rust core (47 tests); the helper and ScriptUI
   resize regression tests are part of the development fork.
 - The screenshots in `docs/images` are original offscreen renders of EffectCraft/Flow Studio with an

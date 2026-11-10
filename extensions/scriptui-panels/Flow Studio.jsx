@@ -2052,6 +2052,8 @@ function catRemoveItem(item, comp, layers) {
     fr: {
       "library": "Biblioth\u00e8que", "montage": "Montage", "animer": "Animer", "look": "Look",
       "settings": "R\u00e9glages", "silence": "Silence", "captions": "Sous-titres", "sounds": "Sons",
+      "tab.libraryShort": "Bib", "tab.montageShort": "Montage", "tab.animerShort": "Animer",
+      "tab.lookShort": "Look", "tab.settingsShort": "R\u00e9gl.",
       "ease": "Courbes", "expressions": "Expressions", "text": "Texte", "background": "Fond",
       "effects": "Effets", "stroke": "Contour", "models": "Mod\u00e8les", "helper": "Aide & connexion",
       "pack": "Pack de presets", "language": "Langue", "theme": "Th\u00e8me",
@@ -2087,6 +2089,8 @@ function catRemoveItem(item, comp, layers) {
     en: {
       "library": "Library", "montage": "Montage", "animer": "Animate", "look": "Look",
       "settings": "Settings", "silence": "Silence", "captions": "Captions", "sounds": "Sounds",
+      "tab.libraryShort": "Lib", "tab.montageShort": "Montage", "tab.animerShort": "Anim",
+      "tab.lookShort": "Look", "tab.settingsShort": "Prefs",
       "ease": "Ease", "expressions": "Expressions", "text": "Text", "background": "Background",
       "effects": "Effects", "stroke": "Stroke", "models": "Models", "helper": "Helper & setup",
       "pack": "Preset pack", "language": "Language", "theme": "Theme",
@@ -2125,6 +2129,9 @@ function catRemoveItem(item, comp, layers) {
       "animer": "\u062a\u062d\u0631\u064a\u0643", "look": "\u0627\u0644\u0645\u0638\u0647\u0631",
       "settings": "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a", "silence": "\u0627\u0644\u0635\u0645\u062a",
       "captions": "\u0627\u0644\u062a\u0631\u062c\u0645\u0627\u062a", "sounds": "\u0627\u0644\u0623\u0635\u0648\u0627\u062a",
+      "tab.libraryShort": "\u0645\u0643\u062a\u0628\u0629", "tab.montageShort": "\u0645\u0648\u0646\u062a\u0627\u062c",
+      "tab.animerShort": "\u062a\u062d\u0631\u064a\u0643", "tab.lookShort": "\u0645\u0638\u0647\u0631",
+      "tab.settingsShort": "\u0625\u0639\u062f\u0627\u062f",
       "ease": "\u0627\u0644\u0645\u0646\u062d\u0646\u064a\u0627\u062a", "expressions": "\u0627\u0644\u062a\u0639\u0628\u064a\u0631\u0627\u062a",
       "text": "\u0627\u0644\u0646\u0635", "background": "\u0627\u0644\u062e\u0644\u0641\u064a\u0629",
       "effects": "\u0627\u0644\u062a\u0623\u062b\u064a\u0631\u0627\u062a", "stroke": "\u0627\u0644\u062d\u062f\u0648\u062f",
@@ -2722,7 +2729,13 @@ function catRemoveItem(item, comp, layers) {
     g.fillPath(colorBrush(g, C.border));
   };
 
-  var brandMark = header.add("panel");
+  var headerBrandRow = header.add("group");
+  headerBrandRow.orientation = "row";
+  headerBrandRow.alignChildren = ["left", "center"];
+  headerBrandRow.alignment = ["fill", "center"];
+  headerBrandRow.spacing = 8;
+
+  var brandMark = headerBrandRow.add("panel");
   brandMark.preferredSize = [30, 30];
   brandMark.minimumSize = [30, 30];
   brandMark.alignment = ["left", "center"];
@@ -2740,7 +2753,7 @@ function catRemoveItem(item, comp, layers) {
     g.drawString("F", colorPen(g, C.bg, 1), Math.floor(w / 2) - 3, Math.floor(h / 2) - 7);
   };
 
-  var brandBox = header.add("group");
+  var brandBox = headerBrandRow.add("group");
   brandBox.orientation = "column";
   brandBox.alignChildren = ["left", "center"];
   brandBox.spacing = 1;
@@ -2752,13 +2765,21 @@ function catRemoveItem(item, comp, layers) {
     brandSub.graphics.foregroundColor = colorPen(brandSub.graphics, palette().muted, 1);
   } catch (eSub) {}
 
-  var headerSpacer = header.add("statictext", undefined, "");
+  var headerSpacer = headerBrandRow.add("statictext", undefined, "");
   headerSpacer.alignment = ["fill", "center"];
-  var langDrop = header.add("dropdownlist", undefined, ["Fran\u00e7ais", "English", "\u0627\u0644\u0639\u0631\u0628\u064a\u0629"]);
+
+  // Language and theme live in their own row so the header can stack them under the brand when
+  // the dock is narrow (ScriptUI has no media queries; `applyResponsive` below does the switch).
+  var headerTools = header.add("group");
+  headerTools.orientation = "row";
+  headerTools.alignChildren = ["right", "center"];
+  headerTools.alignment = ["right", "center"];
+  headerTools.spacing = 6;
+  var langDrop = headerTools.add("dropdownlist", undefined, ["Fran\u00e7ais", "English", "\u0627\u0644\u0639\u0631\u0628\u064a\u0629"]);
   langDrop.selection = Math.max(0, LANGS.indexOf(LANG));
   langDrop.minimumSize = [92, -1];
   langDrop.alignment = ["right", "center"];
-  var themeDrop = header.add("dropdownlist", undefined, ["Auto", "Sombre", "Clair"]);
+  var themeDrop = headerTools.add("dropdownlist", undefined, ["Auto", "Sombre", "Clair"]);
   themeDrop.selection = THEME === "dark" ? 1 : THEME === "light" ? 2 : 0;
   themeDrop.minimumSize = [80, -1];
   themeDrop.alignment = ["right", "center"];
@@ -2790,6 +2811,61 @@ function catRemoveItem(item, comp, layers) {
   welcomeSkip.alignment = ["fill", "center"];
   var welcomeShown = setting("welcomeDone", "0") !== "1";
   welcome.visible = welcomeShown;
+
+  // ScriptUI static text does not wrap by itself in EffectCraft: the longest line just runs under
+  // the panel edge. Break long strings at word boundaries for the current width instead, so the
+  // welcome copy and helper errors stay readable at the 298 pt the dock gives this panel.
+  var welcomeStatusBase = "";
+  var welcomeStatusColor = null;
+
+  function wrapLines(text, width, charW) {
+    var max = Math.max(12, Math.floor(width / (charW || 7)));
+    var out = [];
+    var paras = String(text).split(/\r\n|\r|\n/);
+    for (var p = 0; p < paras.length; p++) {
+      var words = paras[p].split(/\s+/);
+      var line = "";
+      for (var i = 0; i < words.length; i++) {
+        var word = words[i];
+        if (!word) continue;
+        // A path or a URL has no spaces: cut it rather than let it run off the panel.
+        while (word.length > max) {
+          if (line) { out.push(line); line = ""; }
+          out.push(word.slice(0, max));
+          word = word.slice(max);
+        }
+        if (!word) continue;
+        var next = line ? line + " " + word : word;
+        if (next.length <= max || !line) line = next;
+        else { out.push(line); line = word; }
+      }
+      out.push(line);
+    }
+    return out.join("\n");
+  }
+
+  // `width` is the width being laid out for; without one, read the panel's real size. A test or a
+  // host that resizes before the panel has a size passes it explicitly.
+  function welcomeTextWidth(width) {
+    var w = width > 0 ? width : panelWidth();
+    return Math.max(160, (w || 360) - 40);
+  }
+
+  function setWelcomeStatus(text, rgba) {
+    welcomeStatusBase = String(text || "");
+    welcomeStatusColor = rgba || null;
+    welcomeStatus.text = welcomeStatusBase ? wrapLines(welcomeStatusBase, welcomeTextWidth()) : "";
+    if (welcomeStatusColor) setStatusColor(welcomeStatus, welcomeStatusColor);
+  }
+
+  function refreshWelcomeText(width) {
+    var w = welcomeTextWidth(width);
+    welcomeBody.text = wrapLines(tr("welcome.body"), w);
+    if (welcomeStatusBase) {
+      welcomeStatus.text = wrapLines(welcomeStatusBase, w);
+      if (welcomeStatusColor) setStatusColor(welcomeStatus, welcomeStatusColor);
+    }
+  }
 
   // ------------------------------------------------------------------ tabbed navigation
   // Consolidated into 5 top-level categories: Library, Montage, Animer, Look, Réglages
@@ -2921,18 +2997,72 @@ function catRemoveItem(item, comp, layers) {
     try { ui.layout.layout(true); } catch (e) {}
   }
 
+  // The dock can be narrower than the 320 pt design minimum: EffectCraft gives this panel 298 pt.
+  // ScriptUI has no media queries, so the header stacks, the welcome buttons stack and the five
+  // tab labels switch to short forms (kept in STRINGS as `tab.*Short`) below the widths below.
+  var COMPACT_WIDTH = 400;
+  var NARROW_WIDTH = 360;
+  var headerCompact = null;
+  var buttonsNarrow = null;
+  var wrappedAt = 0;
+
+  function panelWidth() {
+    var sz = ui.size;
+    var w = sz && (sz.width !== undefined ? sz.width : sz[0]);
+    return w > 0 ? w : 0;
+  }
+
+  function setTabLabel(tab, fullKey, shortKey, short) {
+    tab._flowBase = short ? shortKey : fullKey;
+    tab.text = tr(tab._flowBase);
+  }
+
+  // Lay the chrome out for `width` (0 reads the panel's current size). Returns false before the
+  // host has given the panel a size, so a headless run never guesses.
+  function applyResponsive(width) {
+    var w = width > 0 ? width : panelWidth();
+    if (!(w > 0)) return false;
+    var compact = w < COMPACT_WIDTH;
+    var narrow = w < NARROW_WIDTH;
+    var changed = compact !== headerCompact || narrow !== buttonsNarrow;
+    if (changed) {
+      headerCompact = compact;
+      buttonsNarrow = narrow;
+      header.orientation = compact ? "column" : "row";
+      header.preferredSize = [-1, compact ? 68 : 54];
+      headerTools.alignment = compact ? ["fill", "center"] : ["right", "center"];
+      headerTools.alignChildren = ["right", "center"];
+      welcomeButtons.orientation = narrow ? "column" : "row";
+      setTabLabel(libraryTab, "library", "tab.libraryShort", compact);
+      setTabLabel(montageTab, "montage", "tab.montageShort", compact);
+      setTabLabel(animTab, "animer", "tab.animerShort", compact);
+      setTabLabel(lookTab, "look", "tab.lookShort", compact);
+      setTabLabel(settingsTab, "settings", "tab.settingsShort", compact);
+    }
+    if (Math.abs(w - wrappedAt) >= 8) {
+      wrappedAt = w;
+      refreshWelcomeText(w);
+    }
+    if (changed) {
+      try { ui.layout.layout(); } catch (e) {}
+    }
+    return true;
+  }
+
   // Hosts whose column layout uses each child's preferred height (EffectCraft before the shared
   // `fill` layout) would push the status line below the pane as soon as the panel is docked shorter
   // than its content. Detect that once, then pin the tabbed panel to the pane height so every host
   // shows the same full-height screen; a host that already shares the spare height is left alone.
-  var CHROME = 66; // margins (8 + 8) + header 22 + status row 16 + two 6 px gaps
+  var CHROME_WIDE = 98; // margins (8 + 8) + header 54 + status row 16 + two 6 px gaps
+  var CHROME_COMPACT = 112; // the same, with the two-row header (68)
   var heightPinned = false;
   ui.onResize = function () {
     var sz = ui.size;
     var w = sz && (sz.width !== undefined ? sz.width : sz[0]);
     var h = sz && (sz.height !== undefined ? sz.height : sz[1]);
     if (!(w > 0) || !(h > 0)) return;
-    var th = Math.max(1, h - CHROME);
+    applyResponsive(w);
+    var th = Math.max(1, h - (headerCompact ? CHROME_COMPACT : CHROME_WIDE));
     if (!heightPinned && tabs.bounds[3] <= th + 1) return;
     heightPinned = true;
     tabs.preferredSize = [-1, th];
@@ -2984,7 +3114,7 @@ function catRemoveItem(item, comp, layers) {
       welcomeCheck._flowRetry = false;
       welcomeCheck.text = welcomeRetryLabel();
       welcomeSkip.text = tr("welcome.skip");
-      welcomeStatus.text = "";
+      setWelcomeStatus("");
     }
     try { ui.layout.layout(true); } catch (e) {}
   }
@@ -2992,16 +3122,14 @@ function catRemoveItem(item, comp, layers) {
   welcomeCheck.onClick = function () {
     var r = helper({ op: "ping" });
     if (r && r.ok) {
-      welcomeStatus.text = tr("welcome.ok");
-      setStatusColor(welcomeStatus, [0.15, 0.75, 0.35, 1]);
+      setWelcomeStatus(tr("welcome.ok"), [0.15, 0.75, 0.35, 1]);
       save("welcomeDone", "1");
       setWelcome(false);
       say(tr("welcome.ok"));
     } else {
       welcomeCheck._flowRetry = true;
       welcomeCheck.text = welcomeRetryLabel();
-      welcomeStatus.text = tr("welcome.fail") + (r && r.error ? "\n" + r.error : "");
-      setStatusColor(welcomeStatus, [0.95, 0.65, 0.15, 1]);
+      setWelcomeStatus(tr("welcome.fail") + (r && r.error ? "\n" + r.error : ""), [0.95, 0.65, 0.15, 1]);
       redrawAll();
     }
   };
@@ -3018,7 +3146,8 @@ function catRemoveItem(item, comp, layers) {
     welcomeCheck.text = welcomeRetryLabel();
     welcomeSkip.text = tr("welcome.skip");
     welcomeTitle.text = tr("welcome.title");
-    welcomeBody.text = tr("welcome.body");
+    refreshWelcomeText();
+    applyResponsive(0);
     if (/^(●|▲)/.test(status.text)) status.text = status.text.charAt(0) + " " + tr("status.ready");
     redrawAll();
   }
@@ -6493,14 +6622,17 @@ catLibraryRelabel();
   welcomeSkip._flowBase = "welcome.skip";
   localizeUI(ui);
   welcomeTitle.text = tr("welcome.title");
-  welcomeBody.text = tr("welcome.body");
+  refreshWelcomeText();
   welcomeCheck.text = welcomeRetryLabel();
   welcomeSkip.text = tr("welcome.skip");
+  applyResponsive(0);
   redrawAll();
 
   if (ui instanceof Window) {
     ui.show();
+    applyResponsive(0);
   } else {
+    applyResponsive(0);
     ui.layout.layout(true);
   }
   // A small handle for other scripts and for tests.
@@ -6515,6 +6647,19 @@ catLibraryRelabel();
     propKind: propKind,
     poll: poll,
     status: function () { return status.text; },
+    layout: applyResponsive,
+    panelWidth: panelWidth,
+    headerMode: function () { return header.orientation; },
+    welcomeButtonsMode: function () { return welcomeButtons.orientation; },
+    welcomeBody: welcomeBody,
+    tabStripWidth: function () {
+      var total = 0;
+      for (var i = 0; i < tabs.children.length; i++) {
+        if (!tabs.children[i].visible) continue;
+        total += Math.max(48, String(tabs.children[i].text).length * 7 + 20);
+      }
+      return total;
+    },
     fx: FX,
     transitions: TRANSITIONS,
     libItems: libItems,

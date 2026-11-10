@@ -61,6 +61,31 @@ same token with alpha 1) if a host ignores brush alpha.
   nominal size.
 - Widths: `320 / 400 / 460` px, `460` being the design's `min(100vw, 460px)`.
 
+## Responsive layout
+
+ScriptUI has no media queries, so `applyResponsive(width)` in the panel does the reflow and the
+host's `onResize` calls it with the pane width. The smoke suite drives the same function directly.
+
+| Width | What changes |
+| --- | --- |
+| `< 360 pt` | welcome actions stack in one column |
+| `< 400 pt` | header stacks the language/theme row under the brand; tabs use short labels |
+| `>= 400 pt` | one-row header, full tab labels |
+
+- **298 pt works too.** That is the width EffectCraft actually gives a docked panel at its default
+  split, which is below the 320 pt design minimum. At 298 pt the header is two rows, the welcome
+  buttons are stacked and the tab strip (`Bib / Montage / Animer / Look / R\u00e9gl.` in French,
+  `Lib / Montage / Anim / Look / Prefs` in English, short Arabic forms) must fit in `width - 16`.
+- **Tab labels are data, not literals.** Short forms live in `STRINGS` as `tab.*Short` for every
+  language, so switching language while narrow keeps the short labels and switching back restores
+  the full ones.
+- **Static text does not wrap** in EffectCraft's ScriptUI. The welcome copy and helper errors are
+  broken at word boundaries by `wrapLines(text, width)`; a single long token (a path, a URL) is cut
+  instead of running under the panel edge. Re-wrapping happens when the width moves by 8 pt or more.
+- **The height budget moves with the header.** `CHROME_WIDE` (98) counts the 54 pt one-row header;
+  `CHROME_COMPACT` (112) counts the 68 pt stacked one, so the tabbed panel keeps the rest of the
+  pane in both modes.
+
 ## Layout and screens
 
 - Five top tabs (Library, Montage, Animer, Look, Réglages) and, inside Montage, a segmented
@@ -92,7 +117,7 @@ same token with alpha 1) if a host ignores brush alpha.
 | Inter / IBM Plex Sans Arabic everywhere | host UI font |
 | hover states, 150 ms transitions | no hover on native buttons; `onDraw` states only |
 | PNG thumbnails at `@2x` | generated `onDraw` miniatures |
-| 460 px fixed layout | 320 / 400 / 460 px, reflowing |
+| 460 px fixed layout | 320 / 400 / 460 px design widths, plus the 298 pt dock, reflowing |
 | radial ambient glow behind the panel | flat screen background |
 | Figma Make mock application | reference only; not shipped, not executed |
 
