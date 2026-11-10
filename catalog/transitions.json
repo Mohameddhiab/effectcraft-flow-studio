@@ -12,7 +12,7 @@
     "fade",
     "dissolve"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "fade"
@@ -28,7 +28,7 @@
     "fade",
     "black"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "dip",
@@ -46,7 +46,7 @@
     "fade",
     "white"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "dip",
@@ -64,7 +64,7 @@
     "fade",
     "color"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "dip",
@@ -83,7 +83,7 @@
     "fade",
     "additive"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "fade"
@@ -103,7 +103,7 @@
     "fade",
     "film"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "fade"
@@ -124,7 +124,7 @@
     "fade",
     "blur"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "fade"
@@ -144,7 +144,7 @@
     "fade",
     "luma"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "levels",
@@ -164,7 +164,7 @@
     "slide",
     "left"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -182,7 +182,7 @@
     "slide",
     "right"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -200,7 +200,7 @@
     "slide",
     "up"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -218,7 +218,7 @@
     "slide",
     "down"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -236,7 +236,7 @@
     "push",
     "left"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "push",
@@ -254,7 +254,7 @@
     "push",
     "right"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "push",
@@ -272,7 +272,7 @@
     "push",
     "up"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "push",
@@ -290,7 +290,7 @@
     "push",
     "down"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "push",
@@ -308,7 +308,7 @@
     "whip",
     "left"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -331,7 +331,7 @@
     "whip",
     "right"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -354,7 +354,7 @@
     "whip",
     "up"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -377,7 +377,7 @@
     "whip",
     "down"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "slide",
@@ -400,7 +400,7 @@
     "spin",
     "rotate"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "spin",
@@ -418,7 +418,7 @@
     "zoom",
     "in"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "zoom",
@@ -435,7 +435,7 @@
     "zoom",
     "out"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "zoom",
@@ -452,7 +452,7 @@
     "zoom",
     "through"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "zoomthrough"
@@ -468,7 +468,7 @@
     "dolly",
     "zoom"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "dolly"
@@ -485,17 +485,12 @@
     "roll",
     "move"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "spin",
      "angle": -90,
      "scale": 100
-    },
-    {
-     "op": "offset",
-     "x": 1,
-     "y": 0
     }
    ]
   },
@@ -508,7 +503,7 @@
     "swing",
     "rotate"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "swing",
@@ -525,7 +520,7 @@
     "cube",
     "3d"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "scaleWidth",
@@ -547,7 +542,7 @@
     "page",
     "peel"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wipe",
@@ -571,7 +566,7 @@
     "iris",
     "circle"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "iris",
@@ -589,7 +584,7 @@
     "iris",
     "box"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "iris",
@@ -607,7 +602,7 @@
     "iris",
     "diamond"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "iris",
@@ -625,7 +620,7 @@
     "clock",
     "wipe"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "radial",
@@ -642,7 +637,7 @@
     "radial",
     "wipe"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "radial",
@@ -659,7 +654,7 @@
     "barn",
     "doors"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wipe",
@@ -678,7 +673,7 @@
     "barn",
     "doors"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wipe",
@@ -697,7 +692,7 @@
     "split",
     "horizontal"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wipe",
@@ -715,7 +710,7 @@
     "split",
     "vertical"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wipe",
@@ -733,7 +728,7 @@
     "blinds",
     "horizontal"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "venetian",
@@ -751,7 +746,7 @@
     "blinds",
     "vertical"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "venetian",
@@ -769,7 +764,7 @@
     "checker",
     "blocks"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "mosaic",
@@ -790,7 +785,7 @@
     "venetian",
     "blinds"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "venetian",
@@ -808,7 +803,7 @@
     "glitch",
     "rgb"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "glitch",
@@ -826,7 +821,7 @@
     "rgb",
     "split"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "rgbsplit",
@@ -848,7 +843,7 @@
     "flash",
     "white"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "flash",
@@ -865,7 +860,7 @@
     "light",
     "leak"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "leak",
@@ -886,7 +881,7 @@
     "film",
     "burn"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "burn",
@@ -906,7 +901,7 @@
     "pixelate",
     "blocks"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "mosaic",
@@ -926,7 +921,7 @@
     "mosaic",
     "tile"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "mosaic",
@@ -946,7 +941,7 @@
     "ripple",
     "wave"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "ripple",
@@ -966,7 +961,7 @@
     "wave",
     "warp"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "wave",
@@ -986,7 +981,7 @@
     "shake",
     "cut"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "shake",
@@ -1007,7 +1002,7 @@
     "strobe",
     "flash"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "strobe",
@@ -1028,7 +1023,7 @@
     "luma",
     "wipe"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "levels",
@@ -1048,7 +1043,7 @@
     "smear",
     "motion"
    ],
-   "duration": 1.0,
+   "duration": 1,
    "ops": [
     {
      "op": "smear",

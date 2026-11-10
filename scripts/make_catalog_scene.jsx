@@ -23,6 +23,12 @@
       var s = inner.layers.addSolid(colors[i], "Quadrant " + (i + 1), w, h, 1, 4);
       s.transform.position.setValue([comp.width / 2 + (i % 2 ? w / 2 : -w / 2), comp.height / 2 + (i < 2 ? -h / 2 : h / 2)]);
     }
+    // High-frequency detail (text) so a scale, rotation or offset visibly changes the frame.
+    var mark = inner.layers.addText(label || "FLOW");
+    try {
+      mark.transform.position.setValue([comp.width / 2, comp.height / 2]);
+      mark.transform.scale.setValue([260, 260]);
+    } catch (e) {}
     var layer = comp.layers.add(inner);
     layer.name = label || "Plate";
     return layer;

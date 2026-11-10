@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "total": 528,
+ "total": 525,
  "counts": {
   "titles": 60,
   "widgets": 25,
@@ -11,6 +11,6 @@
   "palettes": 30,
   "captions": 34,
   "sfx": 84,
-  "tools": 24
+  "tools": 21
  }
 }

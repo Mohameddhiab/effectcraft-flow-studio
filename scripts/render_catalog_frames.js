@@ -14,6 +14,14 @@ if (!fs.existsSync(project)) {
   process.exit(1);
 }
 const text = fs.readFileSync(project, 'utf8');
+const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+// Each effect is sampled inside its own window: a 0.01 s utility is gone by 0.1 s.
+const fxDuration = {};
+try {
+  for (const it of JSON.parse(fs.readFileSync(path.join(root, 'catalog', 'effects.json'), 'utf8')).items) {
+    fxDuration[slugify(it.name)] = Number(it.duration) || 0.6;
+  }
+} catch (e) { console.log('no effect durations:', e.message); }
 const names = [];
 const re = /"(TR|FX) ([a-z0-9-]+)"/g;
 let m;
@@ -27,13 +35,17 @@ function render(comp, time, out) {
 }
 
 let ok = 0, bad = 0;
-if (render('BASE plate', 0.1, path.join(outRoot, 'base.png'))) ok++; else bad++;
+if (render('BASE plate', 0.003, path.join(outRoot, 'base.png'))) ok++; else bad++;
 for (const name of names) {
   const kind = name.slice(0, 2), slug = name.slice(3);
   if (kind === 'TR') {
     for (const [pct, time] of [[0, 0], [50, 0.5], [100, 1]]) {
       if (render(name, time, path.join(outRoot, 'tr', `${slug}-${pct}.png`))) ok++; else bad++;
     }
-  } else if (render(name, 0.1, path.join(outRoot, 'fx', `${slug}.png`))) ok++; else bad++;
+  } else {
+    const d = fxDuration[slug] || 0.6;
+    const at = Math.max(0.002, Math.min(0.4, d * 0.3));
+    if (render(name, at, path.join(outRoot, 'fx', `${slug}.png`))) ok++; else bad++;
+  }
 }
 console.log(`rendered ${ok} frames, ${bad} failures, ${names.length} comps`);

@@ -508,7 +508,7 @@ function pump(n) {
 
   // ---- Catalogue UI widgets (original, data-driven parts)
   libGo("Catalogue");
-  check("catalogue total is 528", F.catalog().total === 528, F.catalog().total);
+  check("catalogue total is 525", F.catalog().total === 525, F.catalog().total);
   check("catalogue has 25 widgets", F.catalog().counts.widgets === 25, F.catalog().counts.widgets);
   F.catalogKind(F.catalog().kinds.indexOf("widgets") + 2);
   var wItems = F.libShown();

@@ -24,7 +24,7 @@ and opens on a short welcome screen the first time.
 
 | Category | Sub-tabs | What it does |
 |---|---|---|
-| **Library** | Unified browser | 528 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
+| **Library** | Unified browser | 525 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
 | | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
@@ -183,7 +183,7 @@ panel and are not duplicated into packs; user styles, text animations and backgr
   when nothing is selected); transitions go on the start/end of the selected layers (overlap two clips and put
   a transition on the top one); generators land at the playhead (gradients at the bottom); audio adds sounds at
   the playhead or sets levels (fade in/out, -12 dB, +6 dB, mute) on the selected layers.
-- **Catalogue** (`Library ▸ Catalogue`): 528 validated, data-driven presets (titles, 25 UI widgets, text
+- **Catalogue** (`Library ▸ Catalogue`): 525 validated, data-driven presets (titles, 25 UI widgets, text
   animations, transitions, effects, gradients, palettes, captions, sounds, tools) filtered by kind and family,
   searchable, with drawn thumbnails, recents and favourites. Applying a card is one undo step named `Flow: …`,
   every created layer is tagged `flow:cat:<id>`, and **Remove** deletes the whole preset at once. The UI widgets
@@ -263,7 +263,7 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
 * The Stroke tab was written against the plug-in's published parameters (Stroke Color, Thickness,
   Blur, Softness); it reports a clear error if the effect isn't installed.
 
-## Catalogue verification (528 presets, 2026-11-10)
+## Catalogue verification (525 presets, 2026-11-10)
 
 The catalogue is verified in two layers, both reproducible from the repository root.
 
@@ -276,29 +276,38 @@ The catalogue is verified in two layers, both reproducible from the repository r
 | Widgets | 25 | 25 |
 | Text animations | 96 | 96 |
 | Transitions | 55 | 55 |
-| Effects | 70 | 67 |
+| Effects | 70 | 70 |
 | Gradients | 50 | 50 |
 | Palettes | 30 | 30 |
 | Caption styles | 34 | 34 |
 | Sounds | 84 | 84 |
-| Tools | 24 | 21 |
-| **Total** | **528** | **525** |
+| Tools | 21 | 21 |
+| **Total** | **525** | **525** |
 
-The three remaining tools fail for real reasons, not test noise: **Beat Markers** only redirects to
-*Montage ▸ Rythme & Beat* in this version, and **Repeat on Selection** / **Clear Flow History** answer
-"not available in this version". They should either be implemented or hidden from the catalogue.
+The three tools that only redirected or answered "not available in this version" (**Beat Markers**,
+**Repeat on Selection**, **Clear Flow History**) were removed from `catalog/tools.json`; the catalogue
+is now 525 presets, the embedded panel and `catalog/index.json` agree, and the smoke suite pins 525.
 
 **2. Transitions and effects are rendered** (`scripts/make_catalog_scene.jsx`,
 `scripts/render_catalog_frames.js`, `scripts/check_catalog_frames.js`): 55 transition comps at
-0 / 50 / 100 % and 70 effect comps at 0.1 s, 236 PNGs, read back with a dependency-free Node/zlib
-decoder. **53/55 transitions** and **56/70 effects** pass the mechanical check (non-blank, changes
-across the cut, and, for effects, a measurable difference from a no-effect reference plate).
+0 / 50 / 100 % and 70 effect comps sampled inside each effect's own window (a 0.01 s utility is gone by
+0.1 s), 236 PNGs, read back with a dependency-free Node/zlib decoder. **55/55 transitions** and
+**65/70 effects** pass: non-blank, changes across the cut, and a measurable difference from a no-effect
+reference plate.
 
-The failures are visual gaps on a still test plate, not crashes: *Roll* and *Zoom In* show no frame
-difference at the sampled times, and 14 effects (duotone, sepia, freeze-frame, reverse clip, speed
-ramp, strobe, safe-zone overlay, zoom punch, pull out, slow push in, handheld, pixelate, RGB split,
-sharpen) are too subtle or intentionally static at 0.1 s to register. They need footage with motion
-before being judged; none of them throws or leaves the project in a bad state.
+Two real defects were fixed by these renders: **Roll** moved the incoming clip a full frame width off
+screen with an extra `offset` op (removed), and **Duotone**/**Sepia** set *Blend With Original* to
+100 %, which cancelled the effect (now 0). **Zoom In** and **RGB Split** were harness timing/threshold
+errors, not product defects.
+
+The five remaining effect checks are not observable on a still plate: **Freeze Frame**, **Reverse
+Clip**, **Speed Ramp** and **Echo Trail** need a moving source (time remapping of a still is a still),
+and **Safe Zone Overlay** creates guide layers that are intentionally excluded from renders. All five
+apply and remove cleanly in the coverage pass; they still need motion footage before a visual verdict.
+
+**Not verified:** real GUI screenshots. The offscreen `flow_studio_panel_snapshot` test mentioned in
+this document lives in the development fork and is not part of this repository, and this machine has no
+desktop session, so `docs/images/flow-studio-after-*.png` could not be regenerated.
 
 To reproduce:
 

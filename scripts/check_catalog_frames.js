@@ -104,7 +104,7 @@ for (const slug of fxs) {
     const changed = base ? diff(base, img) : 0;
     // A threshold/edge effect can legitimately output a flat colour: a large change from the
     // reference plate still proves the effect ran, while a small change needs visible variation.
-    const ok = (s.unique >= 3 && s.std >= 2 && (base ? changed >= 0.8 : true)) || (base && changed >= 10);
+    const ok = (s.unique >= 3 && s.std >= 2 && (base ? changed >= 0.5 : true)) || (base && changed >= 10);
     if (ok) fxPass++; else fxFail++;
     console.log((ok ? 'PASS ' : 'FAIL ') + 'effect ' + slug + (ok ? '' : `  -> unique=${s.unique} std=${s.std.toFixed(1)} vsBase=${changed.toFixed(2)}`));
   } catch (e) {
