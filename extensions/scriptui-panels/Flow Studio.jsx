@@ -2882,6 +2882,7 @@ function catRemoveItem(item, comp, layers) {
   tabs.visible = !welcomeShown;
 
   var libraryTab = tabs.add("tab", undefined, "Library");
+  libraryTab.margins = [0, 26, 0, 0];
   var montageTab = tabs.add("tab", undefined, "Montage");
   var animTab = tabs.add("tab", undefined, "Animer");
   var lookTab = tabs.add("tab", undefined, "Look");
@@ -6639,7 +6640,21 @@ catLibraryRelabel();
   redrawAll();
 
   if (ui instanceof Window) {
-    ui.show();
+    // Some hosts draw a tab's content from the tabbed panel's top, so its first row lands on the
+  // tab strip. Reserve that strip's height on every tab, nested panels included.
+  (function padTabContent(node) {
+    var kids = node.children || [];
+    for (var i = 0; i < kids.length; i++) {
+      var c = kids[i];
+      if (c.type === "tabbedpanel") {
+        for (var j = 0; j < c.children.length; j++) {
+          if (c.children[j].type === "tab") c.children[j].margins = [0, 26, 0, 0];
+        }
+      }
+      padTabContent(c);
+    }
+  })(ui);
+  ui.show();
     applyResponsive(0);
   } else {
     applyResponsive(0);

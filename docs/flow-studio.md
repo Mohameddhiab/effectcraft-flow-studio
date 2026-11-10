@@ -88,8 +88,9 @@ and opens on a short welcome screen the first time.
 | ![Flow Studio v1 Captions](images/flow-studio-before-captions.png) | ![Flow Studio v3 Captions](images/flow-studio-after-captions.png) |
 
 More v3 screens: [welcome](images/flow-studio-after-welcome.png) · [silence](images/flow-studio-after-silence.png) ·
-[preset pack](images/flow-studio-after-pack.png). The captures come from the ignored
-`flow_studio_panel_snapshot` test (offscreen, empty project).
+[preset pack](images/flow-studio-after-pack.png). The captures are offscreen control-channel renders from `scripts/panel_snapshot.js`
+(UI Scale 1:1, cropped to the panel tab bar). The harnais was added to this repository
+to reproduce the former development-fork kittest without needing a GUI session.
 
 ## Common AE Scripts (in Library ▸ AE Scripts)
 - **Auto Nulls**: Creates a Null object centered on selected layers and parents them to it.

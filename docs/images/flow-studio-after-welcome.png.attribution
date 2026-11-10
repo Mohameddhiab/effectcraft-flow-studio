@@ -5,4 +5,5 @@ source:       original work (offscreen kittest render, cropped to the Flow Studi
 license:      MIT OR Apache-2.0
 license-file:
 added:        2026-11-07 by Flow Studio contributors
-notes:        Screenshot of EffectCraft/Flow Studio only: the v3 welcome screen with exactly two actions (check the helper, continue without it). Empty generated project, no third-party media, fonts or logos.
+notes:        Offscreen control-channel render, cropped to the Flow Studio panel; UI Scale 1:1 for pixel-perfect geometry. No session, no mock.
+        Generated via scripts/panel_snapshot.js on 2026-11-10.

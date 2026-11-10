@@ -1,8 +1,10 @@
 asset:        flow-studio-after-silence.png
 title:        Flow Studio v3 panel, Silence screen
 author:       Flow Studio contributors
-source:       original work (offscreen kittest render, cropped to the Flow Studio panel)
+source:       offscreen control-channel render, cropped to the Flow Studio panel
+        Generated via scripts/panel_snapshot.js on 2026-11-10.
 license:      MIT OR Apache-2.0
 license-file:
 added:        2026-11-07 by Flow Studio contributors
-notes:        Screenshot of EffectCraft/Flow Studio only: the v3 Silence screen with waveform, threshold and detection controls. Empty generated project, no third-party media, fonts or logos.
+notes:        Offscreen control-channel render, cropped to the Flow Studio panel; UI Scale 1:1 for pixel-perfect geometry. No session, no mock.
+        Generated via scripts/panel_snapshot.js on 2026-11-10.
