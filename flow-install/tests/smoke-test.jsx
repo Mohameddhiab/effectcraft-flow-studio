@@ -506,6 +506,86 @@ function pump(n) {
   searchBox.text = "";
   searchBox.onChanging();
 
+  // ---- Catalogue UI widgets (original, data-driven parts)
+  libGo("Catalogue");
+  check("catalogue total is 528", F.catalog().total === 528, F.catalog().total);
+  check("catalogue has 25 widgets", F.catalog().counts.widgets === 25, F.catalog().counts.widgets);
+  F.catalogKind(F.catalog().kinds.indexOf("widgets") + 2);
+  var wItems = F.libShown();
+  check("widget kind lists the 25 widgets", wItems.length === 25 && wItems[0].sub.indexOf("UI widgets") === 0, wItems.length + " " + (wItems[0] && wItems[0].sub));
+  function widgetIndex(name) {
+    for (var q = 0; q < wItems.length; q++) if (wItems[q].name === name) return q;
+    return -1;
+  }
+  var liveIndex = widgetIndex("Live badge");
+  check("Live badge is in the widget kind", liveIndex >= 0, liveIndex);
+  if (liveIndex >= 0) {
+    deselectAll();
+    comp.time = 2;
+    var wb = comp.numLayers;
+    F.libSelect(liveIndex);
+    button("Add to timeline").onClick();
+    var wcount = 0, wpill = null, wdot = null, wtext = null;
+    for (var wj = 1; wj <= comp.numLayers; wj++) {
+      var wl2 = comp.layer(wj);
+      if (wl2.comment === "flow:cat:widget.badge.live") {
+        wcount++;
+        if (/Pill/.test(wl2.name)) wpill = wl2;
+        if (/Dot/.test(wl2.name)) wdot = wl2;
+        if (/Label/.test(wl2.name)) wtext = wl2;
+      }
+    }
+    check("widget applies its 3 parts as tagged layers", comp.numLayers === wb + 3 && wcount === 3, (comp.numLayers - wb) + " " + wcount + " " + F.status());
+    check("widget parts sit at the playhead", wpill && near(wpill.inPoint, 2, 0.02) && near(wpill.outPoint, 7, 0.05), wpill ? wpill.inPoint + ".." + wpill.outPoint : "no pill");
+    check("widget pill fades and slides in", wpill && near(wpill.transform.opacity.valueAtTime(2, false), 0, 0.5) && near(wpill.transform.opacity.valueAtTime(2.45, false), 100, 0.5) && wpill.transform.position.numKeys === 2, wpill ? wpill.transform.opacity.valueAtTime(2, false) + " " + wpill.transform.opacity.valueAtTime(2.45, false) : "no pill");
+    check("widget parts keep their offsets", wdot && near(wdot.transform.position.value[0], 902, 1) && near(wdot.transform.position.value[1], 540, 1), wdot ? JSON.stringify(wdot.transform.position.value) : "no dot");
+    check("widget text is a real text layer", wtext && wtext.property("Source Text").value.text === "LIVE", wtext ? wtext.property("Source Text").value.text : "no label");
+    var wremoved = F.catalogRemove(F.catalogById("widget.badge.live"), comp, []);
+    check("widget removal clears every part", wremoved === 3 && comp.numLayers === wb, wremoved + " " + comp.numLayers);
+  }
+  var barIndex = widgetIndex("Progress bar");
+  check("Progress bar is in the widget kind", barIndex >= 0, barIndex);
+  if (barIndex >= 0) {
+    deselectAll();
+    comp.time = 1;
+    var bb = comp.numLayers;
+    F.libSelect(barIndex);
+    button("Add to timeline").onClick();
+    var bfill = null, btrack = null;
+    for (var bj = 1; bj <= comp.numLayers; bj++) {
+      var bl = comp.layer(bj);
+      if (/ - Fill$/.test(bl.name)) bfill = bl;
+      if (/ - Track$/.test(bl.name)) btrack = bl;
+    }
+    check("progress fill grows from the left", bfill && near(bfill.transform.scale.valueAtTime(1, false)[0], 0, 1) && near(bfill.transform.scale.valueAtTime(1.85, false)[0], 100, 1), bfill ? JSON.stringify(bfill.transform.scale.valueAtTime(1, false)) + " " + JSON.stringify(bfill.transform.scale.valueAtTime(1.85, false)) : "no fill");
+    check("translucent track keeps its opacity", btrack && near(btrack.transform.opacity.valueAtTime(1.4, false), 16, 0.5), btrack ? btrack.transform.opacity.valueAtTime(1.4, false) : "no track");
+    var bremoved = F.catalogRemove(F.catalogById("widget.progress.bar"), comp, []);
+    check("progress removal clears every part", bremoved === 4 && comp.numLayers === bb, bremoved + " " + comp.numLayers);
+  }
+  // Every widget is applied and removed for real: a malformed part must fail a check, not the panel.
+  var widgetProblems = [];
+  var widgetParts = 0;
+  var widgetBase = comp.numLayers;
+  var allWidgets = F.catalogItems("widgets");
+  for (var wq = 0; wq < allWidgets.length; wq++) {
+    var witem = allWidgets[wq];
+    try {
+      F.catalogApply(witem, { comp: comp, layers: [] });
+      var wmade = 0;
+      for (var wr = 1; wr <= comp.numLayers; wr++) {
+        if (comp.layer(wr).comment === "flow:cat:" + witem.id) wmade++;
+      }
+      if (wmade !== witem.parts.length) widgetProblems.push(witem.name + " made " + wmade + "/" + witem.parts.length);
+      widgetParts += wmade;
+      var wgone = F.catalogRemove(witem, comp, []);
+      if (wgone !== wmade || comp.numLayers !== widgetBase) widgetProblems.push(witem.name + " removed " + wgone + "/" + wmade);
+    } catch (we) {
+      widgetProblems.push(witem.name + ": " + String(we.message || we));
+    }
+  }
+  check("all 25 widgets apply and remove cleanly", widgetProblems.length === 0 && widgetParts === 100, widgetProblems.slice(0, 3).join(" | ") + " parts=" + widgetParts);
+  F.catalogKind(0);
+
   // ---- Models tab talks to the helper
   button("Connect / refresh").onClick();
   check("models list loads", /Connected/.test(F.status()), F.status());

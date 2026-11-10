@@ -1,15 +1,16 @@
 {
  "schema": 1,
- "total": 499,
+ "total": 528,
  "counts": {
   "titles": 60,
-  "text-animations": 96,
+  "widgets": 25,
+  "textAnims": 96,
   "transitions": 55,
   "effects": 70,
   "gradients": 50,
   "palettes": 30,
   "captions": 34,
-  "sfx": 80,
+  "sfx": 84,
   "tools": 24
  }
 }

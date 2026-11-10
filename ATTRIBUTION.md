@@ -31,10 +31,16 @@ EffectCraft itself is not vendored in this repository. The helper overlay is des
 into an EffectCraft source checkout; EffectCraft remains under its own MIT OR Apache-2.0 licence and
 its NOTICE file.
 
+## Presets, widgets and thumbnails
+
+All catalogue data (`catalog/*.json`), including the 25 UI widgets, and every panel thumbnail are original
+work by the Flow Studio contributors, drawn in ScriptUI (`onDraw`). No third-party templates, Adobe artwork
+or bitmap assets are used or traced.
+
 ## Sound effects
 
-The 20 sound effects are synthesised at runtime by `overlay/crates/flow/src/sfx.rs`. No samples,
-recordings or third-party sound libraries are bundled.
+The built-in fallback sound effects are synthesised at runtime by `overlay/crates/flow/src/sfx.rs`. No samples,
+recordings or third-party sound libraries are bundled. The main library is the 84-file CC0 pack below.
 
 <!-- sfx-pack:start -->
 ## Sound effects

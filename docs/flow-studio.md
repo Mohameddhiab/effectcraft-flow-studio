@@ -24,7 +24,7 @@ and opens on a short welcome screen the first time.
 
 | Category | Sub-tabs | What it does |
 |---|---|---|
-| **Library** | Unified browser | 503 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
+| **Library** | Unified browser | 528 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
 | | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
@@ -176,6 +176,12 @@ panel and are not duplicated into packs; user styles, text animations and backgr
   when nothing is selected); transitions go on the start/end of the selected layers (overlap two clips and put
   a transition on the top one); generators land at the playhead (gradients at the bottom); audio adds sounds at
   the playhead or sets levels (fade in/out, -12 dB, +6 dB, mute) on the selected layers.
+- **Catalogue** (`Library ▸ Catalogue`): 528 validated, data-driven presets (titles, 25 UI widgets, text
+  animations, transitions, effects, gradients, palettes, captions, sounds, tools) filtered by kind and family,
+  searchable, with drawn thumbnails, recents and favourites. Applying a card is one undo step named `Flow: …`,
+  every created layer is tagged `flow:cat:<id>`, and **Remove** deletes the whole preset at once. The UI widgets
+  (badges, buttons, progress, notifications, stats, overlays) are original compositions of rounded rectangles,
+  outlines and text parts with keyframed entrances: they need no plug-in and no native effect.
 - **Text**: 10 built-in text animations (letters, words or lines) plus your own. Pick one, edit any field
   (start state, easing, duration, softness, random order), then **Save as my preset**. My presets are stored
   in the app settings (survive updates); **Export/Import** moves them as JSON. Each animation is a real text
@@ -219,9 +225,10 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   pane-resize redraw (**128 tests**). The app-level changes and these tests live in the development
   fork; this repository ships the panel, the overlay and the smoke suite.
 - `flow-install/tests/smoke-test.jsx` drives the real panel in EffectCraft through
-  `effectcraft-cli`: **194 checks**, including the welcome screen, five top tabs, one primary action
+  `effectcraft-cli`: **216 checks**, including the welcome screen, five top tabs, one primary action
   per leaf screen, English/Arabic switching, dark/light themes, library grid and paging, eight style
-  thumbnails, pack file round-trip, ASS karaoke tags, beat markers, AE scripts and Arabic RTL captions.
+  thumbnails, pack file round-trip, ASS karaoke tags, beat markers, AE scripts, Arabic RTL captions,
+  the 84-sound pack, the silence profiles, the Whisper check and the UI widget catalogue.
   Run `scripts/build_steps.ps1`, start the helper, then run the steps with `effectcraft-cli run`
   (see `scripts/run_smoke_test.ps1`).
 - The visual record is produced by the ignored `flow_studio_panel_snapshot` test in the development

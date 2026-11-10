@@ -1,6 +1,6 @@
 // ================================================================== Flow Catalogue engine
 //
-// The catalogue is data: 503 presets validated by scripts/catalog_schema.py and embedded above.
+// The catalogue is data: 528 presets validated by scripts/catalog_schema.py and embedded above.
 // This block turns a preset into real layers, effects and expressions. Every native effect is
 // checked before use and every addProperty() call stays inside a try/catch, so a host that ships
 // an older effect registry disables one card instead of breaking the panel.
@@ -10,9 +10,10 @@
 //   created layers                 -> comment "flow:cat:<preset id>"
 //   time remap expressions         -> comment "flow:cat:<preset id>" inside the expression
 
-var CAT_KIND_KEYS = ["titles", "textAnims", "transitions", "effects", "gradients", "palettes", "captions", "sfx", "tools"];
+var CAT_KIND_KEYS = ["titles", "widgets", "textAnims", "transitions", "effects", "gradients", "palettes", "captions", "sfx", "tools"];
 var CAT_KIND_LABELS = {
   titles: "Titles",
+  widgets: "UI Widgets",
   textAnims: "Text animations",
   transitions: "Transitions",
   effects: "Effects",
@@ -24,7 +25,7 @@ var CAT_KIND_LABELS = {
 };
 var CAT_STRINGS = {
   fr: {
-    titles: "Titres", textAnims: "Animations de texte", transitions: "Transitions", effects: "Effets",
+    titles: "Titres", widgets: "Widgets UI", textAnims: "Animations de texte", transitions: "Transitions", effects: "Effets",
     gradients: "D\u00e9grad\u00e9s & g\u00e9n\u00e9rateurs", palettes: "Palettes", captions: "Sous-titres",
     sfx: "Sons", tools: "Outils", catalogue: "Catalogue", allKinds: "Tous les types", allFamilies: "Toutes les familles",
     search: "Rechercher", recent: "R\u00e9cents", add: "Ajouter \u00e0 la timeline", remove: "Retirer", unavailable: "Indisponible",
@@ -40,7 +41,7 @@ var CAT_STRINGS = {
     timeRemapSkipped: "Calques sans remappage temporel ignor\u00e9s"
   },
   en: {
-    titles: "Titles", textAnims: "Text animations", transitions: "Transitions", effects: "Effects",
+    titles: "Titles", widgets: "UI widgets", textAnims: "Text animations", transitions: "Transitions", effects: "Effects",
     gradients: "Gradients & generators", palettes: "Palettes", captions: "Captions",
     sfx: "Sounds", tools: "Tools", catalogue: "Catalogue", allKinds: "All kinds", allFamilies: "All families",
     search: "Search", recent: "Recent", add: "Add to timeline", remove: "Remove", unavailable: "Unavailable",
@@ -56,7 +57,7 @@ var CAT_STRINGS = {
     timeRemapSkipped: "Layers without time remapping skipped"
   },
   ar: {
-    titles: "\u0627\u0644\u0639\u0646\u0627\u0648\u064a\u0646", textAnims: "\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0646\u0635", transitions: "\u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644\u0627\u062a", effects: "\u0627\u0644\u062a\u0623\u062b\u064a\u0631\u0627\u062a",
+    titles: "\u0627\u0644\u0639\u0646\u0627\u0648\u064a\u0646", widgets: "\u0639\u0646\u0627\u0635\u0631 \u0627\u0644\u0648\u0627\u062c\u0647\u0629", textAnims: "\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0646\u0635", transitions: "\u0627\u0644\u0627\u0646\u062a\u0642\u0627\u0644\u0627\u062a", effects: "\u0627\u0644\u062a\u0623\u062b\u064a\u0631\u0627\u062a",
     gradients: "\u0627\u0644\u062a\u062f\u0631\u062c\u0627\u062a \u0648\u0627\u0644\u0645\u0648\u0644\u062f\u0627\u062a", palettes: "\u0644\u0648\u062d\u0627\u062a \u0627\u0644\u0623\u0644\u0648\u0627\u0646", captions: "\u0627\u0644\u062a\u0631\u062c\u0645\u0627\u062a",
     sfx: "\u0627\u0644\u0623\u0635\u0648\u0627\u062a", tools: "\u0627\u0644\u0623\u062f\u0648\u0627\u062a", catalogue: "\u0627\u0644\u0643\u062a\u0627\u0644\u0648\u062c", allKinds: "\u0643\u0644 \u0627\u0644\u0623\u0646\u0648\u0627\u0639", allFamilies: "\u0643\u0644 \u0627\u0644\u0639\u0627\u0626\u0644\u0627\u062a",
     search: "\u0628\u062d\u062b", recent: "\u0627\u0644\u0623\u062d\u062f\u062b", add: "\u0623\u0636\u0641 \u0625\u0644\u0649 \u0627\u0644\u062e\u0637 \u0627\u0644\u0632\u0645\u0646\u064a", remove: "\u0625\u0632\u0627\u0644\u0629", unavailable: "\u063a\u064a\u0631 \u0645\u062a\u0627\u062d",
@@ -80,10 +81,20 @@ function catTr(key) {
   return String(key);
 }
 
+// Items carry the singular kind ("title"), the dropdown and the thumbnail code use the plural
+// key ("titles"): one helper keeps both worlds in sync.
+var CAT_KIND_SINGULAR = {
+  title: "titles", widget: "widgets", text: "textAnims", transition: "transitions", effect: "effects",
+  gradient: "gradients", palette: "palettes", caption: "captions", sfx: "sfx", tool: "tools"
+};
+
+function catKindKey(key) {
+  var k = CAT_KIND_SINGULAR[key] || key;
+  return CAT_KIND_KEYS.indexOf(k) >= 0 ? k : "";
+}
+
 function catKindLabel(key) {
-  var map = { titles: "titles", textAnims: "textAnims", transitions: "transitions", effects: "effects",
-    gradients: "gradients", palettes: "palettes", captions: "captions", sfx: "sfx", tools: "tools" };
-  return catTr(map[key] || "catalogue");
+  return catTr(catKindKey(key) || "catalogue");
 }
 
 function catItems(key) {
@@ -278,12 +289,17 @@ function catEnsureSfx() {
     if (!s || !s.name) continue;
     CAT_SFX_MAP[String(s.name).toLowerCase()] = s;
     CAT_SFX_MAP[String(s.name).toLowerCase().replace(/[^a-z0-9]+/g, "")] = s;
+    if (s.id) CAT_SFX_MAP[String(s.id)] = s;
   }
   return CAT_SFX_MAP;
 }
 
 function catSfxEntry(item) {
   var map = catEnsureSfx();
+  if (item && item.asset) {
+    var byId = map[String(item.asset)];
+    if (byId) return byId;
+  }
   var name = String(item.name || "").toLowerCase();
   if (map[name]) return map[name];
   var compact = name.replace(/[^a-z0-9]+/g, "");
@@ -559,7 +575,7 @@ function catShapeRect(comp, name, comment, center, size, radius, color, opacity,
   return s;
 }
 
-function catShapeOutline(comp, name, comment, center, size, color, width, t0, t1) {
+function catShapeOutline(comp, name, comment, center, size, color, width, t0, t1, radius) {
   var s = comp.layers.addShape();
   s.name = name;
   s.comment = comment;
@@ -568,6 +584,7 @@ function catShapeOutline(comp, name, comment, center, size, color, width, t0, t1
   var gcontents = group.property("Contents");
   var rect = gcontents.addProperty("ADBE Vector Shape - Rect");
   try { rect.property("ADBE Vector Rect Size").setValue(size); } catch (e) {}
+  try { if (radius > 0) rect.property("ADBE Vector Rect Roundness").setValue(radius); } catch (eRadius) {}
   var stroke = gcontents.addProperty("ADBE Vector Graphic - Stroke");
   try { stroke.property("ADBE Vector Stroke Color").setValue(color); } catch (e3) {}
   try { stroke.property("ADBE Vector Stroke Width").setValue(width); } catch (e4) {}
@@ -1246,6 +1263,139 @@ function catApplyTitle(item, comp) {
   return "\"" + item.name + "\" " + catTr("applied") + ".";
 }
 
+// ------------------------------------------------------------------ UI widgets
+//
+// A widget is data: a small list of parts (rounded rectangles, outlined rectangles and text)
+// positioned around an anchor, each with an optional entrance. Parts are ordinary shape and text
+// layers named "Flow: <widget>" and tagged flow:cat:<id>, so Remove and undo work like every other
+// preset. Entrances use layer keyframes, so a host without the Transform effect still gets the
+// widget itself instead of an error.
+
+function catWidgetTextCenter(layer, center, atTime) {
+  var rect = null;
+  try { rect = layer.sourceRectAtTime(atTime, false); } catch (e) {}
+  if (!rect) {
+    try { layer.transform.position.setValue(center); } catch (e2) {}
+    return;
+  }
+  try {
+    layer.transform.position.setValue([center[0] - (rect.left + rect.width / 2), center[1] - (rect.top + rect.height / 2)]);
+  } catch (e3) {}
+}
+
+function catWidgetEase(prop, count) {
+  var dims = 1;
+  try { var v = prop.value; if (v instanceof Array) dims = v.length; } catch (e) {}
+  var eases = [];
+  for (var d = 0; d < dims; d++) {
+    try { eases.push(new KeyframeEase(0, 75)); } catch (e2) { return; }
+  }
+  for (var i = 1; i <= count; i++) {
+    try { prop.setTemporalEaseAtKey(i, eases, eases); } catch (e3) {}
+  }
+}
+
+function catWidgetEntrance(layer, part, t0, k) {
+  var kind = part.entrance || "none";
+  if (kind === "none") return;
+  var start = t0 + catNum(part.delay, 0, 0, 30);
+  var end = start + catNum(part.animDur, 0.4, 0.05, 10);
+  var opacity = null;
+  try { opacity = layer.transform.opacity; } catch (e) {}
+  if (opacity) {
+    // A translucent part keeps its own opacity: the entrance fades in to it, not to 100%.
+    var baseOpacity = 100;
+    try { baseOpacity = opacity.value; } catch (eBase) {}
+    try {
+      opacity.setValueAtTime(start, 0);
+      opacity.setValueAtTime(end, baseOpacity);
+      catWidgetEase(opacity, 2);
+    } catch (e2) {}
+  }
+  if (kind === "pop") {
+    try {
+      var sc = layer.transform.scale;
+      sc.setValueAtTime(start, [76, 76]);
+      sc.setValueAtTime(end, [100, 100]);
+      catWidgetEase(sc, 2);
+    } catch (e3) {}
+  } else if (kind === "grow-x") {
+    try {
+      var sw = layer.transform.scale;
+      sw.setValueAtTime(start, [0, 100]);
+      sw.setValueAtTime(end, [100, 100]);
+      catWidgetEase(sw, 2);
+    } catch (e4) {}
+  } else if (kind.indexOf("slide-") === 0) {
+    var dx = 0, dy = 0;
+    if (kind === "slide-up") dy = 36 * k;
+    else if (kind === "slide-down") dy = -36 * k;
+    else if (kind === "slide-left") dx = 36 * k;
+    else if (kind === "slide-right") dx = -36 * k;
+    try {
+      var pos = layer.transform.position;
+      var base = pos.value;
+      pos.setValueAtTime(start, [base[0] + dx, base[1] + dy]);
+      pos.setValueAtTime(end, [base[0], base[1]]);
+      catWidgetEase(pos, 2);
+    } catch (e5) {}
+  }
+}
+
+function catApplyWidget(item, comp) {
+  var k = comp.height / 1080;
+  var t0 = comp.time;
+  var t1 = Math.min(comp.duration, t0 + catNum(item.duration, 5, 0.5, 60));
+  var base = catAnchorPoint({ anchor: item.anchor || "middle-center", margin: item.margin }, comp);
+  var parts = item.parts || [];
+  if (!parts.length) throw new Error("This widget has no parts.");
+  var comment = "flow:cat:" + item.id;
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    var px = base[0] + catNum(p.x, 0, -8000, 8000) * k;
+    var py = base[1] + catNum(p.y, 0, -8000, 8000) * k;
+    var layer = null;
+    if (p.type === "text") {
+      var text = String(p.text || "");
+      if (p.caps === "upper") text = text.toUpperCase();
+      var td = new TextDocument(text);
+      catApplyTextFont(td, {
+        font: "Inter", weight: p.weight || "SemiBold", size: p.size,
+        fill: p.fill || "#F5F7FB", tracking: p.tracking, leading: 1.1
+      }, k);
+      layer = comp.layers.addText(td);
+      catWidgetTextCenter(layer, [px, py], t0);
+    } else {
+      var w = catNum(p.w, 120, 1, 8000) * k;
+      var h = catNum(p.h, 40, 1, 8000) * k;
+      var shift = p.origin === "left" ? w / 2 : p.origin === "right" ? -w / 2 : 0;
+      var center = [px + shift, py];
+      if (p.type === "outline") {
+        layer = catShapeOutline(comp, "", comment, center, [w, h], catColor(p.stroke || "#F5F7FB", [1, 1, 1]),
+          catNum(p.strokeWidth, 2, 0.5, 40) * k, t0, t1, catNum(p.radius, 0, 0, 4000) * k);
+      } else {
+        layer = catShapeRect(comp, "", comment, center, [w, h], catNum(p.radius, 0, 0, 4000) * k,
+          catColor(p.fill || "#FFFFFF", [1, 1, 1]), catNum(p.opacity, 100, 0, 100), t0, t1);
+      }
+      if (catNum(p.opacity, 100, 0, 100) < 100) {
+        try { layer.transform.opacity.setValue(catNum(p.opacity, 100, 0, 100)); } catch (eo) {}
+      }
+      if (p.entrance === "grow-x") {
+        try {
+          layer.transform.anchorPoint.setValue([-w / 2, 0]);
+          layer.transform.position.setValue([center[0] - w / 2, center[1]]);
+        } catch (eg) {}
+      }
+    }
+    try { layer.name = "Flow: " + item.name + (p.name ? " - " + p.name : ""); } catch (en) {}
+    layer.comment = comment;
+    layer.inPoint = t0;
+    layer.outPoint = t1;
+    catWidgetEntrance(layer, p, t0, k);
+  }
+  return "\"" + item.name + "\" " + catTr("applied") + ".";
+}
+
 // ------------------------------------------------------------------ text animations
 
 function catApplyTextItem(item, comp, layers) {
@@ -1707,6 +1857,7 @@ function catApplyItem(item, ctx) {
   var enabled = catEnabled(item, layers);
   if (!enabled.ok) throw new Error(enabled.reason);
   if (item.kind === "title") return catApplyTitle(item, comp);
+  if (item.kind === "widget") return catApplyWidget(item, comp);
   if (item.kind === "text") return catApplyTextItem(item, comp, layers);
   if (item.kind === "transition") {
     if (!layers.length) throw new Error(catTr("selectLayers"));

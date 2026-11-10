@@ -36,6 +36,10 @@ BG_ANIMS = {"none", "rotate", "pulse", "drift"}
 CAPTION_ANCHORS = {"top", "middle", "bottom"}
 CAPTION_ANIMS = {"none", "fade", "pop", "slideUp"}
 CAPTION_STYLES = {"Regular", "Medium", "SemiBold", "Bold", "Black", "Light", "Italic"}
+WIDGET_PART_TYPES = {"rect", "outline", "text"}
+WIDGET_ENTRANCES = {"none", "fade", "pop", "slide-up", "slide-down", "slide-left", "slide-right", "grow-x"}
+WIDGET_ORIGINS = {"center", "left", "right"}
+WIDGET_CAPS = {"none", "upper"}
 GENERATORS = {"solid", "grey-scale", "color-bars-smpte", "color-bars-ebu", "checker", "grid", "noise", "countdown"}
 SFX_RECIPES = {"asset", "legacy", "whoosh", "riser", "reverse", "boom", "impact", "drop", "downlifter",
                "ui", "chime", "shimmer", "sparkle", "digital", "camera", "ambience", "cartoon", "scifi"}
@@ -227,6 +231,7 @@ def check_common(item, kind, where, errors):
 
 _KIND_FIELDS = {
     "title": {"text", "duration", "anim", "out", "style"},
+    "widget": {"duration", "anchor", "margin", "parts"},
     "text": {"unit", "mode", "from", "easing", "duration", "smooth", "random", "loop", "period", "amount"},
     "transition": {"duration", "ops"},
     "effect": {"when", "duration", "ops"},
@@ -355,6 +360,70 @@ def check_title(item, where, errors, text_ids):
         if value is not None and value not in text_ids:
             errors.add(where + "." + key, f"unknown text animation {value!r}")
     check_style(item.get("style"), where + ".style", errors)
+
+
+def check_widget(item, where, errors):
+    check_range(item.get("duration"), 0.5, 60, where + ".duration", errors)
+    if item.get("anchor") not in ANCHORS:
+        errors.add(where + ".anchor", f"expected one of {sorted(ANCHORS)}")
+    if "margin" in item:
+        check_range(item["margin"], 0, 0.3, where + ".margin", errors)
+    parts = item.get("parts")
+    if not isinstance(parts, list) or not (1 <= len(parts) <= 12):
+        errors.add(where + ".parts", "expected 1..12 parts")
+        return
+    for i, part in enumerate(parts):
+        w = f"{where}.parts[{i}]"
+        if not isinstance(part, dict):
+            errors.add(w, "expected an object")
+            continue
+        kind = part.get("type")
+        if kind not in WIDGET_PART_TYPES:
+            errors.add(w + ".type", f"expected one of {sorted(WIDGET_PART_TYPES)}")
+            continue
+        common = {"type", "name", "x", "y", "entrance", "delay", "animDur"}
+        if kind == "text":
+            allowed = common | {"text", "size", "weight", "fill", "tracking", "caps"}
+            check_keys(part, allowed, w, errors, ("type", "x", "y", "text", "size"))
+            check_str(part.get("text"), w + ".text", errors, 1, 120)
+            check_range(part.get("size"), 8, 200, w + ".size", errors)
+            if "weight" in part and part["weight"] not in WEIGHTS:
+                errors.add(w + ".weight", f"expected one of {sorted(WEIGHTS)}")
+            if "fill" in part:
+                check_hex(part["fill"], w + ".fill", errors)
+            if "tracking" in part:
+                check_range(part["tracking"], -1000, 1000, w + ".tracking", errors)
+            if "caps" in part and part["caps"] not in WIDGET_CAPS:
+                errors.add(w + ".caps", f"expected one of {sorted(WIDGET_CAPS)}")
+        else:
+            extra = {"w", "h", "radius", "opacity", "origin"}
+            extra |= {"fill"} if kind == "rect" else {"stroke", "strokeWidth"}
+            check_keys(part, common | extra, w, errors, ("type", "x", "y", "w", "h"))
+            for key in ("w", "h"):
+                check_range(part.get(key), 1, 4000, w + "." + key, errors)
+            if "radius" in part:
+                check_range(part["radius"], 0, 2000, w + ".radius", errors)
+            if "opacity" in part:
+                check_range(part["opacity"], 0, 100, w + ".opacity", errors)
+            if "origin" in part and part["origin"] not in WIDGET_ORIGINS:
+                errors.add(w + ".origin", f"expected one of {sorted(WIDGET_ORIGINS)}")
+            if kind == "rect":
+                if "fill" in part:
+                    check_hex(part["fill"], w + ".fill", errors)
+            else:
+                check_hex(part.get("stroke"), w + ".stroke", errors)
+                if "strokeWidth" in part:
+                    check_range(part["strokeWidth"], 0.5, 40, w + ".strokeWidth", errors)
+        for key in ("x", "y"):
+            check_range(part.get(key), -4000, 4000, w + "." + key, errors)
+        if "entrance" in part and part["entrance"] not in WIDGET_ENTRANCES:
+            errors.add(w + ".entrance", f"expected one of {sorted(WIDGET_ENTRANCES)}")
+        if "delay" in part:
+            check_range(part["delay"], 0, 5, w + ".delay", errors)
+        if "animDur" in part:
+            check_range(part["animDur"], 0.05, 5, w + ".animDur", errors)
+        if "name" in part:
+            check_str(part["name"], w + ".name", errors, 1, 40)
 
 
 def check_gradient(item, where, errors):
@@ -495,6 +564,7 @@ def validate():
     errors = Errors()
     kinds = {
         "titles.json": "title",
+        "widgets.json": "widget",
         "text-animations.json": "text",
         "transitions.json": "transition",
         "effects.json": "effect",
@@ -533,6 +603,9 @@ def validate():
     for i, item in enumerate(docs.get("title", [])):
         if isinstance(item, dict):
             check_title(item, f"titles.json[{i}]", errors, text_ids)
+    for i, item in enumerate(docs.get("widget", [])):
+        if isinstance(item, dict):
+            check_widget(item, f"widgets.json[{i}]", errors)
     for i, item in enumerate(docs.get("transition", [])):
         if isinstance(item, dict):
             check_range(item.get("duration"), 0.05, 10, f"transitions.json[{i}].duration", errors)

@@ -44,6 +44,7 @@ ANCHOR_UI = '  libSearch.minimumSize = [90, -1];'
 
 KINDS = (
     ("titles", "titles.json"),
+    ("widgets", "widgets.json"),
     ("textAnims", "text-animations.json"),
     ("transitions", "transitions.json"),
     ("effects", "effects.json"),
@@ -95,7 +96,7 @@ def build_data_block():
     block = "\n".join(header + parts + footer)
     if not block.isascii():
         raise SystemExit("the catalogue block is not ASCII")
-    return block, total
+    return block, total, counts
 
 
 def build_source_block(path, begin, end, note):
@@ -170,7 +171,7 @@ def main():
             print("  " + error, file=sys.stderr)
         return 1
 
-    data_block, total = build_data_block()
+    data_block, total, counts = build_data_block()
     engine_block = build_source_block(CORE, ENGINE_BEGIN, ENGINE_END, "flow-install/src/catalog-core.jsx")
     ui_block = build_source_block(UI, UI_BEGIN, UI_END, "flow-install/src/catalog-ui.jsx")
     print(f"catalogue valid: {total} presets ({len(data_block)} bytes embedded)")
@@ -207,9 +208,12 @@ def main():
         updated = inject_block(updated, block, begin, end, anchor)
     if updated == panel:
         print("panel embeds: already current")
-        return 0
-    PANEL.write_text(updated, encoding="utf-8", newline="\n")
-    print(f"panel embeds: written ({len(updated)} bytes)")
+    else:
+        PANEL.write_text(updated, encoding="utf-8", newline="\n")
+        print(f"panel embeds: written ({len(updated)} bytes)")
+    summary = {"schema": 1, "total": total, "counts": counts}
+    (CATALOG / "index.json").write_text(json.dumps(summary, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
+    print("catalogue index: written")
     return 0
 
 
