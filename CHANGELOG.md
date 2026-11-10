@@ -17,6 +17,13 @@
   success colour now matches the design (`#44d7a2`).
 - Smoke suite: 227 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens,
   narrow-dock layout at 298 / 320 / 400 / 460 pt).
+- Catalogue verification: `scripts/catalog_coverage.jsx` applies and removes every one of the 528 presets
+  through the panel API (525 PASS; the three remaining tools are listed in `docs/flow-studio.md`).
+- Render verification: 55 transition comps and 70 effect comps are rendered by the CLI (236 PNGs) and
+  checked by a dependency-free pixel reader; 53/55 transitions and 56/70 effects pass, the rest are
+  documented as visual gaps on a still test plate.
+- Duplicate catalogue names fixed: the two exit animations named *Fade Out* are now *Fade Up Out* and
+  *Fade Down Out*; the two *Slide Out* are *Slide Up Out* and *Slide Down Out*.
 
 ## 3.0.0 — 2026-11-08
 

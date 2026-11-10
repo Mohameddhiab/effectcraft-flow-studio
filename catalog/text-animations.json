@@ -127,7 +127,7 @@
     ]
    },
    "easing": "outBounce",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -170,7 +170,7 @@
     ]
    },
    "easing": "outBounce",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -301,7 +301,7 @@
     "blur": 30
    },
    "easing": "outQuad",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -450,7 +450,7 @@
     "rotation": -180
    },
    "easing": "outQuart",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -473,7 +473,7 @@
     ]
    },
    "easing": "outSine",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 70,
    "random": false
   },
@@ -493,7 +493,7 @@
     "rotation": 20
    },
    "easing": "outElastic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 80,
    "random": false
   },
@@ -576,7 +576,7 @@
     "tracking": -30
    },
    "easing": "outExpo",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 10,
    "random": false
   },
@@ -636,7 +636,7 @@
     "scale": 30
    },
    "easing": "outElastic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -656,7 +656,7 @@
     "rotation": 35
    },
    "easing": "outBack",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -737,7 +737,7 @@
     "opacity": 0
    },
    "easing": "outCubic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 0,
    "random": false
   },
@@ -935,7 +935,7 @@
     "scale": 40
    },
    "easing": "outCubic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -965,7 +965,7 @@
   {
    "id": "text.fade-up-out",
    "kind": "text",
-   "name": "Fade Out",
+   "name": "Fade Up Out",
    "family": "Exit",
    "tags": [
     "exit",
@@ -988,7 +988,7 @@
   {
    "id": "text.fade-down-out",
    "kind": "text",
-   "name": "Fade Out",
+   "name": "Fade Down Out",
    "family": "Exit",
    "tags": [
     "exit",
@@ -1086,7 +1086,7 @@
     ]
    },
    "easing": "outBounce",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1129,7 +1129,7 @@
     ]
    },
    "easing": "outBounce",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1182,7 +1182,7 @@
   {
    "id": "text.slide-up-out",
    "kind": "text",
-   "name": "Slide Out",
+   "name": "Slide Up Out",
    "family": "Exit",
    "tags": [
     "exit",
@@ -1205,7 +1205,7 @@
   {
    "id": "text.slide-down-out",
    "kind": "text",
-   "name": "Slide Out",
+   "name": "Slide Down Out",
    "family": "Exit",
    "tags": [
     "exit",
@@ -1260,7 +1260,7 @@
     "blur": 30
    },
    "easing": "outQuad",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1409,7 +1409,7 @@
     "rotation": -180
    },
    "easing": "outQuart",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1432,7 +1432,7 @@
     ]
    },
    "easing": "outSine",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 70,
    "random": false
   },
@@ -1452,7 +1452,7 @@
     "rotation": 20
    },
    "easing": "outElastic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 80,
    "random": false
   },
@@ -1535,7 +1535,7 @@
     "tracking": -30
    },
    "easing": "outExpo",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 10,
    "random": false
   },
@@ -1595,7 +1595,7 @@
     "scale": 30
    },
    "easing": "outElastic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1615,7 +1615,7 @@
     "rotation": 35
    },
    "easing": "outBack",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1696,7 +1696,7 @@
     "opacity": 0
    },
    "easing": "outCubic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 0,
    "random": false
   },
@@ -1894,7 +1894,7 @@
     "scale": 40
    },
    "easing": "outCubic",
-   "duration": 1.0,
+   "duration": 1,
    "smooth": 100,
    "random": false
   },
@@ -1952,7 +1952,7 @@
    "unit": "chars",
    "mode": "loop",
    "loop": "position",
-   "period": 3.0,
+   "period": 3,
    "amount": 8,
    "easing": "linear",
    "duration": 0.5,
@@ -1990,7 +1990,7 @@
    "unit": "chars",
    "mode": "loop",
    "loop": "scale",
-   "period": 4.0,
+   "period": 4,
    "amount": 2,
    "easing": "linear",
    "duration": 0.5,
@@ -2028,7 +2028,7 @@
    "unit": "chars",
    "mode": "loop",
    "loop": "color",
-   "period": 6.0,
+   "period": 6,
    "amount": 0,
    "easing": "linear",
    "duration": 0.5,

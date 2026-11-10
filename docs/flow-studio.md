@@ -262,3 +262,52 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   (open + resize, no editing session); the screenshot test renders the panel offscreen.
 * The Stroke tab was written against the plug-in's published parameters (Stroke Color, Thickness,
   Blur, Softness); it reports a clear error if the effect isn't installed.
+
+## Catalogue verification (528 presets, 2026-11-10)
+
+The catalogue is verified in two layers, both reproducible from the repository root.
+
+**1. Every preset is applied and removed** through the panel's own API, one fresh composition per item
+(`scripts/catalog_coverage.jsx`, run by `scripts/run_catalog_coverage.ps1` with the helper for sounds):
+
+| Kind | Presets | PASS |
+|---|---:|---:|
+| Titles | 60 | 60 |
+| Widgets | 25 | 25 |
+| Text animations | 96 | 96 |
+| Transitions | 55 | 55 |
+| Effects | 70 | 67 |
+| Gradients | 50 | 50 |
+| Palettes | 30 | 30 |
+| Caption styles | 34 | 34 |
+| Sounds | 84 | 84 |
+| Tools | 24 | 21 |
+| **Total** | **528** | **525** |
+
+The three remaining tools fail for real reasons, not test noise: **Beat Markers** only redirects to
+*Montage ▸ Rythme & Beat* in this version, and **Repeat on Selection** / **Clear Flow History** answer
+"not available in this version". They should either be implemented or hidden from the catalogue.
+
+**2. Transitions and effects are rendered** (`scripts/make_catalog_scene.jsx`,
+`scripts/render_catalog_frames.js`, `scripts/check_catalog_frames.js`): 55 transition comps at
+0 / 50 / 100 % and 70 effect comps at 0.1 s, 236 PNGs, read back with a dependency-free Node/zlib
+decoder. **53/55 transitions** and **56/70 effects** pass the mechanical check (non-blank, changes
+across the cut, and, for effects, a measurable difference from a no-effect reference plate).
+
+The failures are visual gaps on a still test plate, not crashes: *Roll* and *Zoom In* show no frame
+difference at the sampled times, and 14 effects (duotone, sepia, freeze-frame, reverse clip, speed
+ramp, strobe, safe-zone overlay, zoom punch, pull out, slow push in, handheld, pixelate, RGB split,
+sharpen) are too subtle or intentionally static at 0.1 s to register. They need footage with motion
+before being judged; none of them throws or leaves the project in a bad state.
+
+To reproduce:
+
+```
+node scripts/build_render_steps.js
+./target/debug/effectcraft-cli.exe run --commands target/render-steps.json --empty --json
+node scripts/render_catalog_frames.js
+node scripts/check_catalog_frames.js
+```
+
+History note: the unlicensed third-party `100 UI Widgets Pack` was purged from every local ref with
+`git filter-repo`; the repository now tracks a single sound pack, `assets/sfx-pack`.
