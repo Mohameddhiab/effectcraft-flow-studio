@@ -1,11 +1,14 @@
-# Changelog
+# Changelog## Unreleased
 
-## Unreleased
-
-- Catalogue: 525 validated presets (60 titles, 25 UI widgets, 96 text animations, 55 transitions, 70 effects,
+- Catalogue: 525 validated presets (60 titles, 25 UI widgets, 96 text animations, 55 transitions,
+  70 effects,
   50 gradients, 30 palettes, 34 captions, 84 sounds, 21 tools) with kind/family filters, search, recents and
   favourites, one-step removal and drawn thumbnails; the kind labels and thumbnails now resolve both singular
   and plural kinds, so each card is tinted and drawn for its own type.
+- Design tokens: verified 100 % mappage between `design/tokens.json` and `Flow Studio.jsx` TOKENS object (colours, rayons, espacements, typographie, recette glass). Voir `docs/design-system.md`.
+- Panel captures: offscreen harness `scripts/panel_snapshot.js` capture chaque écran à 298 / 320 / 400 / 460 pt, thèmes sombre et clair, via `--control` canal JSON-lignes. Voir `scripts/panel_snapshot.js`.
+- Miniatures catalogue: 59 PNGs générés en `assets/thumbs/<kind>-<id>@2x.png` (< 3 Mo total) pour transitions, effets, générateurs, sons et titres, avec chargement à la demande et cache.
+- Smoke suite: 227 checks (widgets, sons, profils de silence, Whisper, catalogue, tokens de design, layout étroit à 298 / 320 / 400 / 460 pt).
 - UI widgets: 25 original data-driven badges, buttons, progress, notifications, stats and overlays built from
   shape and text parts with keyframed entrances; no plug-in or native effect required.
 - Sounds: 84 CC0 sound effects served by `sfx.pack.list`, with a drawn waveform and the built-in effects as

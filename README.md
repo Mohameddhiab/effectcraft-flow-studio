@@ -81,6 +81,7 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
 - **Design tokens.** Colours, radii, spacing and the glass recipe come from
   [`design/tokens.json`](design/tokens.json), extracted from the interface design; the smoke suite
   pins them so a silent drift fails a test. See [`docs/design-system.md`](docs/design-system.md).
+- **Miniatures catalogue.** 59 PNGs générés en `assets/thumbs/<kind>-<id>@2x.png` (< 3 Mo total) pour transitions, effets, générateurs, sons et titres, avec chargement à la demande et cache. Voir `scripts/gen_thumbs.js`.
 - **Theme and language.** The header switches between **Français**, **English** and **العربية**, and
   between **Auto**, **Sombre** and **Clair**. The choice persists across sessions.
 - **Persisted state.** Last top tab, library category, silence settings, advanced mode, language,
