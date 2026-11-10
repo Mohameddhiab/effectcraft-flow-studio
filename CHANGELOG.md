@@ -12,7 +12,10 @@
   fallback.
 - Silence: named profiles (Standard, Podcast, Interview, Musique) replacing the sensitivity menu.
 - Captions: Whisper readiness check and model install inside the Captions tab.
-- Smoke suite: 216 checks (widgets, sounds, silence profiles, Whisper, catalogue).
+- Design: `design/tokens.json` and `docs/design-system.md` publish the colours, radii, spacing, type sizes
+  and glass recipe the panel mirrors; the smoke suite pins them so a silent drift fails. The light theme's
+  success colour now matches the design (`#44d7a2`).
+- Smoke suite: 217 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens).
 
 ## 3.0.0 — 2026-11-08
 

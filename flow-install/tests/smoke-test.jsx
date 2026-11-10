@@ -737,7 +737,10 @@ function pump(n) {
   check("v3 theme keeps labels", F.mainTabs.children[0].text === labelBeforeTheme, F.mainTabs.children[0].text);
   F.setTheme("auto");
 
-  // 6. Exactly one primary action per leaf screen, and one on the welcome screen.
+  // 6. Design tokens are the published extract, not a drifting copy.
+  check("design tokens match design/tokens.json", F.tokens.dark.accent === "#5ce1ff" && F.tokens.light.bg === "#e8edf6" && F.tokens.light.success === F.tokens.dark.success && F.tokenRadius.pill === 20 && F.tokenSpacing.length === 17, F.tokens.dark.accent + "/" + F.tokens.light.bg + "/" + F.tokens.light.success);
+
+  // 7. Exactly one primary action per leaf screen, and one on the welcome screen.
   var tabList = all(F.ui, "tab");
   var leafTabs = tabList.filter(function (t) { return all(t, "tab").filter(function (x) { return x !== t; }).length === 0; });
   var primaryProblems = [];
@@ -749,7 +752,7 @@ function pump(n) {
   check("v3 one primary action per screen", primaryProblems.length === 0, primaryProblems.join(", "));
   check("v3 welcome has one primary action", all(F.welcome, "button").filter(function (b) { return b.isPrimary === true; }).length === 1, "welcome primaries");
 
-  // 7. Arabic captions are right-justified and placed against the right edge.
+  // 8. Arabic captions are right-justified and placed against the right edge.
   var karoMode = all(F.ui, "dropdownlist").filter(function (d) { return d._en === "Karaoke Mode"; })[0];
   if (karoMode) karoMode.selection = 0;
   F.setCaptions([{ start: 1, end: 2.5, words: [

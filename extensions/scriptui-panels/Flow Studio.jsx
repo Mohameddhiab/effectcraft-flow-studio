@@ -2375,8 +2375,9 @@ function catRemoveItem(item, comp, layers) {
   }
 
   // ------------------------------------------------------------------ design tokens
-  // Mirrors design/tokens.json, extracted from design/figma/src/index.css. The panel must stay a
-  // single installable file, so it cannot read the JSON at runtime: change both together.
+  // Mirrors design/tokens.json, extracted from the Figma Make design's index.css. The panel must
+  // stay a single installable file, so it cannot read the JSON at runtime: change both together.
+  // The smoke suite pins the accent, the light background, the success colour and the pill radius.
   var TOKENS = {
     dark: {
       bg: "#090d18", bg2: "#101526",
@@ -2392,7 +2393,7 @@ function catRemoveItem(item, comp, layers) {
       border: ["#1d2a43", 0.1], border2: ["#1d2a43", 0.17],
       text: "#111829", text2: "#58647a", muted: "#7d8799",
       accent: "#087eac", accent2: "#6267ed", accentSoft: ["#0091c3", 0.1],
-      danger: "#ff5f6d", success: "#2fb37a", warning: "#ffbd59"
+      danger: "#ff5f6d", success: "#44d7a2", warning: "#ffbd59"
     }
   };
   var TOKEN_RADIUS = { xs: 2, sm: 4, md: 5, lg: 7, xl: 8, x2: 9, x3: 10, x4: 11, x5: 12, x6: 13, x7: 14, pill: 20 };
@@ -6546,6 +6547,9 @@ catLibraryRelabel();
     },
     language: function () { return LANG; },
     theme: function () { return THEME; },
+    tokens: TOKENS,
+    tokenRadius: TOKEN_RADIUS,
+    tokenSpacing: TOKEN_SPACING,
     tr: tr,
     showWelcome: function (visible) { setWelcome(visible !== false); },
     welcome: welcome,

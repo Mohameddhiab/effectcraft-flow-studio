@@ -78,6 +78,9 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
   panel widths, only minimum sizes. The Library grid is 3 × 2 and the caption-style grid is 4 × 2.
 - **Status and progress.** Green for success, orange for warnings, red for failures; helper jobs draw
   a real progress bar driven by the helper's progress messages.
+- **Design tokens.** Colours, radii, spacing and the glass recipe come from
+  [`design/tokens.json`](design/tokens.json), extracted from the interface design; the smoke suite
+  pins them so a silent drift fails a test. See [`docs/design-system.md`](docs/design-system.md).
 - **Theme and language.** The header switches between **Français**, **English** and **العربية**, and
   between **Auto**, **Sombre** and **Clair**. The choice persists across sessions.
 - **Persisted state.** Last top tab, library category, silence settings, advanced mode, language,
@@ -131,11 +134,11 @@ inside its `FlowStudio` folder and never listens on a public interface.
 
 ## Tests
 
-- **216-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
+- **217-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
   top tabs, one primary action per leaf screen, English/Arabic switching, dark/light themes, library
   grid and paging, eight style thumbnails, pack round-trip, ASS karaoke tags, beat markers, AE
   scripts, Arabic RTL captions, the 84-sound pack, silence profiles, the Whisper check and the UI
-  widget catalogue. It passed **216 / 0** in the development fork.
+  widget catalogue. It passed **217 / 0** in the development fork.
 - **`cargo test -p effectcraft-flow`** covers the pure Rust core (47 tests); the helper and ScriptUI
   resize regression tests are part of the development fork.
 - The screenshots in `docs/images` are original offscreen renders of EffectCraft/Flow Studio with an

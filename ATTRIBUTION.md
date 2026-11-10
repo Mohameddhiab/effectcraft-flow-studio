@@ -37,7 +37,14 @@ All catalogue data (`catalog/*.json`), including the 25 UI widgets, and every pa
 work by the Flow Studio contributors, drawn in ScriptUI (`onDraw`). No third-party templates, Adobe artwork
 or bitmap assets are used or traced.
 
-## Sound effects
+## Design
+
+`design/tokens.json` is an extract of the user's own Figma Make interface design ("Redesign Flow
+Studio Interface"), licensed to this project under MIT OR Apache-2.0 together with the panel's copy
+of its colours, radii, spacing and glass recipe. The Figma Make application itself is reference
+material and is not shipped. No Adobe artwork, screenshot, icon or font is included.
+
+## Fallback sound effects
 
 The built-in fallback sound effects are synthesised at runtime by `overlay/crates/flow/src/sfx.rs`. No samples,
 recordings or third-party sound libraries are bundled. The main library is the 84-file CC0 pack below.

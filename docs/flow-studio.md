@@ -57,6 +57,11 @@ and opens on a short welcome screen the first time.
   action produced.
 - **Persisted state.** Last top tab, last library category, silence settings, advanced mode, language,
   theme and helper port are saved in the host preferences.
+- **Design tokens.** The panel mirrors [`design/tokens.json`](../design/tokens.json) (colours, radii,
+  spacing, glass recipe) in `TOKENS` / `TOKEN_RADIUS` / `TOKEN_SPACING`; ScriptUI cannot read the
+  JSON at runtime, so the smoke suite pins the accent, the light background, the success colour and
+  the pill radius. The mapping and the honest gaps are in
+  [`design-system.md`](design-system.md).
 
 ### ScriptUI layout and drawing notes
 
@@ -225,7 +230,7 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   pane-resize redraw (**128 tests**). The app-level changes and these tests live in the development
   fork; this repository ships the panel, the overlay and the smoke suite.
 - `flow-install/tests/smoke-test.jsx` drives the real panel in EffectCraft through
-  `effectcraft-cli`: **216 checks**, including the welcome screen, five top tabs, one primary action
+  `effectcraft-cli`: **217 checks**, including the welcome screen, five top tabs, one primary action
   per leaf screen, English/Arabic switching, dark/light themes, library grid and paging, eight style
   thumbnails, pack file round-trip, ASS karaoke tags, beat markers, AE scripts, Arabic RTL captions,
   the 84-sound pack, the silence profiles, the Whisper check and the UI widget catalogue.
