@@ -24,7 +24,7 @@ and opens on a short welcome screen the first time.
 
 | Category | Sub-tabs | What it does |
 |---|---|---|
-| **Library** | Unified browser | 499 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
+| **Library** | Unified browser | 503 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
 | | Sounds | 20 original synthesised sound effects with instant playhead insertion and custom folder scanning. |

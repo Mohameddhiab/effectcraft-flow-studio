@@ -56,7 +56,7 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
 
 | Tab | Screens | Highlights |
 |---|---|---|
-| **Library** | Unified browser | 499 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid, with kind/family filters, search, live preview and favorites. |
+| **Library** | Unified browser | 503 validated presets (titles, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid, with kind/family filters, search, live preview and favorites. |
 | **Montage** | Silence | Live waveform with red cut zones, green speech and a threshold line; advanced detector settings; ripple or marker modes; tempo detection and beat cuts. |
 | **Montage** | Captions | Whisper speech-to-text, 8 built-in caption styles, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export, Arabic RTL placement. |
 | **Montage** | Sounds | 20 original synthesised sound effects, instant playhead insertion and custom folder scanning. |

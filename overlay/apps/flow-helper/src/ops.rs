@@ -68,6 +68,15 @@ fn existing_file(path: &str) -> Result<PathBuf, String> {
     }
 }
 
+/// Strip the Windows `\\?\` long-path prefix so the path can be passed to `new File(...)`.
+fn plain_path(path: &Path) -> String {
+    let s = path.to_string_lossy();
+    if s.starts_with(r"\\?\") {
+        return s[4..].to_string();
+    }
+    s.to_string()
+}
+
 impl Helper {
     pub fn new() -> Helper {
         Helper::default()
@@ -94,6 +103,7 @@ impl Helper {
             "sfx.list" => Ok(sfx_list()),
             "sfx.install" => sfx_install(req),
             "sfx.scan" => sfx_scan(req),
+            "sfx.pack.list" => sfx_pack_list(),
             "styles.list" => Ok(styles_list()),
             "styles.save" => styles_save(req),
             "styles.delete" => styles_delete(req),
@@ -608,6 +618,124 @@ fn sfx_scan(req: &Value) -> Result<Value, String> {
     }
     found.sort_by(|a, b| a["name"].as_str().cmp(&b["name"].as_str()));
     Ok(json!({"items": found, "folder": root.to_string_lossy()}))
+}
+
+fn sfx_pack_list() -> Result<Value, String> {
+    let Some(pack_dir) = dirs::sfx_pack_dir() else {
+        return Ok(json!({"items": [], "categories": [], "missing": true, "warnings": [], "dir": ""}));
+    };
+    let root = pack_dir.canonicalize().map_err(|e| format!("{}: {e}", pack_dir.display()))?;
+    let catalog = root.join("catalog.json");
+    let text = std::fs::read_to_string(&catalog).map_err(|e| format!("{}: {e}", catalog.display()))?;
+    if text.len() > 4 * 1024 * 1024 {
+        return Err("the sound pack catalogue is larger than 4 MiB".into());
+    }
+    let doc: Value = serde_json::from_str(&text).map_err(|e| format!("{}: {e}", catalog.display()))?;
+    let entries = doc.get("items").and_then(Value::as_array).ok_or("the sound pack catalogue has no \"items\" array")?;
+    if entries.len() > 500 {
+        return Err(format!("the sound pack catalogue holds {} items (at most 500)", entries.len()));
+    }
+    let mut items = Vec::with_capacity(entries.len());
+    let mut warnings = Vec::new();
+    for (index, entry) in entries.iter().enumerate() {
+        match pack_sfx_item(&root, entry) {
+            Ok(item) => items.push(item),
+            Err(e) => {
+                if warnings.len() < 50 {
+                    warnings.push(format!("item {index}: {e}"));
+                }
+            }
+        }
+    }
+    let mut categories: Vec<String> = items.iter().filter_map(|i| i.get("category").and_then(Value::as_str).map(str::to_string)).collect();
+    categories.sort();
+    categories.dedup();
+    Ok(json!({
+        "items": items,
+        "categories": categories,
+        "missing": false,
+        "warnings": warnings,
+        "dir": root.to_string_lossy(),
+    }))
+}
+
+fn pack_sfx_item(root: &Path, entry: &Value) -> Result<Value, String> {
+    let id = entry.get("id").and_then(Value::as_str).ok_or("missing id")?;
+    if id.is_empty() || id.len() > 40 || !id.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-') {
+        return Err(format!("bad id {id:?}"));
+    }
+    let name = entry.get("name").and_then(Value::as_str).ok_or("missing name")?;
+    if name.is_empty() || name.chars().count() > 80 {
+        return Err(format!("{id}: bad name"));
+    }
+    let category = entry.get("category").and_then(Value::as_str).ok_or("missing category")?;
+    if category.is_empty() || category.chars().count() > 60 {
+        return Err(format!("{id}: bad category"));
+    }
+    let recorded = entry.get("seconds").and_then(Value::as_f64).ok_or("missing seconds")?;
+    if !recorded.is_finite() || recorded <= 0.0 || recorded > 120.0 {
+        return Err(format!("{id}: bad duration"));
+    }
+    let file = entry.get("file").and_then(Value::as_str).ok_or("missing file")?;
+    let relative = Path::new(file);
+    if relative.is_absolute()
+        || relative.components().any(|c| !matches!(c, std::path::Component::Normal(_)))
+        || relative.extension().and_then(|e| e.to_str()).is_none_or(|e| !e.eq_ignore_ascii_case("wav"))
+    {
+        return Err(format!("{id}: bad file path {file:?}"));
+    }
+    let path = root.join(relative);
+    let canonical = path.canonicalize().map_err(|e| format!("{id}: {e}"))?;
+    if !canonical.starts_with(root) {
+        return Err(format!("{id}: file is outside the pack"));
+    }
+    let meta = std::fs::metadata(&canonical).map_err(|e| format!("{id}: {e}"))?;
+    if !meta.is_file() {
+        return Err(format!("{id}: not a file"));
+    }
+    if meta.len() > 32 * 1024 * 1024 {
+        return Err(format!("{id}: larger than 32 MiB"));
+    }
+    let bytes = std::fs::read(&canonical).map_err(|e| format!("{id}: {e}"))?;
+    let wav = audio::parse_wav(&bytes).map_err(|e| format!("{id}: not a PCM WAV: {e}"))?;
+    let seconds = wav.duration();
+    if !seconds.is_finite() || seconds <= 0.0 || seconds > 120.0 {
+        return Err(format!("{id}: bad measured duration"));
+    }
+    let peaks: Vec<f64> = match entry.get("peaks").and_then(Value::as_array) {
+        Some(values)
+            if (8..=512).contains(&values.len())
+                && values.iter().all(|v| v.as_f64().is_some_and(|x| x.is_finite() && (0.0..=1.0).contains(&x))) =>
+        {
+            values.iter().filter_map(Value::as_f64).collect()
+        }
+        _ => audio::compute_peaks(&bytes, 64).into_iter().map(|p| f64::from(p.clamp(0.0, 1.0))).collect(),
+    };
+    let tags: Vec<String> = entry
+        .get("tags")
+        .and_then(Value::as_array)
+        .map(|list| {
+            list.iter()
+                .filter_map(Value::as_str)
+                .filter(|t| !t.is_empty() && t.len() <= 20 && t.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-'))
+                .take(8)
+                .map(str::to_string)
+                .collect()
+        })
+        .unwrap_or_default();
+    let channels = entry.get("channels").and_then(Value::as_u64).filter(|c| (1..=8).contains(c)).unwrap_or(1);
+    Ok(json!({
+        "id": id,
+        "name": name,
+        "category": category,
+        "tags": tags,
+        "seconds": (seconds * 1000.0).round() / 1000.0,
+        "sampleRate": wav.rate,
+        "channels": channels,
+        "peaks": peaks,
+        "file": file,
+        "path": plain_path(&canonical),
+    }))
 }
 
 fn styles_list() -> Value {

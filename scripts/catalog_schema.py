@@ -37,7 +37,7 @@ CAPTION_ANCHORS = {"top", "middle", "bottom"}
 CAPTION_ANIMS = {"none", "fade", "pop", "slideUp"}
 CAPTION_STYLES = {"Regular", "Medium", "SemiBold", "Bold", "Black", "Light", "Italic"}
 GENERATORS = {"solid", "grey-scale", "color-bars-smpte", "color-bars-ebu", "checker", "grid", "noise", "countdown"}
-SFX_RECIPES = {"legacy", "whoosh", "riser", "reverse", "boom", "impact", "drop", "downlifter",
+SFX_RECIPES = {"asset", "legacy", "whoosh", "riser", "reverse", "boom", "impact", "drop", "downlifter",
                "ui", "chime", "shimmer", "sparkle", "digital", "camera", "ambience", "cartoon", "scifi"}
 TOOL_IDS = {
     "marker.chapters", "marker.beats", "marker.notes",
@@ -233,7 +233,7 @@ _KIND_FIELDS = {
     "gradient": {"sub", "bg", "gen", "color"},
     "palette": {"colors"},
     "caption": {"style"},
-    "sfx": {"seconds", "recipe", "variant"},
+    "sfx": {"seconds", "recipe", "variant", "asset"},
     "tool": {"tool", "needs"},
 }
 
@@ -454,6 +454,12 @@ def check_sfx(item, where, errors):
     if item.get("recipe") not in SFX_RECIPES:
         errors.add(where + ".recipe", f"expected one of {sorted(SFX_RECIPES)}")
     check_range(item.get("variant"), 0, 100000, where + ".variant", errors, integer=True)
+    asset = item.get("asset")
+    if item.get("recipe") == "asset":
+        if not check_str(asset, where + ".asset", errors, 1, 40, re.compile(r"^[a-z0-9][a-z0-9-]{0,39}$")):
+            return
+    elif "asset" in item:
+        errors.add(where + ".asset", "only the asset recipe names a pack file")
 
 
 def check_tool(item, where, errors):

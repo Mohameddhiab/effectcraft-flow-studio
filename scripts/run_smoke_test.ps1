@@ -11,6 +11,8 @@ if (-not $Helper) { $Helper = "effectcraft-flow-helper" }
 $flowDir = Join-Path $root "target\flowtest"
 New-Item -ItemType Directory -Force -Path $flowDir | Out-Null
 $env:EFFECTCRAFT_FLOW_DIR = $flowDir
+# The helper serves the sound pack from here at runtime (sfx.pack.list).
+$env:EFFECTCRAFT_FLOW_ASSETS = Join-Path $root "assets\sfx-pack"
 
 & (Join-Path $PSScriptRoot "build_steps.ps1")
 if (!(Test-Path (Join-Path $root "target\steps.json"))) {

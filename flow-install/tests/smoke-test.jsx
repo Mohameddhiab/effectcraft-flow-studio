@@ -338,12 +338,12 @@ function pump(n) {
   button("Remove Flow effects").onClick();
   check("remove clears every Flow effect", fxSolid.property("ADBE Effect Parade").numProperties === 0, fxSolid.property("ADBE Effect Parade").numProperties);
 
-  // ---- Sounds
-  pick("Built-in (original)");
+  // ---- Sounds (pack via sfx.pack.list; built-in stays the fallback)
+  pick("Pack");
   F.loadSounds();
-  check("built-in sounds listed", /sounds ready/.test(F.status()), F.status());
-  var sl = all(F.ui, "listbox").filter(function (l) { return l.items.length === 20; })[0];
-  check("20 built-in sounds", !!sl, "no list of 20");
+  check("pack sounds listed", /sons du pack/.test(F.status()), F.status());
+  var sl = all(F.ui, "listbox").filter(function (l) { return l.items.length === 84; })[0];
+  check("84 pack sounds", !!sl, "list=" + (sl ? sl.items.length : 0));
   sl.selection = 0;
   comp.time = 2;
   for (var sz = 1; sz <= comp.numLayers; sz++) comp.layer(sz).selected = false;

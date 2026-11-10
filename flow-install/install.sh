@@ -24,5 +24,22 @@ if [ -f "$dest/Flow Studio.jsx" ]; then
 fi
 cp "$source" "$dest/"
 echo "Installed: $dest/Flow Studio.jsx"
+
+# Sound-effect pack: copied to <settings>/FlowStudio/assets/sfx-pack so the helper
+# (sfx.pack.list) can find it at runtime.
+sfx_source="$root/assets/sfx-pack"
+sfx_dest="$base/FlowStudio/assets/sfx-pack"
+if [ -d "$sfx_source" ]; then
+  if [ -e "$sfx_dest" ]; then
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    mv "$sfx_dest" "$sfx_dest.$stamp.bak"
+    echo "Backup of the previous pack: $sfx_dest.$stamp.bak"
+  fi
+  mkdir -p "$(dirname "$sfx_dest")"
+  cp -r "$sfx_source/." "$sfx_dest/"
+  echo "Installed sound pack: $sfx_dest"
+else
+  echo "No assets/sfx-pack found alongside the panel; sounds will fall back to built-in."
+fi
 echo "Restart EffectCraft, then open Window > Flow Studio.jsx."
 echo "Optional helper (silence, captions, sounds, models): run effectcraft-flow-helper serve."

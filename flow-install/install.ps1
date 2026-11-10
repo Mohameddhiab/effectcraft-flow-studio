@@ -22,5 +22,23 @@ if (Test-Path $dest) {
 }
 Copy-Item -Force $source $dest
 Write-Host "Installed: $dest"
+
+# Sound-effect pack: copied to <settings>/FlowStudio/assets/sfx-pack so the helper
+# (sfx.pack.list) can find it at runtime.
+$sfxSource = Join-Path $root "assets\sfx-pack"
+$sfxDest = Join-Path $config "FlowStudio\assets\sfx-pack"
+if (Test-Path $sfxSource) {
+    if (Test-Path $sfxDest) {
+        $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+        $backup = "$sfxDest.$stamp.bak"
+        Move-Item -Force $sfxDest $backup
+        Write-Host "Backup of the previous pack: $backup"
+    }
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $sfxDest) | Out-Null
+    Copy-Item -Recurse -Force $sfxSource $sfxDest
+    Write-Host "Installed sound pack: $sfxDest"
+} else {
+    Write-Host "No assets/sfx-pack found alongside the panel; sounds will fall back to built-in."
+}
 Write-Host "Restart EffectCraft, then open Window > Flow Studio.jsx."
 Write-Host "Optional helper (silence, captions, sounds, models): run effectcraft-flow-helper.exe serve."

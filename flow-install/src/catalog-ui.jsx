@@ -1,7 +1,7 @@
 // ================================================================== Catalogue screens
 //
 // The catalogue lives inside the Library tab, so the panel keeps its five tabs. The kind and
-// family dropdowns narrow 499 presets down to a handful of cards; the search box also matches
+// family dropdowns narrow 503 presets down to a handful of cards; the search box also matches
 // families and tags. A card is greyed when a native effect it needs is missing, and a click
 // explains why instead of failing halfway through an apply.
 

@@ -1,0 +1,9 @@
+asset:        sfx-pack
+title:        Flow Studio Original SFX Pack
+author:       Flow Studio contributors
+source:       original work
+license:      CC0-1.0
+license-file: LICENSE-CC0.txt
+added:        2026-11-09 by Flow Studio contributors
+notes:        84 sound effects synthesised from oscillators and seeded noise by
+              generate_sfx.py; no third-party recordings, samples or Adobe artwork.

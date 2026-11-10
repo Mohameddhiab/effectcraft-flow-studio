@@ -59,6 +59,42 @@ pub fn sfx_dir() -> PathBuf {
     flow_dir().join("sfx")
 }
 
+/// The sound-effect pack: `EFFECTCRAFT_FLOW_ASSETS` (a pack folder or a folder holding
+/// `assets/sfx-pack`), the installed copy under the Flow folder, a development checkout next to
+/// the helper binary, or the current folder. `None` when no readable `catalog.json` is found.
+pub fn sfx_pack_dir() -> Option<PathBuf> {
+    fn has_catalog(dir: &Path) -> bool {
+        dir.join("catalog.json").is_file()
+    }
+    if let Some(raw) = std::env::var_os("EFFECTCRAFT_FLOW_ASSETS").filter(|d| !d.is_empty()) {
+        let given = PathBuf::from(raw);
+        if has_catalog(&given) {
+            return Some(given);
+        }
+        let nested = given.join("assets").join("sfx-pack");
+        if has_catalog(&nested) {
+            return Some(nested);
+        }
+    }
+    let installed = flow_dir().join("assets").join("sfx-pack");
+    if has_catalog(&installed) {
+        return Some(installed);
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        let mut dir = exe.parent().map(Path::to_path_buf);
+        for _ in 0..4 {
+            let Some(current) = dir else { break };
+            let candidate = current.join("assets").join("sfx-pack");
+            if has_catalog(&candidate) {
+                return Some(candidate);
+            }
+            dir = current.parent().map(Path::to_path_buf);
+        }
+    }
+    let cwd = std::env::current_dir().ok()?.join("assets").join("sfx-pack");
+    has_catalog(&cwd).then_some(cwd)
+}
+
 pub fn pins_file() -> PathBuf {
     flow_dir().join("model-pins.json")
 }

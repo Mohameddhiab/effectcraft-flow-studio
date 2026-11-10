@@ -169,6 +169,30 @@ pub fn encode_wav_pcm16(samples: &[f32], rate: u32) -> Vec<u8> {
     v
 }
 
+/// Computes normalized peak values for a waveform mini-drawing from audio bytes.
+pub fn compute_peaks(bytes: &[u8], bins: u32) -> Vec<f32> {
+    let bins = bins.min(4096) as usize;
+    let wav = match parse_wav(bytes) {
+        Ok(w) => w,
+        Err(_) => return vec![0.0f32; bins],
+    };
+    let samples = wav.samples;
+    if samples.is_empty() || bins == 0 {
+        return vec![0.0f32; bins];
+    }
+    let bin_count = bins.min(samples.len());
+    let mut peaks = Vec::with_capacity(bin_count);
+    let step = samples.len() as f32 / bin_count as f32;
+    for i in 0..bin_count {
+        let start = (i as f32 * step).floor() as usize;
+        let end = ((i + 1) as f32 * step).floor() as usize;
+        let end = end.min(samples.len()).max(start.saturating_add(1)).min(samples.len());
+        let peak = samples.get(start..end).unwrap_or_default().iter().fold(0.0f32, |m, v| m.max(v.abs()));
+        peaks.push(peak.clamp(0.0, 1.0));
+    }
+    peaks
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

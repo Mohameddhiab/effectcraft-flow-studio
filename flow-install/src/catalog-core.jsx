@@ -1,6 +1,6 @@
 // ================================================================== Flow Catalogue engine
 //
-// The catalogue is data: 499 presets validated by scripts/catalog_schema.py and embedded above.
+// The catalogue is data: 503 presets validated by scripts/catalog_schema.py and embedded above.
 // This block turns a preset into real layers, effects and expressions. Every native effect is
 // checked before use and every addProperty() call stays inside a try/catch, so a host that ships
 // an older effect registry disables one card instead of breaking the panel.
