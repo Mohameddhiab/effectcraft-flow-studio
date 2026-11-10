@@ -3515,6 +3515,62 @@ function catRemoveItem(item, comp, layers) {
   var capButtons = captionTab.add("group");
   capButtons.alignment = ["fill", "top"];
   var capGenerate = addBtn(capButtons, "Générer depuis le calque", "Generate from selected layer", true);
+
+  // Whisper readiness right where captions are generated: check the chosen model and whisper-cli,
+  // or install the model without leaving the Captions tab.
+  var capWhisperRow = captionTab.add("group");
+  capWhisperRow.alignment = ["fill", "top"];
+  var capWhisperCheck = addBtn(capWhisperRow, "Vérifier Whisper", "Check Whisper", false);
+  var capWhisperInstall = addBtn(capWhisperRow, "Installer le modèle", "Install model", false);
+  var capWhisperInfo = captionTab.add("statictext", undefined, "Whisper : vérifiez le modèle et whisper-cli avant de générer.", { multiline: true });
+  capWhisperInfo.preferredSize = [-1, 30];
+  capWhisperInfo.alignment = ["fill", "top"];
+
+  function capModelId() {
+    var i = capModel.selection ? capModel.selection.index : 0;
+    return MODEL_IDS[clamp(i, 0, MODEL_IDS.length - 1)];
+  }
+
+  function capFindModel(list) {
+    var id = capModelId();
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+
+  function capCheckWhisper() {
+    var c = helper({ op: "config.get" });
+    if (!c.ok) {
+      capWhisperInfo.text = "Helper injoignable : " + c.error;
+      return fail("Whisper : " + c.error);
+    }
+    var l = helper({ op: "models.list" });
+    if (!l.ok) {
+      capWhisperInfo.text = "Modèles indisponibles : " + l.error;
+      return fail(l.error);
+    }
+    var m = capFindModel(l.models || []);
+    var name = m ? m.name : capModelId();
+    var ready = !!(m && m.installed && c.whisperCli);
+    capWhisperInfo.text =
+      (m && m.installed ? "Modèle " + name + " installé." : "Modèle " + name + (m ? " non installé (" + m.sizeMb + " Mo)." : " inconnu.")) +
+      "\n" +
+      (c.whisperCli ? "whisper-cli : " + c.whisperCli : (c.whisperCliError || "whisper-cli introuvable : indiquez son chemin dans Modèles."));
+    if (ready) return say("Whisper prêt : " + name + ".");
+    warn("Whisper incomplet : " + (m && !m.installed ? "installez le modèle." : "vérifiez whisper-cli dans Modèles."));
+  }
+
+  capWhisperCheck.onClick = capCheckWhisper;
+  capWhisperInstall.onClick = function () {
+    var l = helper({ op: "models.list" });
+    if (!l.ok) return fail(l.error);
+    var m = capFindModel(l.models || []);
+    if (!m) return fail("Modèle inconnu : " + capModelId() + ".");
+    if (m.installed) return capCheckWhisper();
+    startJob({ op: "models.install", id: m.id }, "Installation de " + m.name, function () {
+      capCheckWhisper();
+    });
+  };
+
   var capSrtPath = field(captionTab, tr("captionFile"), "", 150);
   var capImport = addBtn(captionTab, "Importer un fichier de sous-titres", "Import captions from file", false);
 
@@ -6365,6 +6421,7 @@ catLibraryRelabel();
       };
     },
     silenceProfiles: function () { return SIL_PROFILES.slice(); },
+    whisperStatus: function () { return capWhisperInfo.text; },
     textBuiltin: TEXT_BUILTIN,
     bgBuiltin: BG_BUILTIN,
     addTextAnimation: addTextAnimation,

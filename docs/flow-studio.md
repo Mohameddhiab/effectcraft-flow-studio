@@ -142,7 +142,9 @@ catalog entry; a pinned digest is then checked on every install.
   Named profiles (**Standard**, **Podcast**, **Interview**, **Musique**) set the detector and timings;
   minimum silence, padding, detector and threshold are persisted.
 - **Captions** (`Montage ▸ Captions`): **Générer depuis le calque** transcribes the selected layer with
-  Whisper; **Importer un fichier de sous-titres** accepts `.srt` and `.vtt`; **Exporter SRT** and
+  Whisper; **Vérifier Whisper** reports whether the chosen model and `whisper-cli` are ready and
+  **Installer le modèle** fetches it without leaving the tab; **Importer un fichier de sous-titres** accepts
+  `.srt` and `.vtt`; **Exporter SRT** and
   **Exporter ASS** write to the helper's exports folder. The style editor has a live swatch, font,
   colours, stroke, shadow, position, animation and grouping controls. Eight built-in styles ship with
   the panel: Clean, Bold Yellow, Word Pop, Minimal, Subtitle Outline, Arabic Clean, Hormozi and Karaoke.

@@ -141,6 +141,11 @@ function pump(n) {
   check("original disabled", alayer.enabled === false, alayer.enabled);
 
   // ---- Captions
+  var capCheck = all(F.ui, "button").filter(function (b) { return b._en === "Check Whisper"; })[0];
+  check("Captions has a Whisper check", !!capCheck, "no Check Whisper button");
+  capCheck.onClick();
+  var ws = F.whisperStatus();
+  check("Whisper check reports the model and whisper-cli", /Modèle .*(installé|non installé)/.test(ws) && /whisper-cli/.test(ws), ws);
   var words = [["Bonjour", 0.5, 1.0], ["tout", 1.0, 1.3], ["le", 1.3, 1.4], ["monde", 1.4, 2.0]];
   var line = { start: 0.5, end: 2.0, words: words.map(function (w) { return { text: w[0], start: w[1], end: w[2] }; }) };
   F.setCaptions([line, { start: 3, end: 4, words: [{ text: "Salut", start: 3, end: 4 }] }], 0);
