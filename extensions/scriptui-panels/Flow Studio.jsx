@@ -2953,6 +2953,41 @@ function catRemoveItem(item, comp, layers) {
     }
   }
 
+  // Every other multiline note in the panel has the same problem as the welcome copy: EffectCraft's
+  // ScriptUI never re-wraps static text, so a fixed preferredSize clips the sentence at narrow
+  // docks. `note()` registers a control with its raw string (or its translation key) and
+  // `refreshNotes()` re-wraps and re-sizes them all when the width or the language changes, so no
+  // hint, guide or result line is ever cut mid-word.
+  var NOTES = [];
+
+  function refreshNote(c, w) {
+    var raw = c._flowKey !== undefined ? tr(c._flowKey) : c._flowNote;
+    c.text = wrapLines(raw, w);
+    c.preferredSize = [-1, Math.max(16, c.text.split("\n").length * 16)];
+  }
+
+  // `spec` is the translation key for a static hint; without one the control's current text is
+  // taken as the raw string (dynamic results set through `setNote`).
+  function note(c, spec) {
+    if (typeof spec === "string") c._flowKey = spec;
+    else c._flowNote = String(c.text || "");
+    NOTES.push(c);
+    refreshNote(c, welcomeTextWidth());
+    registerDraw(c);
+    return c;
+  }
+
+  function setNote(c, text) {
+    c._flowKey = undefined;
+    c._flowNote = String(text === undefined || text === null ? "" : text);
+    refreshNote(c, welcomeTextWidth());
+  }
+
+  function refreshNotes(width) {
+    var w = welcomeTextWidth(width);
+    for (var i = 0; i < NOTES.length; i++) refreshNote(NOTES[i], w);
+  }
+
   // ------------------------------------------------------------------ tabbed navigation
   // Consolidated into 5 top-level categories: Library, Montage, Animer, Look, Réglages
   var tabs = ui.add("tabbedpanel");
@@ -3155,6 +3190,7 @@ function catRemoveItem(item, comp, layers) {
     if (Math.abs(w - wrappedAt) >= 8) {
       wrappedAt = w;
       refreshWelcomeText(w);
+      refreshNotes(w);
     }
     if (changed) {
       try { ui.layout.layout(); } catch (e) {}
@@ -3201,7 +3237,10 @@ function catRemoveItem(item, comp, layers) {
         // A control whose initial text is not a known label is dynamic (status, counters, model
         // info...). Mark it once so a later language switch never overwrites live content.
         if (!c._flowNoTranslate) {
-          if (c._flowBase === undefined) {
+          // Registered notes re-translate and re-wrap themselves in `refreshNotes`; localizing
+          // here would replace the wrapped text with a single clipped line.
+          if (c._flowNote !== undefined || c._flowKey !== undefined) c._flowNoTranslate = true;
+          else if (c._flowBase === undefined) {
             var baseText = c.text;
             if (typeof baseText !== "string" || !baseText) c._flowNoTranslate = true;
             else if (canTranslate(baseText)) c._flowBase = baseText;
@@ -3260,6 +3299,7 @@ function catRemoveItem(item, comp, layers) {
     welcomeSkip.text = tr("welcome.skip");
     welcomeTitle.text = tr("welcome.title");
     refreshWelcomeText();
+    refreshNotes();
     applyResponsive(0);
     if (/^(●|▲)/.test(status.text)) status.text = status.text.charAt(0) + " " + tr("status.ready");
     redrawAll();
@@ -3288,6 +3328,12 @@ function catRemoveItem(item, comp, layers) {
   function skinButton(b, kind, height) {
     b._flowKind = kind || "normal";
     if (height) b.preferredSize = [-1, height];
+    // Groups that hold buttons share one rhythm everywhere: 8 pt between actions, whatever the
+    // screen (the engine default is 10 and plain `add("group")` rows never set it).
+    if (b.parent && b.parent.type === "group" && b.parent._flowRow !== true) {
+      b.parent._flowRow = true;
+      b.parent.spacing = 8;
+    }
     b.onDraw = function () {
       var g = this.graphics;
       var sz = this.size;
@@ -3509,6 +3555,7 @@ function catRemoveItem(item, comp, layers) {
   var easeClear = addBtn(easeButtons, "Supprimer l'expression", "Remove expression", false, { kind: "danger" });
   var easeHintText = easeTab.add("statictext", undefined, tr("easeHint"), { multiline: true });
   easeHintText.alignment = ["fill", "top"];
+  note(easeHintText, "easeHint");
 
   easeApply.onClick = function () {
     var props = selectedProps();
@@ -3555,7 +3602,7 @@ function catRemoveItem(item, comp, layers) {
   exprList.preferredSize = [-1, 120];
   var exprInfo = exprTab.add("statictext", undefined, "", { multiline: true });
   exprInfo.alignment = ["fill", "top"];
-  exprInfo.preferredSize = [-1, 34];
+  note(exprInfo);
   var exprParamBox = exprTab.add("group");
   exprParamBox.orientation = "column";
   exprParamBox.alignChildren = ["fill", "top"];
@@ -3565,6 +3612,7 @@ function catRemoveItem(item, comp, layers) {
   var exprPick = addBtn(exprButtons, "Voir le code", "Show code", false);
   var exprHintText = exprTab.add("statictext", undefined, tr("exprHint"), { multiline: true });
   exprHintText.alignment = ["fill", "top"];
+  note(exprHintText, "exprHint");
   var exprShown = [];
   var exprFields = [];
 
@@ -3586,7 +3634,7 @@ function catRemoveItem(item, comp, layers) {
     exprFields = [];
     var sel = exprList.selection;
     var entry = sel ? exprShown[sel.index] : null;
-    exprInfo.text = entry ? entry.info : "";
+    setNote(exprInfo, entry ? entry.info : "");
     if (!entry) return;
     for (var i = 0; i < entry.params.length; i++) {
       var p = entry.params[i];
@@ -3638,6 +3686,7 @@ function catRemoveItem(item, comp, layers) {
 
   var silHint = silenceTab.add("statictext", undefined, tr("silenceHint"), { multiline: true });
   silHint.preferredSize = [-1, 22];
+  note(silHint, "silenceHint");
 
   // Waveform & threshold preview
   var silWave = silenceTab.add("panel", undefined, tr("waveform"));
@@ -3770,6 +3819,7 @@ function catRemoveItem(item, comp, layers) {
   silApply.enabled = false;
   var silResult = silenceTab.add("statictext", undefined, tr("silenceReady"), { multiline: true });
   silResult.preferredSize = [-1, 40];
+  note(silResult, "silenceReady");
   silResult.alignment = ["fill", "top"];
   var silLast = null;
 
@@ -3780,6 +3830,7 @@ function catRemoveItem(item, comp, layers) {
   beatGroup.alignment = ["fill", "top"];
   var beatHint = beatGroup.add("statictext", undefined, "Détecte le tempo de la musique et pose des repères de rythme.", { multiline: true });
   beatHint.preferredSize = [-1, 20];
+  note(beatHint);
   var beatButtons = beatGroup.add("group");
   beatButtons.alignment = ["fill", "top"];
   var beatBtn = addBtn(beatButtons, "Détecter le tempo & poser des marqueurs", "Detect Beats", false);
@@ -3863,7 +3914,7 @@ function catRemoveItem(item, comp, layers) {
       function (result) {
         silLast = { result: result, layerId: t.layer.index, path: t.path };
         var pct = result.duration > 0 ? Math.round((result.silentTotal / result.duration) * 100) : 0;
-        silResult.text = result.silent.length + " silences, " + fmt(result.silentTotal) + " (" + pct + "%) can be removed of " + fmt(result.duration) + ". Threshold used: " + result.thresholdUsedDb + " dB, noise floor " + result.noiseFloorDb + " dB.";
+        setNote(silResult, result.silent.length + " silences, " + fmt(result.silentTotal) + " (" + pct + "%) can be removed of " + fmt(result.duration) + ". Threshold used: " + result.thresholdUsedDb + " dB, noise floor " + result.noiseFloorDb + " dB.");
         silApply.enabled = result.silent.length > 0;
         try { silWave.notify("onDraw"); } catch (e) {}
       }
@@ -3950,6 +4001,7 @@ function catRemoveItem(item, comp, layers) {
 
   var capHint = captionTab.add("statictext", undefined, tr("captionsHint"), { multiline: true });
   capHint.preferredSize = [-1, 20];
+  note(capHint, "captionsHint");
 
   var capLang = dropdown(captionTab, "Language", ["Auto-detect", "Français (fr)", "العربية (ar)", "English (en)", "Español (es)", "Deutsch (de)"], 0);
   var LANG_CODES = ["auto", "fr", "ar", "en", "es", "de"];
@@ -3976,6 +4028,7 @@ function catRemoveItem(item, comp, layers) {
   var capWhisperInstall = addBtn(capWhisperRow, "Installer le modèle", "Install model", false);
   var capWhisperInfo = captionTab.add("statictext", undefined, "Whisper : vérifiez le modèle et whisper-cli avant de générer.", { multiline: true });
   capWhisperInfo.preferredSize = [-1, 30];
+  note(capWhisperInfo);
   capWhisperInfo.alignment = ["fill", "top"];
 
   function capModelId() {
@@ -3992,21 +4045,21 @@ function catRemoveItem(item, comp, layers) {
   function capCheckWhisper() {
     var c = helper({ op: "config.get" });
     if (!c.ok) {
-      capWhisperInfo.text = "Helper injoignable : " + c.error;
+      setNote(capWhisperInfo, "Helper injoignable : " + c.error);
       return fail("Whisper : " + c.error);
     }
     var l = helper({ op: "models.list" });
     if (!l.ok) {
-      capWhisperInfo.text = "Modèles indisponibles : " + l.error;
+      setNote(capWhisperInfo, "Modèles indisponibles : " + l.error);
       return fail(l.error);
     }
     var m = capFindModel(l.models || []);
     var name = m ? m.name : capModelId();
     var ready = !!(m && m.installed && c.whisperCli);
-    capWhisperInfo.text =
+    setNote(capWhisperInfo,
       (m && m.installed ? "Modèle " + name + " installé." : "Modèle " + name + (m ? " non installé (" + m.sizeMb + " Mo)." : " inconnu.")) +
       "\n" +
-      (c.whisperCli ? "whisper-cli : " + c.whisperCli : (c.whisperCliError || "whisper-cli introuvable : indiquez son chemin dans Modèles."));
+      (c.whisperCli ? "whisper-cli : " + c.whisperCli : (c.whisperCliError || "whisper-cli introuvable : indiquez son chemin dans Modèles.")));
     if (ready) return say("Whisper prêt : " + name + ".");
     warn("Whisper incomplet : " + (m && !m.installed ? "installez le modèle." : "vérifiez whisper-cli dans Modèles."));
   }
@@ -4143,13 +4196,23 @@ function catRemoveItem(item, comp, layers) {
     try { ui.layout.layout(true); } catch (e) {}
   };
 
+  // Four actions would ellipsize on a narrow dock, so the row splits into a 2x2 block (the
+  // column group keeps the outer spacing while each row gets the shared 8 pt rhythm).
   var capActions = captionTab.add("group");
+  capActions.orientation = "column";
   capActions.alignment = ["fill", "top"];
-  var capCreate = addBtn(capActions, "Créer les calques de texte", "Create text layers", false);
-  var capRestyle = addBtn(capActions, "Re-styliser tous les sous-titres", "Restyle all captions", false);
-  var capExport = addBtn(capActions, "Exporter SRT", "Export SRT", false);
-  var capExportAss = addBtn(capActions, "Exporter ASS", "Export ASS", false);
+  capActions.alignChildren = ["fill", "top"];
+  capActions.spacing = 4;
+  var capActionsRow1 = capActions.add("group");
+  capActionsRow1.alignment = ["fill", "top"];
+  var capCreate = addBtn(capActionsRow1, "Créer les calques de texte", "Create text layers", false);
+  var capRestyle = addBtn(capActionsRow1, "Re-styliser tous les sous-titres", "Restyle all captions", false);
+  var capActionsRow2 = capActions.add("group");
+  capActionsRow2.alignment = ["fill", "top"];
+  var capExport = addBtn(capActionsRow2, "Exporter SRT", "Export SRT", false);
+  var capExportAss = addBtn(capActionsRow2, "Exporter ASS", "Export ASS", false);
   var capHelp = captionTab.add("statictext", undefined, tr("captionsSteps"), { multiline: true });
+  note(capHelp, "captionsSteps");
   capHelp.alignment = ["fill", "top"];
   var lastLines = null;
 
@@ -4515,6 +4578,7 @@ function catRemoveItem(item, comp, layers) {
   var stkNote = strokeTab.add("statictext", undefined, "Nécessite le plug-in Stroke (" + STROKE_ID + ") dans votre dossier Plug-ins.", { multiline: true });
   stkNote.alignment = ["fill", "top"];
   stkNote.preferredSize = [-1, 34];
+  note(stkNote);
 
   stkPreset.onChange = function () {
     var p = STROKE_PRESETS[stkPreset.selection.index];
@@ -4595,6 +4659,7 @@ function catRemoveItem(item, comp, layers) {
   var modSave = addBtn(modelsTab, "Enregistrer le chemin whisper-cli", "Save whisper-cli path", false);
   var modInfo = modelsTab.add("statictext", undefined, "Models are free and open source (MIT). They are downloaded on demand and checked with SHA-256; nothing is bundled.", { multiline: true });
   modInfo.preferredSize = [-1, 50];
+  note(modInfo);
   var modelRows = [];
 
   function refreshModels() {
@@ -4655,8 +4720,10 @@ function catRemoveItem(item, comp, layers) {
   var hlpTitle = helperTab.add("statictext", undefined, tr("helperTitle"));
   var hlpStatusText = helperTab.add("statictext", undefined, "État : Prêt à vérifier.", { multiline: true });
   hlpStatusText.preferredSize = [-1, 24];
+  note(hlpStatusText);
   var hlpGuide = helperTab.add("statictext", undefined, tr("helperGuide"), { multiline: true });
   hlpGuide.preferredSize = [-1, 90];
+  note(hlpGuide, "helperGuide");
   var hlpRow = helperTab.add("group");
   hlpRow.alignment = ["fill", "top"];
   var hlpCheckBtn = addBtn(hlpRow, "Tester la connexion / Réessayer", "Connect / refresh", true);
@@ -4667,13 +4734,13 @@ function catRemoveItem(item, comp, layers) {
   hlpCheckBtn.onClick = function () {
     var r = helper({ op: "models.list" });
     if (r && r.ok) {
-      hlpStatusText.text = "● Connecté avec succès au helper Flow Studio.";
+      setNote(hlpStatusText, "● Connecté avec succès au helper Flow Studio.");
       try {
         hlpStatusText.graphics.foregroundColor = hlpStatusText.graphics.newPen(hlpStatusText.graphics.PenType.SOLID_COLOR, [0.15, 0.75, 0.35, 1], 1);
       } catch (e) {}
       say("Helper connecté.");
     } else {
-      hlpStatusText.text = "! Connexion impossible : " + (r ? r.error : "helper injoignable");
+      setNote(hlpStatusText, "! Connexion impossible : " + (r ? r.error : "helper injoignable"));
       try {
         hlpStatusText.graphics.foregroundColor = hlpStatusText.graphics.newPen(hlpStatusText.graphics.PenType.SOLID_COLOR, [0.95, 0.25, 0.25, 1], 1);
       } catch (e) {}
@@ -4686,6 +4753,7 @@ function catRemoveItem(item, comp, layers) {
   packTab.alignChildren = ["fill", "top"];
   var packDesc = packTab.add("statictext", undefined, tr("packHint"), { multiline: true });
   packDesc.preferredSize = [-1, 48];
+  note(packDesc, "packHint");
   var packBtns = packTab.add("group");
   packBtns.alignment = ["fill", "top"];
   var packExportBtn = addBtn(packBtns, "Exporter le pack complet", "Export pack", true);
@@ -4702,6 +4770,7 @@ function catRemoveItem(item, comp, layers) {
   packBox.alignment = ["fill", "fill"];
   packBox.preferredSize = [-1, 130];
   var packHelp = packTab.add("statictext", undefined, tr("packHelp"), { multiline: true });
+  note(packHelp, "packHelp");
   packHelp.alignment = ["fill", "top"];
 
   function flowPack() {
@@ -4897,6 +4966,7 @@ function catRemoveItem(item, comp, layers) {
   var txRemove = addBtn(txButtons, "Supprimer l'animation Flow", "Remove Flow animation", false, { kind: "danger" });
   var txHintText = textTab.add("statictext", undefined, tr("textHint"), { multiline: true });
   txHintText.alignment = ["fill", "top"];
+  note(txHintText, "textHint");
   var txName = field(textTab, "My preset name", "", 150);
   var txSaveRow = textTab.add("group");
   txSaveRow.alignment = ["fill", "top"];
@@ -5178,6 +5248,7 @@ function catRemoveItem(item, comp, layers) {
   var bgUpdate = addBtn(bgButtons, "Mettre à jour la sélection", "Update selected", false);
   var bgHintText = bgTab.add("statictext", undefined, tr("bgHint"), { multiline: true });
   bgHintText.alignment = ["fill", "top"];
+  note(bgHintText, "bgHint");
   var bgName = field(bgTab, "My preset name", "", 150);
   var bgSaveRow = bgTab.add("group");
   bgSaveRow.alignment = ["fill", "top"];
@@ -5494,6 +5565,7 @@ function catRemoveItem(item, comp, layers) {
   var fxNote = effectsTab.add("statictext", undefined, "Effects are named \"Flow: …\" and driven by expressions over the time window, so you can tweak them in the timeline.", { multiline: true });
   fxNote.alignment = ["fill", "top"];
   fxNote.preferredSize = [-1, 40];
+  note(fxNote);
   fxPick.onChange = function () {
     if (fxPick.selection) fxWhen.selection = FX[fxPick.selection.index].when;
   };
@@ -5596,6 +5668,7 @@ function catRemoveItem(item, comp, layers) {
   var sfxNote = soundsTab.add("statictext", undefined, "Le pack (84 sons CC0) est lu via le helper Flow. Les sons intégrés sont générés sur votre ordinateur. Glissez vos propres WAV dans un dossier et scannez-le.", { multiline: true });
   sfxNote.alignment = ["fill", "top"];
   sfxNote.preferredSize = [-1, 56];
+  note(sfxNote);
 
   function sfxFill(items) {
     sfxItems = items;
@@ -6925,6 +6998,7 @@ catLibraryRelabel();
   libRemove.visible = false;
   var libHelp = libraryTab.add("statictext", undefined, tr("libraryHelp"), { multiline: true });
   libHelp.alignment = ["fill", "top"];
+  note(libHelp, "libraryHelp");
 
   function libSelectedItem() {
     return libSel >= 0 && libSel < libShown.length ? libShown[libSel] : null;
@@ -7086,6 +7160,8 @@ catLibraryRelabel();
     headerMode: function () { return header.orientation; },
     welcomeButtonsMode: function () { return welcomeButtons.orientation; },
     welcomeBody: welcomeBody,
+    notes: function () { return NOTES; },
+    capActions: capActions,
     tabStripWidth: function () {
       var total = 0;
       for (var i = 0; i < tabs.children.length; i++) {

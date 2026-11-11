@@ -499,7 +499,7 @@ function pump(n) {
   button("★ Favorite").onClick();
   check("un-favourite empties it", libCount() === 0, libCount());
   libGo("Effects");
-  var searchBox = all(F.ui, "edittext").filter(function (e) { return e.onChanging && e.minimumSize && e.minimumSize[0] === 90; })[0];
+  var searchBox = all(F.ui, "edittext").filter(function (e) { return e.onChanging && e.preferredSize && e.preferredSize[0] === 220; })[0];
   searchBox.text = "blur";
   searchBox.onChanging();
   check("search filters the list", libCount() === 2, libCount());
@@ -783,6 +783,29 @@ function pump(n) {
   var dangers = allBtns.filter(function (b) { return b._flowKind === "danger"; });
   check("v3 destructive buttons are danger kind", dangers.length === 8, dangers.length);
   check("v3 primary actions carry the flag", allBtns.filter(function (b) { return b.isPrimary === true; }).length === 14, allBtns.filter(function (b) { return b.isPrimary === true; }).length);
+
+  // 8c. Notes: this host never re-wraps static text, so every multiline note re-wraps itself on
+  // width and language changes. In English (current language here) the 7 px/char estimate is the
+  // same one the welcome check uses; 258 pt is the inner width at the 298 pt dock.
+  check("v3 every multiline note registers for re-wrap", F.notes().length === 20, F.notes().length);
+  F.layout(298);
+  var noteClip = 0;
+  for (var ntn = 0; ntn < F.notes().length; ntn++) {
+    var nLines = String(F.notes()[ntn].text || "").split("\n");
+    var nWidest = 0;
+    for (var nll = 0; nll < nLines.length; nll++) nWidest = Math.max(nWidest, nLines[nll].length);
+    if (nWidest * 7 + 4 > 258) noteClip++;
+  }
+  check("v3 notes fit a 298 pt dock", noteClip === 0, "clipped=" + noteClip);
+  F.layout(1200);
+
+  // 8d. Action rows: the four caption actions split into a 2x2 block and every button row shares
+  // the same 8 pt rhythm (skinButton marks its parent group `_flowRow` once).
+  check("v3 caption actions split 2x2", F.capActions.orientation === "column" && F.capActions.children.length === 2 && F.capActions.children[0].children.length === 2 && F.capActions.children[1].children.length === 2, F.capActions.children.length);
+  var flowRows = all(F.ui, "group").filter(function (g) { return g._flowRow === true; });
+  var badRows = [];
+  for (var frw = 0; frw < flowRows.length; frw++) if (flowRows[frw].spacing !== 8) badRows.push(frw);
+  check("v3 button rows share the 8 pt rhythm", flowRows.length >= 14 && badRows.length === 0, flowRows.length + "/" + badRows.join(","));
 
   // 9. Arabic captions are right-justified and placed against the right edge.
   var karoMode = all(F.ui, "dropdownlist").filter(function (d) { return d._en === "Karaoke Mode"; })[0];
