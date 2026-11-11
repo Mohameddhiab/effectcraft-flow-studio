@@ -136,7 +136,7 @@ inside its `FlowStudio` folder and never listens on a public interface.
 
 ## Tests
 
-- **227-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
+- **235-check smoke suite** (`flow-install/tests/smoke-test.jsx`) covering the welcome screen, five
   top tabs, one primary action per leaf screen, English/Arabic switching, dark/light themes, library
   grid and paging, eight style thumbnails, pack round-trip, ASS karaoke tags, beat markers, AE
   scripts, Arabic RTL captions, the 84-sound pack, silence profiles, the Whisper check, the UI

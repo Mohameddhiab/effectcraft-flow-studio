@@ -237,10 +237,11 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   pane-resize redraw (**128 tests**). The app-level changes and these tests live in the development
   fork; this repository ships the panel, the overlay and the smoke suite.
 - `flow-install/tests/smoke-test.jsx` drives the real panel in EffectCraft through
-  `effectcraft-cli`: **227 checks**, including the welcome screen, five top tabs, one primary action
+  `effectcraft-cli`: **235 checks**, including the welcome screen, five top tabs, one primary action
   per leaf screen, English/Arabic switching, dark/light themes, library grid and paging, eight style
   thumbnails, pack file round-trip, ASS karaoke tags, beat markers, AE scripts, Arabic RTL captions,
-  the 84-sound pack, the silence profiles, the Whisper check and the UI widget catalogue.
+  the 84-sound pack, the silence profiles, the Whisper check, the UI widget catalogue, the token
+  skin on every button, the re-wrapped multiline notes and the shared action-row rhythm.
   Run `scripts/build_steps.ps1`, start the helper, then run the steps with `effectcraft-cli run`
   (see `scripts/run_smoke_test.ps1`).
 - The visual record is produced by the ignored `flow_studio_panel_snapshot` test in the development
@@ -250,6 +251,28 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   `scriptui.resize` to 760×540 the tabbed area measured 474 px with the status row visible at
   516–532. This is the compatibility path `INSTALL-PANEL.bat` uses when the app is already installed.
 
+## Live instance probe (2026-11-11)
+
+A live EffectCraft instance was driven through its control channel (`--control 9882`,
+`engine.execute` → `script.run` with a `code` parameter) to check what the scripting host really
+offers before building the live preview:
+
+- **`comp.saveFrameToPng(time, file)`** renders a real frame to a PNG. The signature is
+  `(time, file)` — a string path or a `(file, time)` order errors out. Verified on a 128×72 comp
+  with a solid layer: correct pixels, ~9 ms per frame at that size (44 ms for 10 renders).
+- **`comp.openInViewer()`** opens the comp in the Composition viewer and the Timeline (verified by
+  screenshot); `app.project.activeItem` then points at the comp. `app.activeViewer` stays `null`
+  until a viewer exists, so it is not a reliable readiness signal.
+- **`ScriptUI.newImage(file)`** already loads PNGs into the panel (the Library thumbnails use it),
+  so a rendered preview frame can be shown inside the panel too.
+- The engine `app.version` string reads `26.0 (EffectCraft 0.18.0)` but the binary is the current
+  0.23.1 build; the two version numbers are unrelated.
+
+This is the basis for the planned "Flow Preview" flow: a temporary preview comp shown in the
+viewer (and/or as an in-panel PNG), an **Apply** that copies it into the user's comp in one undo
+group, and a **Close** that deletes the preview comp — the user's comp is never touched before
+Apply.
+
 ## Limits and untested areas
 
 * Silence cutting makes one duplicated layer per kept section (no footage is re-encoded) and
@@ -258,9 +281,10 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
 * Arabic needs a font with Arabic glyphs installed (the *Arabic Clean* preset asks for
   *Noto Sans Arabic*); whether shaping is correct depends on EffectCraft's text engine. The ScriptUI
   shell itself stays left-to-right; RTL applies to caption text and placement.
-* ScriptUI cannot recolour native controls. The theme repaints the panel's custom-drawn previews,
-  waveform, curve and thumbnails, while buttons, fields and tabs keep the host colours. The
-  `isPrimary` flag is semantic metadata for tests/agents; the host draws native buttons.
+* ScriptUI cannot recolour native controls in the classic way, so the panel **repaints every
+  button in `onDraw`** (`skinButton`, kinds primary/normal/ghost/danger) while keeping the native
+  click, text and enabled state; fields, dropdowns and tabs stay host-painted. The `isPrimary`
+  flag is semantic metadata for tests/agents.
 * **Untested in this environment:** a real Whisper model and real transcription (no network/model
   download), the Stroke plug-in (not installed), and audio/video media beyond the generated test
   fixtures. The helper and panel were exercised headlessly and the panel once in the real 0.22 GUI

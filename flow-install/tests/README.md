@@ -14,7 +14,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\run_smoke_test.ps1
 ```
 
 The script builds `target/steps.json`, runs it with `effectcraft-cli run --empty --json`, and
-prints `PASS=n FAIL=n`. The suite has 227 checks and passed 227/0 in the development fork.
+prints `PASS=n FAIL=n`. The suite has 235 checks and passed 235/0 in the development fork.
 
 The visual snapshot test was previously only in the development fork (`flow_studio_panel_snapshot`),
 but this repository now provides `scripts/panel_snapshot.js` which drives the app's control channel

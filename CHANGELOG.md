@@ -1,5 +1,18 @@
-# Changelog## Unreleased
+# Changelog
+## Unreleased
 
+- Button skin (Figma): every button in the panel repaints itself in `onDraw` from the design tokens
+  (`skinButton`) while the native button keeps click, text and enabled state — primary = accent fill
+  with the `onAccent` label, normal = glass + border, ghost = flat, danger = red outline for the
+  eight destructive actions; labels ellipsize instead of running under the edge.
+- Notes & rhythm: every multiline static note (20 of them) re-wraps itself when the dock width or
+  the language changes (`note()` / `setNote()` / `refreshNotes()` — this host never re-wraps static
+  text), button rows share an 8 pt spacing rhythm and the four caption actions split into a 2×2
+  block so they stop ellipsizing on narrow docks. Smoke suite: 235 checks.
+- Live-instance probe (2026-11-11): on a live 0.23.1 instance the scripting host offers
+  `comp.saveFrameToPng(time, file)` (real PNG render, ~9 ms/frame at 128×72) and
+  `comp.openInViewer()` (opens the comp in the viewer, verified by screenshot) — the basis for the
+  planned "Flow Preview" temporary preview comp. See `docs/flow-studio.md`.
 - Library (Figma): the screen now mirrors the design export — `COLLECTION` eyebrow, « Bibliothèque
   créative », search with a drawn magnifier and `⌘K`, eight category chips, a 3 × 2 grid of
   illustrated cards and a `SÉLECTION` preview sheet. See `docs/images/flow-studio-after-library.png`.
@@ -14,7 +27,7 @@
 - Design tokens: verified 100 % mappage between `design/tokens.json` and `Flow Studio.jsx` TOKENS object (colours, rayons, espacements, typographie, recette glass). Voir `docs/design-system.md`.
 - Panel captures: offscreen harness `scripts/panel_snapshot.js` capture chaque écran à 298 / 320 / 400 / 460 pt, thèmes sombre et clair, via `--control` canal JSON-lignes. Voir `scripts/panel_snapshot.js`.
 - Miniatures catalogue: 525 PNGs générés en `assets/thumbs/<slug>@2x.png` (200×120, ~0,9 Mo total) pour les dix familles (titres, widgets, animations de texte, transitions, effets, dégradés, palettes, sous-titres, sons, outils), avec manifeste et installation à côté du panel.
-- Smoke suite: 227 checks (widgets, sons, profils de silence, Whisper, catalogue, tokens de design, layout étroit à 298 / 320 / 400 / 460 pt).
+- Smoke suite: 235 checks (widgets, sons, profils de silence, Whisper, catalogue, tokens de design, layout étroit à 298 / 320 / 400 / 460 pt, skin des boutons, notes re-wrappées).
 - UI widgets: 25 original data-driven badges, buttons, progress, notifications, stats and overlays built from
   shape and text parts with keyframed entrances; no plug-in or native effect required.
 - Sounds: 84 CC0 sound effects served by `sfx.pack.list`, with a drawn waveform and the built-in effects as
@@ -24,8 +37,8 @@
 - Design: `design/tokens.json` and `docs/design-system.md` publish the colours, radii, spacing, type sizes
   and glass recipe the panel mirrors; the smoke suite pins them so a silent drift fails. The light theme's
   success colour now matches the design (`#44d7a2`).
-- Smoke suite: 227 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens,
-  narrow-dock layout at 298 / 320 / 400 / 460 pt).
+- Smoke suite: 235 checks (widgets, sounds, silence profiles, Whisper, catalogue, design tokens,
+  narrow-dock layout at 298 / 320 / 400 / 460 pt, the button skin, re-wrapped notes).
 - Catalogue verification: `scripts/catalog_coverage.jsx` applies and removes every one of the 525 presets
   through the panel API (525 PASS; the three remaining tools are listed in `docs/flow-studio.md`).
 - Render verification: 55 transition comps and 70 effect comps are rendered by the CLI (236 PNGs) and
