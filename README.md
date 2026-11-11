@@ -82,7 +82,7 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
   [`design/tokens.json`](design/tokens.json), extracted from the interface design; the smoke suite
   pins them so a silent drift fails a test. See [`docs/design-system.md`](docs/design-system.md).
 - **Bibliothèque façon Figma.** Eyebrow `COLLECTION`, titre « Bibliothèque créative », recherche avec `⌘K`, huit chips de catégories et cartes illustrées (scène dusk : ciel, soleil, skyline, overlay par type). `scripts/gen_thumbs.js` exporte les mêmes scènes en 525 PNGs (`assets/thumbs/<slug>@2x.png`, 200×120, ~0,9 Mo) avec manifeste ; le panel les dessine en `onDraw`, donc un `.jsx` seul affiche quand même une image par élément.
-- **Handoff Figma.** [`design/handoff/`](design/handoff/) contient un brief prêt pour Claude/Figma : tokens, mesures, composants, 14 écrans, flux, chaînes FR/EN/AR, catalogue des 525 éléments et captures de référence.
+- **Handoff Figma.** [`design/handoff/`](design/handoff/) contient un brief prêt pour Claude, Gemini ou Figma : tokens, mesures, composants, 14 écrans, flux, chaînes FR/EN/AR, catalogue des 525 éléments et captures de référence.
 - **Theme and language.** The header switches between **Français**, **English** and **العربية**, and
   between **Auto**, **Sombre** and **Clair**. The choice persists across sessions.
 - **Persisted state.** Last top tab, library category, silence settings, advanced mode, language,

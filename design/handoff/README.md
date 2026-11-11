@@ -1,7 +1,7 @@
 # Flow Studio — UI/UX handoff pack
 
-This folder is a self-contained brief for a designer or an AI design agent (Claude, Figma Make,
-v0, …) that has to rebuild the **Flow Studio** panel as a Figma file. It describes the real,
+This folder is a self-contained brief for a designer or an AI design agent (Claude, Gemini,
+Figma Make, v0, …) that has to rebuild the **Flow Studio** panel as a Figma file. It describes the real,
 shipping panel — not an invented concept — so the design and the product stay aligned.
 
 Everything here is MIT OR Apache-2.0, like the rest of the repository.
@@ -11,6 +11,7 @@ Everything here is MIT OR Apache-2.0, like the rest of the repository.
 | File | What it gives you |
 | --- | --- |
 | [`figma-prompt.md`](figma-prompt.md) | The ready-to-paste prompt. Start here if you just want to hand the job to Claude. |
+| [`gemini-prompt.md`](gemini-prompt.md) | The same job written for Gemini: full redesign, one image per preset, 3-frame motion storyboards, ScriptUI fallbacks. |
 | [`tokens.json`](tokens.json) | Colours, radii, spacing, type sizes and the glass recipe. The single source of truth. |
 | [`measurements.md`](measurements.md) | Breakpoints, heights, margins, grid and type scale. |
 | [`components.md`](components.md) | Every component, its anatomy, sizes and states. |
