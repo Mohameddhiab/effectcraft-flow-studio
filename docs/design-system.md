@@ -9,6 +9,7 @@ panel honestly differs.
 - Machine-readable extract: [`design/tokens.json`](../design/tokens.json).
 - Panel copy: `TOKENS`, `TOKEN_RADIUS` and `TOKEN_SPACING` at the top of
   `extensions/scriptui-panels/Flow Studio.jsx`.
+- Design handoff for Claude/Figma: [`design/handoff/`](../design/handoff/README.md).
 
 The panel is a single installable `.jsx`, so it cannot read the JSON at runtime. The values are
 duplicated on purpose: change the design, `design/tokens.json` and the panel together. The smoke
