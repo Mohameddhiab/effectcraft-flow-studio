@@ -2439,7 +2439,10 @@ function catRemoveItem(item, comp, layers) {
       text: tokenColor(t.text), text2: tokenColor(t.text2), muted: tokenColor(t.muted),
       accent: tokenColor(t.accent), accent2: tokenColor(t.accent2),
       danger: tokenColor(t.danger), success: tokenColor(t.success), warning: tokenColor(t.warning),
-      cut: withAlpha(t.danger, 0.4), voice: withAlpha(t.success, 0.9)
+      cut: withAlpha(t.danger, 0.4), voice: withAlpha(t.success, 0.9),
+      // The label colour the design puts on the accent fill (dark on the bright dark-theme accent,
+      // white on the deeper light-theme one; see the widget presets in design/tokens.json).
+      onAccent: isDarkTheme() ? [0.035, 0.051, 0.094, 1] : [1, 1, 1, 1]
     };
   }
 
@@ -2784,6 +2787,9 @@ function catRemoveItem(item, comp, layers) {
   ui.spacing = 6;
   ui.margins = 8;
 
+  // Every onDraw surface registers here, so a theme or language switch repaints them all.
+  var DRAWABLES = [];
+
   // ------------------------------------------------------------------ top bar
   // Mirrors the Figma header: a gradient brand mark, the product name and a small subtitle.
   // ScriptUI has no CSS, so the mark is painted in onDraw and the rest uses host text controls.
@@ -2885,8 +2891,10 @@ function catRemoveItem(item, comp, layers) {
   var welcomeCheck = welcomeButtons.add("button", undefined, tr("welcome.check"));
   welcomeCheck.alignment = ["fill", "center"];
   welcomeCheck.isPrimary = true;
+  skinButton(welcomeCheck, "primary", 32);
   var welcomeSkip = welcomeButtons.add("button", undefined, tr("welcome.skip"));
   welcomeSkip.alignment = ["fill", "center"];
+  skinButton(welcomeSkip, "ghost", 32);
   var welcomeShown = setting("welcomeDone", "0") !== "1";
   welcome.visible = welcomeShown;
 
@@ -3062,9 +3070,8 @@ function catRemoveItem(item, comp, layers) {
     setStatusColor(status, tokenColor(tokens().danger));
   }
 
-  var DRAWABLES = [];
-  // The header and its brand mark are created before this list exists; register them now so a
-  // theme switch repaints their onDraw surfaces.
+  // The header and its brand mark are registered here so a theme switch repaints their onDraw
+  // surfaces; skinned buttons add themselves in `skinButton` as they are created.
   registerDraw(header);
   registerDraw(brandMark);
   function registerDraw(panel) {
@@ -3273,10 +3280,61 @@ function catRemoveItem(item, comp, layers) {
     applyTheme();
   };
 
-  function addBtn(parent, text, enText, isPrimary) {
+  // Native ScriptUI buttons ignore the theme: the host paints them grey. This skin repaints the
+  // whole control in onDraw from the design tokens — the same trick the style and library tiles
+  // already use — while the native button keeps the click, the text and the enabled state. Kinds:
+  // "primary" (accent fill, one per screen), "normal" (glass + border), "ghost" (flat, escape
+  // actions), "danger" (destructive outline). There is no hover in ScriptUI, so there is none here.
+  function skinButton(b, kind, height) {
+    b._flowKind = kind || "normal";
+    if (height) b.preferredSize = [-1, height];
+    b.onDraw = function () {
+      var g = this.graphics;
+      var sz = this.size;
+      var w = sz[0] || 120, h = sz[1] || 28;
+      var C = palette();
+      var on = this.enabled !== false;
+      g.newPath();
+      g.rectPath(0, 0, w, h);
+      if (this._flowKind === "primary") {
+        g.fillPath(colorBrush(g, on ? C.accent : C.surface2));
+      } else if (this._flowKind === "danger") {
+        g.fillPath(colorBrush(g, C.surface2));
+        g.newPath();
+        g.rectPath(0, 0, w, h);
+        g.strokePath(colorPen(g, on ? [C.danger[0], C.danger[1], C.danger[2], 0.7] : C.border, 1));
+      } else if (this._flowKind === "ghost") {
+        g.fillPath(colorBrush(g, C.surface2));
+        g.newPath();
+        g.rectPath(0, 0, w, h);
+        g.strokePath(colorPen(g, C.border2, 1));
+      } else {
+        g.fillPath(colorBrush(g, C.surface3));
+        g.newPath();
+        g.rectPath(0, 0, w, h);
+        g.strokePath(colorPen(g, C.border, 1));
+      }
+      var fg = !on ? C.muted
+        : this._flowKind === "primary" ? C.onAccent
+        : this._flowKind === "danger" ? C.danger
+        : C.text;
+      // A label wider than the button ellipsises instead of running under the edge (7 px/char is
+      // the layout engine's own estimate).
+      var label = String(this.text || "");
+      var maxW = w - 16;
+      if (label.length * 7 > maxW) label = label.substr(0, Math.max(1, Math.floor(maxW / 7))) + "…";
+      g.drawString(label, colorPen(g, fg, 1), Math.max(8, (w - label.length * 7) / 2), Math.floor((h - 13) / 2));
+    };
+    registerDraw(b);
+    return b;
+  }
+
+  function addBtn(parent, text, enText, isPrimary, opts) {
     var b = parent.add("button", undefined, text);
     b._en = enText || text;
     b.alignment = ["fill", "center"];
+    b.preferredSize = [-1, (opts && opts.height) || 28];
+    skinButton(b, isPrimary ? "primary" : (opts && opts.kind) || "normal");
     if (isPrimary) b.isPrimary = true;
     return b;
   }
@@ -3448,7 +3506,7 @@ function catRemoveItem(item, comp, layers) {
   var easeButtons = easeTab.add("group");
   easeButtons.alignment = ["fill", "top"];
   var easeApply = addBtn(easeButtons, "Appliquer aux propriétés sélectionnées", "Apply to selected properties", true);
-  var easeClear = addBtn(easeButtons, "Supprimer l'expression", "Remove expression", false);
+  var easeClear = addBtn(easeButtons, "Supprimer l'expression", "Remove expression", false, { kind: "danger" });
   var easeHintText = easeTab.add("statictext", undefined, tr("easeHint"), { multiline: true });
   easeHintText.alignment = ["fill", "top"];
 
@@ -4076,7 +4134,7 @@ function catRemoveItem(item, comp, layers) {
   var stButtons = stAdv.add("group");
   stButtons.alignment = ["fill", "top"];
   var stSave = addBtn(stButtons, "Enregistrer le style", "Save preset", false);
-  var stDelete = addBtn(stButtons, "Supprimer", "Delete", false);
+  var stDelete = addBtn(stButtons, "Supprimer", "Delete", false, { kind: "danger" });
   stAdvCheck.value = setting("capAdvanced", "0") === "1";
   stAdv.visible = stAdvCheck.value;
   stAdvCheck.onChange = function () {
@@ -4532,7 +4590,7 @@ function catRemoveItem(item, comp, layers) {
   modButtons.alignment = ["fill", "top"];
   var modInstall = addBtn(modButtons, "Installer", "Install", false);
   var modVerify = addBtn(modButtons, "Vérifier", "Verify", false);
-  var modRemove = addBtn(modButtons, "Désinstaller", "Remove", false);
+  var modRemove = addBtn(modButtons, "Désinstaller", "Remove", false, { kind: "danger" });
   var modWhisper = field(modelsTab, "whisper-cli path", "", 170);
   var modSave = addBtn(modelsTab, "Enregistrer le chemin whisper-cli", "Save whisper-cli path", false);
   var modInfo = modelsTab.add("statictext", undefined, "Models are free and open source (MIT). They are downloaded on demand and checked with SHA-256; nothing is bundled.", { multiline: true });
@@ -4604,6 +4662,7 @@ function catRemoveItem(item, comp, layers) {
   var hlpCheckBtn = addBtn(hlpRow, "Tester la connexion / Réessayer", "Connect / refresh", true);
   var hlpWelcomeBtn = helperTab.add("button", undefined, "Revoir l'aide de démarrage");
   hlpWelcomeBtn.alignment = ["fill", "center"];
+  skinButton(hlpWelcomeBtn, "normal");
   hlpWelcomeBtn.onClick = function () { setWelcome(true); };
   hlpCheckBtn.onClick = function () {
     var r = helper({ op: "models.list" });
@@ -4835,14 +4894,14 @@ function catRemoveItem(item, comp, layers) {
   var txButtons = textTab.add("group");
   txButtons.alignment = ["fill", "top"];
   var txApply = addBtn(txButtons, "Appliquer au texte sélectionné", "Apply to selected text", true);
-  var txRemove = addBtn(txButtons, "Supprimer l'animation Flow", "Remove Flow animation", false);
+  var txRemove = addBtn(txButtons, "Supprimer l'animation Flow", "Remove Flow animation", false, { kind: "danger" });
   var txHintText = textTab.add("statictext", undefined, tr("textHint"), { multiline: true });
   txHintText.alignment = ["fill", "top"];
   var txName = field(textTab, "My preset name", "", 150);
   var txSaveRow = textTab.add("group");
   txSaveRow.alignment = ["fill", "top"];
   var txSave = addBtn(txSaveRow, "Enregistrer dans mes presets", "Save as my preset", false);
-  var txDelete = addBtn(txSaveRow, "Supprimer mon preset", "Delete my preset", false);
+  var txDelete = addBtn(txSaveRow, "Supprimer mon preset", "Delete my preset", false, { kind: "danger" });
   var txIoRow = textTab.add("group");
   txIoRow.alignment = ["fill", "top"];
   var txExport = addBtn(txIoRow, "Exporter mes presets", "Export my presets", false);
@@ -5123,7 +5182,7 @@ function catRemoveItem(item, comp, layers) {
   var bgSaveRow = bgTab.add("group");
   bgSaveRow.alignment = ["fill", "top"];
   var bgSave = addBtn(bgSaveRow, "Enregistrer dans mes presets", "Save as my preset", false);
-  var bgDelete = addBtn(bgSaveRow, "Supprimer mon preset", "Delete my preset", false);
+  var bgDelete = addBtn(bgSaveRow, "Supprimer mon preset", "Delete my preset", false, { kind: "danger" });
   var bgIoRow = bgTab.add("group");
   bgIoRow.alignment = ["fill", "top"];
   var bgExport = addBtn(bgIoRow, "Exporter mes presets", "Export my presets", false);
@@ -5431,7 +5490,7 @@ function catRemoveItem(item, comp, layers) {
   var fxButtons = effectsTab.add("group");
   fxButtons.alignment = ["fill", "top"];
   var fxApply = addBtn(fxButtons, "Appliquer l'effet", "Apply effect", true);
-  var fxRemove = addBtn(fxButtons, "Supprimer les effets Flow", "Remove Flow effects", false);
+  var fxRemove = addBtn(fxButtons, "Supprimer les effets Flow", "Remove Flow effects", false, { kind: "danger" });
   var fxNote = effectsTab.add("statictext", undefined, "Effects are named \"Flow: …\" and driven by expressions over the time window, so you can tweak them in the timeline.", { multiline: true });
   fxNote.alignment = ["fill", "top"];
   fxNote.preferredSize = [-1, 40];
@@ -6851,6 +6910,8 @@ catLibraryRelabel();
   var libNext = libPager.add("button", undefined, "Suivant ›");
   libPrev.minimumSize = [86, -1];
   libNext.minimumSize = [86, -1];
+  skinButton(libPrev, "normal", 24);
+  skinButton(libNext, "normal", 24);
 
   var libDur = field(libraryTab, "Duration (s)", "0.5", 60);
   var libSide = dropdown(libraryTab, "Transition at", ["Start of layer", "End of layer", "Both"], 0);
@@ -6860,7 +6921,7 @@ catLibraryRelabel();
   libButtons.alignment = ["fill", "top"];
   var libAdd = addBtn(libButtons, "Ajouter à la timeline", "Add to timeline", true);
   var libStar = addBtn(libButtons, "★ Favori", "★ Favorite", false);
-  var libRemove = addBtn(libButtons, "Retirer", "Remove", false);
+  var libRemove = addBtn(libButtons, "Retirer", "Remove", false, { kind: "danger" });
   libRemove.visible = false;
   var libHelp = libraryTab.add("statictext", undefined, tr("libraryHelp"), { multiline: true });
   libHelp.alignment = ["fill", "top"];

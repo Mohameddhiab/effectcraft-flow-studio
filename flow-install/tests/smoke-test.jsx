@@ -773,6 +773,17 @@ function pump(n) {
   F.layout(1200);
   check("v3 wide panel restores full labels", F.mainTabs.children[0].text === "Library" && F.headerMode() === "row", F.mainTabs.children[0].text + "/" + F.headerMode());
 
+  // 8b. Button skin: native buttons are grey, so every one repaints itself from the tokens.
+  var allBtns = all(F.ui, "button");
+  var unskinned = [];
+  for (var ab = 0; ab < allBtns.length; ab++) if (typeof allBtns[ab].onDraw !== "function") unskinned.push(ab);
+  check("v3 every button repaints from the tokens", unskinned.length === 0, "unskinned=" + unskinned.join(","));
+  var welcomeSkin = all(F.welcome, "button");
+  check("v3 welcome buttons use accent + ghost", welcomeSkin.length === 2 && welcomeSkin[0]._flowKind === "primary" && welcomeSkin[1]._flowKind === "ghost", welcomeSkin.length + "/" + (welcomeSkin[0] && welcomeSkin[0]._flowKind));
+  var dangers = allBtns.filter(function (b) { return b._flowKind === "danger"; });
+  check("v3 destructive buttons are danger kind", dangers.length === 8, dangers.length);
+  check("v3 primary actions carry the flag", allBtns.filter(function (b) { return b.isPrimary === true; }).length === 14, allBtns.filter(function (b) { return b.isPrimary === true; }).length);
+
   // 9. Arabic captions are right-justified and placed against the right edge.
   var karoMode = all(F.ui, "dropdownlist").filter(function (d) { return d._en === "Karaoke Mode"; })[0];
   if (karoMode) karoMode.selection = 0;
