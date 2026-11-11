@@ -1,6 +1,6 @@
 // ================================================================== Flow Catalogue engine
 //
-// The catalogue is data: 528 presets validated by scripts/catalog_schema.py and embedded above.
+// The catalogue is data: 525 presets validated by scripts/catalog_schema.py and embedded above.
 // This block turns a preset into real layers, effects and expressions. Every native effect is
 // checked before use and every addProperty() call stays inside a try/catch, so a host that ships
 // an older effect registry disables one card instead of breaking the panel.
@@ -976,7 +976,8 @@ function catApplyOp(layer, op, item, comp, t0, dur, reverse, tag, suffix, win, c
     catSet(fx, ["shadows", "Shadows"], sh);
     catSet(fx, ["highlights", "Highlights"], hi);
     catSet(fx, ["midtones", "Midtones"], [(sh[0] + hi[0]) / 2, (sh[1] + hi[1]) / 2, (sh[2] + hi[2]) / 2, 1]);
-    catSet(fx, ["blend", "Blend With Original"], 100);
+    // 100 % would mix the original back in and cancel the duotone entirely.
+    catSet(fx, ["blend", "Blend With Original"], 0);
     return;
   }
   if (name === "glow") {

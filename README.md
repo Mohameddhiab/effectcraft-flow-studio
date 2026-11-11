@@ -56,7 +56,7 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
 
 | Tab | Screens | Highlights |
 |---|---|---|
-| **Library** | Unified browser | 528 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid, with kind/family filters, search, live preview and favorites. |
+| **Library** | Unified browser | 525 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid, with kind/family filters, search, live preview and favorites. |
 | **Montage** | Silence | Live waveform with red cut zones, green speech and a threshold line; advanced detector settings; ripple or marker modes; tempo detection and beat cuts. |
 | **Montage** | Captions | Whisper speech-to-text, 8 built-in caption styles, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export, Arabic RTL placement. |
 | **Montage** | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
@@ -81,6 +81,8 @@ Prefer a ZIP? Download **`flow-studio-panel.zip`** from the latest release.
 - **Design tokens.** Colours, radii, spacing and the glass recipe come from
   [`design/tokens.json`](design/tokens.json), extracted from the interface design; the smoke suite
   pins them so a silent drift fails a test. See [`docs/design-system.md`](docs/design-system.md).
+- **Bibliothèque façon Figma.** Eyebrow `COLLECTION`, titre « Bibliothèque créative », recherche avec `⌘K`, huit chips de catégories et cartes illustrées (scène dusk : ciel, soleil, skyline, overlay par type). `scripts/gen_thumbs.js` exporte les mêmes scènes en 525 PNGs (`assets/thumbs/<slug>@2x.png`, 200×120, ~0,9 Mo) avec manifeste ; le panel les dessine en `onDraw`, donc un `.jsx` seul affiche quand même une image par élément.
+- **Handoff Figma.** [`design/handoff/`](design/handoff/) contient un brief prêt pour Claude/Figma : tokens, mesures, composants, 14 écrans, flux, chaînes FR/EN/AR, catalogue des 525 éléments et captures de référence.
 - **Theme and language.** The header switches between **Français**, **English** and **العربية**, and
   between **Auto**, **Sombre** and **Clair**. The choice persists across sessions.
 - **Persisted state.** Last top tab, library category, silence settings, advanced mode, language,

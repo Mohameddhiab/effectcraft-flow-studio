@@ -8,3 +8,6 @@ log/
 .DS_Store
 *~
 *.bak
+
+# Third-party After Effects widget pack: no licence file, not redistributable (AGENTS.md §1).
+100 UI Widgets Pack - Animated Interface Elements/

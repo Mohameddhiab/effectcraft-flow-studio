@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "kind": "tool",
- "count": 24,
+ "count": 21,
  "items": [
   {
    "id": "tool.markers.chapters",
@@ -14,19 +14,6 @@
    ],
    "tool": "marker.chapters",
    "needs": "comp"
-  },
-  {
-   "id": "tool.markers.beats",
-   "kind": "tool",
-   "name": "Beat Markers",
-   "family": "Markers",
-   "tags": [
-    "marker",
-    "beat",
-    "music"
-   ],
-   "tool": "marker.beats",
-   "needs": "audio"
   },
   {
    "id": "tool.markers.notes",
@@ -249,30 +236,6 @@
     "guide"
    ],
    "tool": "project.safe",
-   "needs": "comp"
-  },
-  {
-   "id": "tool.history.repeat",
-   "kind": "tool",
-   "name": "Repeat on Selection",
-   "family": "Workflow",
-   "tags": [
-    "history",
-    "repeat"
-   ],
-   "tool": "history.repeat",
-   "needs": "layers"
-  },
-  {
-   "id": "tool.history.clear",
-   "kind": "tool",
-   "name": "Clear Flow History",
-   "family": "Workflow",
-   "tags": [
-    "history",
-    "clear"
-   ],
-   "tool": "history.clear",
    "needs": "comp"
   },
   {

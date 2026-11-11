@@ -41,5 +41,17 @@ if [ -d "$sfx_source" ]; then
 else
   echo "No assets/sfx-pack found alongside the panel; sounds will fall back to built-in."
 fi
+# Catalogue thumbnails: copied to <settings>/FlowStudio/assets/thumbs so the Library shows a
+# picture for every preset. Without them the panel keeps its drawn miniatures.
+thumb_source="$root/assets/thumbs"
+thumb_dest="$base/FlowStudio/assets/thumbs"
+if [ -d "$thumb_source" ]; then
+  mkdir -p "$(dirname "$thumb_dest")"
+  rm -rf "$thumb_dest"
+  cp -r "$thumb_source" "$thumb_dest"
+  echo "Installed catalogue thumbnails: $thumb_dest"
+else
+  echo "No assets/thumbs found alongside the panel; cards fall back to drawn miniatures."
+fi
 echo "Restart EffectCraft, then open Window > Flow Studio.jsx."
 echo "Optional helper (silence, captions, sounds, models): run effectcraft-flow-helper serve."

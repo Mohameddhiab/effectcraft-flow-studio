@@ -24,7 +24,7 @@ and opens on a short welcome screen the first time.
 
 | Category | Sub-tabs | What it does |
 |---|---|---|
-| **Library** | Unified browser | 528 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a 2-column drawn-thumbnail grid (6 per page), with kind/family filters, search, live preview, recents and favorites. |
+| **Library** | Unified browser | 525 validated presets (titles, UI widgets, text animations, transitions, effects, gradients, palettes, captions, sounds, tools) plus the legacy generators, audio, favorites and AE scripts, in a Figma-style screen: `COLLECTION` eyebrow, **Bibliothèque créative**, search with `⌘K`, eight category chips, a 3 × 2 illustrated-card grid and a `SÉLECTION` preview sheet, with recents and favorites. |
 | **Montage** | Silence | Finds silences with a live waveform (red cut zones, green speech, threshold line), advanced detector settings and ripple/marker modes. |
 | | Captions | Whisper speech-to-text, editable caption styles with 8 thumbnails, word-by-word **karaoke** (Hormozi, Word Pop, highlight), SRT/VTT import, SRT and **ASS** export. |
 | | Sounds | 84 CC0 sound effects served by the helper, with a drawn waveform, instant playhead insertion, a built-in fallback and custom folder scanning. |
@@ -88,8 +88,9 @@ and opens on a short welcome screen the first time.
 | ![Flow Studio v1 Captions](images/flow-studio-before-captions.png) | ![Flow Studio v3 Captions](images/flow-studio-after-captions.png) |
 
 More v3 screens: [welcome](images/flow-studio-after-welcome.png) · [silence](images/flow-studio-after-silence.png) ·
-[preset pack](images/flow-studio-after-pack.png). The captures come from the ignored
-`flow_studio_panel_snapshot` test (offscreen, empty project).
+[preset pack](images/flow-studio-after-pack.png). The captures are offscreen control-channel renders from `scripts/panel_snapshot.js`
+(UI Scale 1:1, cropped to the panel tab bar). The harnais was added to this repository
+to reproduce the former development-fork kittest without needing a GUI session.
 
 ## Common AE Scripts (in Library ▸ AE Scripts)
 - **Auto Nulls**: Creates a Null object centered on selected layers and parents them to it.
@@ -176,14 +177,18 @@ panel and are not duplicated into packs; user styles, text animations and backgr
 
 ## Library, text, background, effects and sounds
 
-- **Library** (first tab): one place, like DaVinci Resolve's Effects Library. Categories Titles, Effects,
-  Transitions (18), Generators, Audio, Favorites and AE Scripts; search box; 2-column grid with six items
-  per page and a pager; double-click or **Add to timeline**; **★ Favorite**.
+- **Library** (first tab): one place, like DaVinci Resolve's Effects Library. The screen follows the
+  Figma export: a `COLLECTION` eyebrow, the **Bibliothèque créative** title, a search field with a drawn
+  magnifier and `⌘K`, eight category chips (Titres, Effets, Transitions, Dégradés, Sons, Favoris,
+  Scripts, Catalogue), a 3 × 2 grid of illustrated cards and a `SÉLECTION` preview sheet with the
+  duration/side/strength controls and **Ajouter à la timeline**. Double-click a card or use the button;
+  **★ Favori** keeps it. Categories Titles, Effects, Transitions (18), Generators, Audio, Favorites and
+  AE Scripts; the pager shows six cards per page.
   Titles land at the playhead with their animation; effects go on the selected layers (or a new adjustment layer
   when nothing is selected); transitions go on the start/end of the selected layers (overlap two clips and put
   a transition on the top one); generators land at the playhead (gradients at the bottom); audio adds sounds at
   the playhead or sets levels (fade in/out, -12 dB, +6 dB, mute) on the selected layers.
-- **Catalogue** (`Library ▸ Catalogue`): 528 validated, data-driven presets (titles, 25 UI widgets, text
+- **Catalogue** (`Library ▸ Catalogue`): 525 validated, data-driven presets (titles, 25 UI widgets, text
   animations, transitions, effects, gradients, palettes, captions, sounds, tools) filtered by kind and family,
   searchable, with drawn thumbnails, recents and favourites. Applying a card is one undo step named `Flow: …`,
   every created layer is tagged `flow:cat:<id>`, and **Remove** deletes the whole preset at once. The UI widgets
@@ -262,3 +267,61 @@ The helper speaks one JSON request per line on 127.0.0.1:9890. The panel uses `s
   (open + resize, no editing session); the screenshot test renders the panel offscreen.
 * The Stroke tab was written against the plug-in's published parameters (Stroke Color, Thickness,
   Blur, Softness); it reports a clear error if the effect isn't installed.
+
+## Catalogue verification (525 presets, 2026-11-10)
+
+The catalogue is verified in two layers, both reproducible from the repository root.
+
+**1. Every preset is applied and removed** through the panel's own API, one fresh composition per item
+(`scripts/catalog_coverage.jsx`, run by `scripts/run_catalog_coverage.ps1` with the helper for sounds):
+
+| Kind | Presets | PASS |
+|---|---:|---:|
+| Titles | 60 | 60 |
+| Widgets | 25 | 25 |
+| Text animations | 96 | 96 |
+| Transitions | 55 | 55 |
+| Effects | 70 | 70 |
+| Gradients | 50 | 50 |
+| Palettes | 30 | 30 |
+| Caption styles | 34 | 34 |
+| Sounds | 84 | 84 |
+| Tools | 21 | 21 |
+| **Total** | **525** | **525** |
+
+The three tools that only redirected or answered "not available in this version" (**Beat Markers**,
+**Repeat on Selection**, **Clear Flow History**) were removed from `catalog/tools.json`; the catalogue
+is now 525 presets, the embedded panel and `catalog/index.json` agree, and the smoke suite pins 525.
+
+**2. Transitions and effects are rendered** (`scripts/make_catalog_scene.jsx`,
+`scripts/render_catalog_frames.js`, `scripts/check_catalog_frames.js`): 55 transition comps at
+0 / 50 / 100 % and 70 effect comps sampled inside each effect's own window (a 0.01 s utility is gone by
+0.1 s), 236 PNGs, read back with a dependency-free Node/zlib decoder. **55/55 transitions** and
+**65/70 effects** pass: non-blank, changes across the cut, and a measurable difference from a no-effect
+reference plate.
+
+Two real defects were fixed by these renders: **Roll** moved the incoming clip a full frame width off
+screen with an extra `offset` op (removed), and **Duotone**/**Sepia** set *Blend With Original* to
+100 %, which cancelled the effect (now 0). **Zoom In** and **RGB Split** were harness timing/threshold
+errors, not product defects.
+
+The five remaining effect checks are not observable on a still plate: **Freeze Frame**, **Reverse
+Clip**, **Speed Ramp** and **Echo Trail** need a moving source (time remapping of a still is a still),
+and **Safe Zone Overlay** creates guide layers that are intentionally excluded from renders. All five
+apply and remove cleanly in the coverage pass; they still need motion footage before a visual verdict.
+
+**Not verified:** real GUI screenshots. The offscreen `flow_studio_panel_snapshot` test mentioned in
+this document lives in the development fork and is not part of this repository, and this machine has no
+desktop session, so `docs/images/flow-studio-after-*.png` could not be regenerated.
+
+To reproduce:
+
+```
+node scripts/build_render_steps.js
+./target/debug/effectcraft-cli.exe run --commands target/render-steps.json --empty --json
+node scripts/render_catalog_frames.js
+node scripts/check_catalog_frames.js
+```
+
+History note: the unlicensed third-party `100 UI Widgets Pack` was purged from every local ref with
+`git filter-repo`; the repository now tracks a single sound pack, `assets/sfx-pack`.

@@ -15,8 +15,8 @@ never evaluates a preset as code.
 | `palettes.json` | `palette` | 30 |
 | `captions.json` | `caption` | 34 |
 | `sfx.json` | `sfx` | 84 |
-| `tools.json` | `tool` | 24 |
-| **Total** | | **528** |
+| `tools.json` | `tool` | 21 |
+| **Total** | | **525** |
 
 ## Editing a preset
 
