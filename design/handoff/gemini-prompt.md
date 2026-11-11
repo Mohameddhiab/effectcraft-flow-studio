@@ -34,6 +34,31 @@ Attach to the Gemini conversation: `tokens.json`, `measurements.md`, `components
 
 ---
 
+## Version courte en français (à coller)
+
+> Tu es lead product designer. Refais entièrement l'UI/UX de **Flow Studio**, un panel ScriptUI
+> dockable pour le monteur vidéo EffectCraft : 525 presets, 14 écrans, français/anglais/arabe,
+> thèmes sombre et clair, utilisé docké de 298 à 600 px.
+>
+> Pars de `tokens.json`, `screens.md`, `components.md`, `measurements.md`, `catalogue.json`,
+> `strings.json`, des cinq captures et de `thumbnails-contact-sheet.png`. La palette (navy profond
+> + cyan) et l'architecture d'information sont tes ancres ; tout le reste — mise en page,
+> hiérarchie, densité, iconographie, formes des composants, navigation — est à moderniser.
+>
+> Livre un produit image-first : chacun des 525 presets doit apparaître avec sa vraie vignette, et
+> chaque preset animé (titres, animations de texte, transitions, effets, sous-titres, widgets,
+> outils) doit aussi avoir un **storyboard de 3 images** (début / pic / fin). Les sons ont une
+> forme d'onde, les dégradés et les palettes leurs vraies couleurs.
+>
+> Rends : une direction artistique, un jeu de tokens étendu, les 14 écrans en HTML/CSS autonome à
+> 600 / 400 / 298 px, sombre + clair, FR/EN/AR avec contenu RTL, une galerie filtrable des 525
+> presets, les specs de composants avec 8 états, et un `coverage.csv` prouvant que 525/525 éléments
+> ont une image. Pour chaque effet moderne, documente le **fallback ScriptUI** (le panel est un
+> `.jsx` sans CSS, sans vrai flou, sans hover, sans police web). Une seule action primaire par
+> écran. Ne pose pas de questions : choisis, justifie, signale les manques.
+
+---
+
 ## Long version (recommended)
 
 You are a **lead product designer** with a front-end engineering background. Your job is to
