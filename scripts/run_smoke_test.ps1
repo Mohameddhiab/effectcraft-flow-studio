@@ -7,6 +7,9 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 if (-not $Cli) { $Cli = "effectcraft-cli" }
 if (-not $Helper) { $Helper = "effectcraft-flow-helper" }
+if (Test-Path $Helper) {
+    $Helper = (Resolve-Path $Helper).Path
+}
 
 $flowDir = Join-Path $root "target\flowtest"
 New-Item -ItemType Directory -Force -Path $flowDir | Out-Null
@@ -19,7 +22,8 @@ if (!(Test-Path (Join-Path $root "target\steps.json"))) {
     throw "target/steps.json was not created"
 }
 
-$helperProc = Start-Process -FilePath $Helper -ArgumentList @("serve", "--port", "$Port") -PassThru -NoNewWindow
+Get-Process -Name "effectcraft-flow-helper" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+$helperProc = Start-Process -FilePath $Helper -ArgumentList @("serve", "--port", "$Port") -WorkingDirectory $root -PassThru -NoNewWindow
 Start-Sleep -Seconds 2
 try {
     Write-Host "Running the Flow Studio smoke suite through $Cli (helper on port $Port)..."

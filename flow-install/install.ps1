@@ -52,5 +52,27 @@ if (Test-Path $thumbSource) {
 } else {
     Write-Host "No assets/thumbs found alongside the panel; cards fall back to drawn miniatures."
 }
+
+# Helper executable and launcher: copied to <settings>/FlowStudio so it can be started easily
+$helperSource = ""
+$cands = @(
+    (Join-Path $root "dist\effectcraft-flow-helper.exe"),
+    (Join-Path $root "target\release\effectcraft-flow-helper.exe"),
+    (Join-Path $root "target\debug\effectcraft-flow-helper.exe")
+)
+foreach ($c in $cands) {
+    if (Test-Path $c) { $helperSource = $c; break }
+}
+if ($helperSource) {
+    $fsDir = Join-Path $config "FlowStudio"
+    New-Item -ItemType Directory -Force -Path $fsDir | Out-Null
+    Copy-Item -Force $helperSource (Join-Path $fsDir "effectcraft-flow-helper.exe")
+    $launcher = Join-Path $root "LANCER-HELPER.bat"
+    if (Test-Path $launcher) {
+        Copy-Item -Force $launcher (Join-Path $fsDir "LANCER-HELPER.bat")
+    }
+    Write-Host "Installed helper binary: $(Join-Path $fsDir 'effectcraft-flow-helper.exe')"
+}
+
 Write-Host "Restart EffectCraft, then open Window > Flow Studio.jsx."
-Write-Host "Optional helper (silence, captions, sounds, models): run effectcraft-flow-helper.exe serve."
+Write-Host "To start the helper (silence, captions, sounds, models): double-click LANCER-HELPER.bat."

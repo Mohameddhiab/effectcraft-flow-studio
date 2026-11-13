@@ -2446,17 +2446,41 @@ function catRemoveItem(item, comp, layers) {
   // Glass = translucent fill + a 1 px light top edge (+ optional bottom shade). ScriptUI cannot blur
   // what is behind the panel, so that is the whole recipe; see docs/design-system.md.
   function drawGlass(g, x, y, w, h, fill, edge) {
+    var C = palette();
+    var f = fill || C.surface;
     g.newPath();
-    g.rectPath(x, y, w, h);
-    g.fillPath(colorBrush(g, fill));
+    g.rectPath(x, y, Math.max(1, w), Math.max(1, h));
+    g.fillPath(colorBrush(g, f));
     g.newPath();
-    g.rectPath(x, y, w, 1);
+    g.rectPath(x, y, Math.max(1, w), 1);
     g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
     if (edge) {
       g.newPath();
-      g.rectPath(x, y + h - 1, w, 1);
+      g.rectPath(x, y + h - 1, Math.max(1, w), 1);
       g.fillPath(colorBrush(g, tokenColor(tokens().border)));
     }
+  }
+
+  // Accent gradient #5ce1ff -> #7b7dff with hover / pressed brightness
+  function drawAccentGradient(g, x, y, w, h, hover, pressed) {
+    var c1 = tokenColor(tokens().accent);
+    var c2 = tokenColor(tokens().accent2);
+    var steps = Math.min(20, Math.max(6, Math.floor(w / 8)));
+    var stepW = w / steps;
+    var boost = hover ? 0.08 : pressed ? -0.06 : 0;
+    for (var s = 0; s < steps; s++) {
+      var t = s / (steps - 1);
+      var r = clamp(c1[0] + (c2[0] - c1[0]) * t + boost, 0, 1);
+      var gr = clamp(c1[1] + (c2[1] - c1[1]) * t + boost, 0, 1);
+      var b = clamp(c1[2] + (c2[2] - c1[2]) * t + boost, 0, 1);
+      g.newPath();
+      g.rectPath(Math.round(x + s * stepW), y, Math.max(1, Math.ceil(stepW)), Math.max(1, h));
+      g.fillPath(colorBrush(g, [r, gr, b, 1]));
+    }
+    // 1px top highlight
+    g.newPath();
+    g.rectPath(x, y, Math.max(1, w), 1);
+    g.fillPath(colorBrush(g, [1, 1, 1, hover ? 0.35 : 0.22]));
   }
 
   function colorPen(g, rgba, width) {
@@ -2784,6 +2808,18 @@ function catRemoveItem(item, comp, layers) {
   ui.spacing = 6;
   ui.margins = 8;
 
+  var DRAWABLES = [];
+  function registerDraw(panel) {
+    if (panel) DRAWABLES.push(panel);
+    return panel;
+  }
+  function redrawAll() {
+    for (var i = 0; i < DRAWABLES.length; i++) {
+      try { DRAWABLES[i].notify("onDraw"); } catch (e) {}
+    }
+    try { ui.layout.layout(true); } catch (e) {}
+  }
+
   // ------------------------------------------------------------------ top bar
   // Mirrors the Figma header: a gradient brand mark, the product name and a small subtitle.
   // ScriptUI has no CSS, so the mark is painted in onDraw and the rest uses host text controls.
@@ -2814,32 +2850,46 @@ function catRemoveItem(item, comp, layers) {
   headerBrandRow.spacing = 8;
 
   var brandMark = headerBrandRow.add("panel");
-  brandMark.preferredSize = [30, 30];
-  brandMark.minimumSize = [30, 30];
+  brandMark.preferredSize = [36, 36];
+  brandMark.minimumSize = [36, 36];
   brandMark.alignment = ["left", "center"];
   brandMark.onDraw = function () {
     var g = this.graphics;
     var sz = this.size;
-    var w = sz[0] || 30, h = sz[1] || 30;
+    var w = sz[0] || 36, h = sz[1] || 36;
     var C = palette();
+    // 1. Rounded squircle background with accent gradient (#5ce1ff -> #7b7dff)
+    drawAccentGradient(g, 0, 0, w, h, 8);
+    // 2. 4-pointed sparkle icon in dark navy
+    var cx = Math.floor(w / 2), cy = Math.floor(h / 2);
+    var r = 8, inner = 2.4;
+    var starBrush = colorBrush(g, [0.05, 0.08, 0.16, 0.95]);
     g.newPath();
-    g.rectPath(0, 0, w, h);
-    g.fillPath(colorBrush(g, C.accent));
-    g.newPath();
-    g.rectPath(w - 9, 0, 9, 9);
-    g.fillPath(colorBrush(g, C.accent2));
-    g.drawString("F", colorPen(g, C.bg, 1), Math.floor(w / 2) - 3, Math.floor(h / 2) - 7);
+    g.moveTo(cx, cy - r);
+    g.lineTo(cx + inner, cy - inner);
+    g.lineTo(cx + r, cy);
+    g.lineTo(cx + inner, cy + inner);
+    g.lineTo(cx, cy + r);
+    g.lineTo(cx - inner, cy + inner);
+    g.lineTo(cx - r, cy);
+    g.lineTo(cx - inner, cy - inner);
+    g.closePath();
+    g.fillPath(starBrush);
+    // Two mini satellites (top-left & bottom-right)
+    g.newPath(); g.rectPath(cx - 7, cy - 6, 2, 2); g.fillPath(starBrush);
+    g.newPath(); g.rectPath(cx + 6, cy + 5, 2, 2); g.fillPath(starBrush);
   };
+  registerDraw(brandMark);
 
   var brandBox = headerBrandRow.add("group");
   brandBox.orientation = "column";
   brandBox.alignChildren = ["left", "center"];
   brandBox.spacing = 1;
   var brand = brandBox.add("statictext", undefined, "Flow Studio");
-  try { brand.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 13); } catch (eBrand) {}
+  try { brand.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 14); } catch (eBrand) {}
   var brandSub = brandBox.add("statictext", undefined, "EFFECTCRAFT");
   try {
-    brandSub.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
+    brandSub.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 8.5);
     brandSub.graphics.foregroundColor = colorPen(brandSub.graphics, palette().muted, 1);
   } catch (eSub) {}
 
@@ -2853,14 +2903,117 @@ function catRemoveItem(item, comp, layers) {
   headerTools.alignChildren = ["right", "center"];
   headerTools.alignment = ["right", "center"];
   headerTools.spacing = 6;
+
+  // 1. Helper status pill badge
+  var headHelperPill = headerTools.add("panel");
+  headHelperPill.preferredSize = [68, 26];
+  headHelperPill.minimumSize = [68, 26];
+  headHelperPill._hover = false;
+  headHelperPill.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 68, h = sz[1] || 26;
+    var C = palette();
+    // Glass pill background
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 13);
+    g.fillPath(colorBrush(g, this._hover ? [0.15, 0.20, 0.32, 0.6] : [0.08, 0.12, 0.22, 0.45]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 13);
+    g.strokePath(colorPen(g, this._hover ? C.border2 : C.border, 1));
+    // Status dot (green if ok, orange/gray otherwise)
+    var isOk = !/indisponible|arrêté|error|hors ligne/i.test(statusText.text || "");
+    var dotCol = isOk ? [0.20, 0.83, 0.60, 1] : [0.96, 0.62, 0.04, 1];
+    g.newPath();
+    g.ellipsePath(10, Math.floor(h / 2) - 3.5, 7, 7);
+    g.fillPath(colorBrush(g, dotCol));
+    // Label
+    g.drawString("Helper", colorPen(g, this._hover ? C.text : C.muted, 1), 22, Math.floor(h / 2) - 5);
+  };
+  try {
+    headHelperPill.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    headHelperPill.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eHhM) {}
+  headHelperPill.onClick = function () { helperCheck(); };
+  registerDraw(headHelperPill);
+
+  // 2. Language pill button (FR / EN / AR)
+  var headLangPill = headerTools.add("panel");
+  headLangPill.preferredSize = [36, 26];
+  headLangPill.minimumSize = [36, 26];
+  headLangPill._hover = false;
+  headLangPill.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 36, h = sz[1] || 26;
+    var C = palette();
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 13);
+    g.fillPath(colorBrush(g, this._hover ? [0.18, 0.24, 0.38, 0.7] : [0.09, 0.13, 0.24, 0.5]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 13);
+    g.strokePath(colorPen(g, this._hover ? C.border2 : C.border, 1));
+    var lbl = LANG === "fr" ? "FR" : LANG === "ar" ? "AR" : "EN";
+    g.drawString(lbl, colorPen(g, this._hover ? [1, 1, 1, 1] : C.muted, 1), 10, Math.floor(h / 2) - 5);
+  };
+  try {
+    headLangPill.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    headLangPill.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eHlM) {}
+  headLangPill.onClick = function () {
+    var next = LANG === "fr" ? "en" : LANG === "en" ? "ar" : "fr";
+    setLanguage(next);
+    try { headLangPill.notify("onDraw"); } catch (e) {}
+  };
+  registerDraw(headLangPill);
+
+  // 3. Theme square icon button
+  var headThemeBtn = headerTools.add("panel");
+  headThemeBtn.preferredSize = [28, 26];
+  headThemeBtn.minimumSize = [28, 26];
+  headThemeBtn._hover = false;
+  headThemeBtn.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 28, h = sz[1] || 26;
+    var C = palette();
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 8);
+    g.fillPath(colorBrush(g, this._hover ? [0.18, 0.24, 0.38, 0.7] : [0.09, 0.13, 0.24, 0.5]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 8);
+    g.strokePath(colorPen(g, this._hover ? C.border2 : C.border, 1));
+    // Sun icon (center dot + 8 rays)
+    var cx = Math.floor(w / 2), cy = Math.floor(h / 2);
+    var pen = colorPen(g, this._hover ? [1, 1, 1, 1] : C.muted, 1.2);
+    g.newPath();
+    g.ellipsePath(cx - 3, cy - 3, 6, 6);
+    g.strokePath(pen);
+    var rays = [[0, -6], [0, 6], [-6, 0], [6, 0], [-4, -4], [4, -4], [-4, 4], [4, 4]];
+    for (var ri = 0; ri < rays.length; ri++) {
+      g.newPath();
+      g.moveTo(cx + Math.round(rays[ri][0] * 0.75), cy + Math.round(rays[ri][1] * 0.75));
+      g.lineTo(cx + rays[ri][0], cy + rays[ri][1]);
+      g.strokePath(pen);
+    }
+  };
+  try {
+    headThemeBtn.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    headThemeBtn.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eHtM) {}
+  headThemeBtn.onClick = function () {
+    var next = THEME === "dark" ? "light" : "dark";
+    setTheme(next);
+  };
+  registerDraw(headThemeBtn);
+
+  // Hidden native dropdowns kept for compatibility
   var langDrop = headerTools.add("dropdownlist", undefined, ["Fran\u00e7ais", "English", "\u0627\u0644\u0639\u0631\u0628\u064a\u0629"]);
   langDrop.selection = Math.max(0, LANGS.indexOf(LANG));
-  langDrop.minimumSize = [92, -1];
-  langDrop.alignment = ["right", "center"];
+  langDrop.visible = false;
   var themeDrop = headerTools.add("dropdownlist", undefined, ["Auto", "Sombre", "Clair"]);
   themeDrop.selection = THEME === "dark" ? 1 : THEME === "light" ? 2 : 0;
-  themeDrop.minimumSize = [80, -1];
-  themeDrop.alignment = ["right", "center"];
+  themeDrop.visible = false;
 
   // ------------------------------------------------------------------ first-launch help
   // Exactly two actions are shown at any time: check the helper (or retry) and continue without it.
@@ -2885,8 +3038,58 @@ function catRemoveItem(item, comp, layers) {
   var welcomeCheck = welcomeButtons.add("button", undefined, tr("welcome.check"));
   welcomeCheck.alignment = ["fill", "center"];
   welcomeCheck.isPrimary = true;
+  welcomeCheck._hover = false;
+  welcomeCheck._pressed = false;
+  welcomeCheck.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 140, h = sz[1] || 30;
+    drawAccentGradient(g, 0, 0, w, h, this._hover, this._pressed);
+    var label = this.text || "";
+    var textColor = isDarkTheme() ? [0.04, 0.06, 0.10, 1] : [1, 1, 1, 1];
+    var tw = label.length * 6.2;
+    var tx = Math.max(6, Math.floor((w - tw) / 2));
+    var ty = Math.floor(h / 2) - 5 + (this._pressed ? 1 : 0);
+    g.drawString(label, colorPen(g, textColor, 1), tx, ty);
+  };
+  try {
+    welcomeCheck.addEventListener("mouseover", function () { welcomeCheck._hover = true; try { welcomeCheck.notify("onDraw"); } catch (e) {} });
+    welcomeCheck.addEventListener("mouseout", function () { welcomeCheck._hover = false; welcomeCheck._pressed = false; try { welcomeCheck.notify("onDraw"); } catch (e) {} });
+    welcomeCheck.addEventListener("mousedown", function () { welcomeCheck._pressed = true; try { welcomeCheck.notify("onDraw"); } catch (e) {} });
+    welcomeCheck.addEventListener("mouseup", function () { welcomeCheck._pressed = false; try { welcomeCheck.notify("onDraw"); } catch (e) {} });
+  } catch (eWc) {}
+  registerDraw(welcomeCheck);
+
   var welcomeSkip = welcomeButtons.add("button", undefined, tr("welcome.skip"));
   welcomeSkip.alignment = ["fill", "center"];
+  welcomeSkip._hover = false;
+  welcomeSkip._pressed = false;
+  welcomeSkip.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 140, h = sz[1] || 30;
+    var C = palette();
+    var fill = this._pressed ? C.surface3 : (this._hover ? C.surface2 : [C.surface[0], C.surface[1], C.surface[2], 0.65]);
+    g.newPath();
+    g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+    g.fillPath(colorBrush(g, fill));
+    g.newPath();
+    g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+    g.strokePath(colorPen(g, this._hover ? C.accent : C.border, 1));
+    var label = this.text || "";
+    var ghostCol = this._hover ? C.accent : C.text;
+    var tw = label.length * 6;
+    var tx = Math.max(6, Math.floor((w - tw) / 2));
+    var ty = Math.floor(h / 2) - 5 + (this._pressed ? 1 : 0);
+    g.drawString(label, colorPen(g, ghostCol, 1), tx, ty);
+  };
+  try {
+    welcomeSkip.addEventListener("mouseover", function () { welcomeSkip._hover = true; try { welcomeSkip.notify("onDraw"); } catch (e) {} });
+    welcomeSkip.addEventListener("mouseout", function () { welcomeSkip._hover = false; welcomeSkip._pressed = false; try { welcomeSkip.notify("onDraw"); } catch (e) {} });
+    welcomeSkip.addEventListener("mousedown", function () { welcomeSkip._pressed = true; try { welcomeSkip.notify("onDraw"); } catch (e) {} });
+    welcomeSkip.addEventListener("mouseup", function () { welcomeSkip._pressed = false; try { welcomeSkip.notify("onDraw"); } catch (e) {} });
+  } catch (eWs) {}
+  registerDraw(welcomeSkip);
   var welcomeShown = setting("welcomeDone", "0") !== "1";
   welcome.visible = welcomeShown;
 
@@ -2946,11 +3149,123 @@ function catRemoveItem(item, comp, layers) {
   }
 
   // ------------------------------------------------------------------ tabbed navigation
+  // Custom navigation bar with icons, live cyan underline, and hover states
+  var navBar = ui.add("group");
+  navBar.alignment = ["fill", "top"];
+  navBar.preferredSize = [-1, 56];
+  navBar.minimumSize = [-1, 48];
+  navBar.orientation = "row";
+  navBar.alignChildren = ["fill", "fill"];
+  navBar.spacing = 4;
+  navBar.margins = [2, 0, 2, 2];
+  navBar.visible = !welcomeShown;
+
+  var navTabs = [];
+  var navTabDefs = [
+    { id: 0, icon: "grid", trKey: "library" },
+    { id: 1, icon: "scissors", trKey: "montage" },
+    { id: 2, icon: "wave", trKey: "anim" },
+    { id: 3, icon: "palette", trKey: "look" },
+    { id: 4, icon: "gear", trKey: "settings" }
+  ];
+
   // Consolidated into 5 top-level categories: Library, Montage, Animer, Look, Réglages
   var tabs = ui.add("tabbedpanel");
   tabs.alignChildren = ["fill", "fill"];
   tabs.alignment = ["fill", "fill"];
   tabs.visible = !welcomeShown;
+
+  for (var nti = 0; nti < navTabDefs.length; nti++) {
+    (function (def) {
+      var btn = navBar.add("panel");
+      btn.alignment = ["fill", "fill"];
+      btn.preferredSize = [54, 48];
+      btn.minimumSize = [46, 42];
+      btn._def = def;
+      btn._hover = false;
+      btn.onDraw = function () {
+        var g = this.graphics;
+        var sz = this.size;
+        var w = sz[0] || 54, h = sz[1] || 48;
+        var C = palette();
+        var selIdx = tabs.selection ? tabs.selection.index : 0;
+        var on = selIdx === def.id;
+
+        if (on) {
+          g.newPath();
+          g.roundRectPath(0, 0, w, h - 3, 8);
+          g.fillPath(colorBrush(g, [C.accent[0], C.accent[1], C.accent[2], 0.12]));
+          g.newPath();
+          var bw = Math.max(16, Math.floor(w * 0.44));
+          var bx = Math.floor((w - bw) / 2);
+          g.roundRectPath(bx, h - 3, bw, 3, 1.5);
+          g.fillPath(colorBrush(g, C.accent));
+        } else if (this._hover) {
+          g.newPath();
+          g.roundRectPath(0, 0, w, h - 3, 8);
+          g.fillPath(colorBrush(g, [1, 1, 1, 0.05]));
+        }
+
+        var col = on ? C.accent : (this._hover ? [1, 1, 1, 0.95] : C.muted);
+        var pen = colorPen(g, col, 1.4);
+        var brush = colorBrush(g, col);
+        var cx = Math.floor(w / 2), cy = 15;
+
+        if (def.icon === "grid") {
+          var gw = 4.5;
+          g.newPath(); g.roundRectPath(cx - 5.5, cy - 5.5, gw, gw, 1); g.strokePath(pen);
+          g.newPath(); g.roundRectPath(cx + 1, cy - 5.5, gw, gw, 1); g.strokePath(pen);
+          g.newPath(); g.roundRectPath(cx - 5.5, cy + 1, gw, gw, 1); g.strokePath(pen);
+          g.newPath(); g.roundRectPath(cx + 1, cy + 1, gw, gw, 1); g.strokePath(pen);
+        } else if (def.icon === "scissors") {
+          g.newPath(); g.ellipsePath(cx - 5, cy + 1, 4, 4); g.strokePath(pen);
+          g.newPath(); g.ellipsePath(cx + 1, cy + 1, 4, 4); g.strokePath(pen);
+          g.newPath(); g.moveTo(cx - 2, cy + 1); g.lineTo(cx + 4, cy - 5); g.strokePath(pen);
+          g.newPath(); g.moveTo(cx + 2, cy + 1); g.lineTo(cx - 4, cy - 5); g.strokePath(pen);
+        } else if (def.icon === "wave") {
+          g.newPath();
+          g.moveTo(cx - 6, cy + 2);
+          g.lineTo(cx - 2, cy - 4);
+          g.lineTo(cx + 2, cy + 3);
+          g.lineTo(cx + 6, cy - 3);
+          g.strokePath(pen);
+        } else if (def.icon === "palette") {
+          g.newPath(); g.ellipsePath(cx - 6, cy - 5, 12, 10); g.strokePath(pen);
+          g.newPath(); g.rectPath(cx - 3, cy - 2, 2, 2); g.fillPath(brush);
+          g.newPath(); g.rectPath(cx + 1, cy - 2, 2, 2); g.fillPath(brush);
+        } else if (def.icon === "gear") {
+          g.newPath(); g.ellipsePath(cx - 5, cy - 5, 10, 10); g.strokePath(pen);
+          g.newPath(); g.ellipsePath(cx - 2, cy - 2, 4, 4); g.strokePath(pen);
+        }
+
+        var label = tr(def.trKey);
+        var tw = label.length * 6;
+        var lx = Math.max(2, Math.floor((w - tw) / 2));
+        g.drawString(label, colorPen(g, col, 1), lx, cy + 14);
+      };
+
+      try {
+        btn.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+        btn.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+      } catch (eBtnM) {}
+
+      btn.onClick = function () {
+        tabs.selection = def.id;
+        if (tabs.onChange) tabs.onChange();
+        for (var k = 0; k < navTabs.length; k++) {
+          try { navTabs[k].notify("onDraw"); } catch (e) {}
+        }
+      };
+      registerDraw(btn);
+      navTabs.push(btn);
+    })(navTabDefs[nti]);
+  }
+
+  tabs.onChange = function () {
+    for (var k = 0; k < navTabs.length; k++) {
+      try { navTabs[k].notify("onDraw"); } catch (e) {}
+    }
+  };
 
   var libraryTab = tabs.add("tab", undefined, "Library");
   libraryTab.margins = [0, 26, 0, 0];
@@ -3034,6 +3349,14 @@ function catRemoveItem(item, comp, layers) {
   statusRow.alignChildren = ["fill", "center"];
   statusRow.alignment = ["fill", "bottom"];
   statusRow.visible = !welcomeShown;
+  statusRow.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 320, h = sz[1] || 20;
+    g.newPath();
+    g.rectPath(0, 0, Math.max(1, w), 1);
+    g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+  };
   var status = statusRow.add("statictext", undefined, "\u25cf " + tr("status.ready"));
   status.alignment = ["fill", "center"];
   var bar = statusRow.add("progressbar", undefined, 0, 100);
@@ -3062,21 +3385,7 @@ function catRemoveItem(item, comp, layers) {
     setStatusColor(status, tokenColor(tokens().danger));
   }
 
-  var DRAWABLES = [];
-  // The header and its brand mark are created before this list exists; register them now so a
-  // theme switch repaints their onDraw surfaces.
-  registerDraw(header);
-  registerDraw(brandMark);
-  function registerDraw(panel) {
-    DRAWABLES.push(panel);
-    return panel;
-  }
-  function redrawAll() {
-    for (var i = 0; i < DRAWABLES.length; i++) {
-      try { DRAWABLES[i].notify("onDraw"); } catch (e) {}
-    }
-    try { ui.layout.layout(true); } catch (e) {}
-  }
+  registerDraw(statusRow);
 
   // The dock can be narrower than the 320 pt design minimum: EffectCraft gives this panel 298 pt.
   // ScriptUI has no media queries, so the header stacks, the welcome buttons stack and the five
@@ -3162,18 +3471,43 @@ function catRemoveItem(item, comp, layers) {
   var CHROME_WIDE = 98; // margins (8 + 8) + header 54 + status row 16 + two 6 px gaps
   var CHROME_COMPACT = 112; // the same, with the two-row header (68)
   var heightPinned = false;
-  ui.onResize = function () {
-    var sz = ui.size;
-    var w = sz && (sz.width !== undefined ? sz.width : sz[0]);
-    var h = sz && (sz.height !== undefined ? sz.height : sz[1]);
+
+  function handleHostResize(eventOrData) {
+    var w = 0, h = 0;
+    if (eventOrData) {
+      if (eventOrData.size && eventOrData.size.length >= 2) {
+        w = eventOrData.size[0]; h = eventOrData.size[1];
+      } else if (eventOrData.width !== undefined && eventOrData.height !== undefined) {
+        w = eventOrData.width; h = eventOrData.height;
+      }
+    }
+    if (!(w > 0) || !(h > 0)) {
+      var sz = ui.size;
+      w = sz && (sz.width !== undefined ? sz.width : sz[0]);
+      h = sz && (sz.height !== undefined ? sz.height : sz[1]);
+    }
     if (!(w > 0) || !(h > 0)) return;
-    applyResponsive(w);
-    var th = Math.max(1, h - (headerCompact ? CHROME_COMPACT : CHROME_WIDE));
-    if (!heightPinned && tabs.bounds[3] <= th + 1) return;
-    heightPinned = true;
-    tabs.preferredSize = [-1, th];
-    try { ui.layout.layout(); } catch (e) {}
+    try {
+      applyResponsive(w);
+      var th = Math.max(1, h - (headerCompact ? CHROME_COMPACT : CHROME_WIDE));
+      if (!heightPinned && tabs && tabs.bounds && tabs.bounds[3] <= th + 1) return;
+      heightPinned = true;
+      if (tabs) tabs.preferredSize = [-1, th];
+      ui.layout.layout();
+      redrawAll();
+    } catch (eR) {}
+  }
+
+  ui.onResize = function () {
+    handleHostResize(null);
   };
+
+  try {
+    if (typeof ui.addEventListener === "function") {
+      ui.addEventListener("scriptui.resize", function (ev) { handleHostResize(ev); });
+      ui.addEventListener("resize", function (ev) { handleHostResize(ev); });
+    }
+  } catch (eEv) {}
 
   // Static controls are translated after they are built, so every screen follows the chosen language
   // without duplicating the layout code for each one.
@@ -3215,6 +3549,7 @@ function catRemoveItem(item, comp, layers) {
     welcomeShown = !!visible;
     welcome.visible = welcomeShown;
     tabs.visible = !welcomeShown;
+    if (navBar) navBar.visible = !welcomeShown;
     statusRow.visible = !welcomeShown;
     if (welcomeShown) {
       welcomeCheck._flowRetry = false;
@@ -3278,6 +3613,45 @@ function catRemoveItem(item, comp, layers) {
     b._en = enText || text;
     b.alignment = ["fill", "center"];
     if (isPrimary) b.isPrimary = true;
+    b._hover = false;
+    b._pressed = false;
+    b.onDraw = function () {
+      var g = this.graphics;
+      var sz = this.size;
+      var w = sz[0] || 120, h = sz[1] || 28;
+      var C = palette();
+      var isPri = !!this.isPrimary;
+      if (isPri) {
+        drawAccentGradient(g, 0, 0, w, h, this._hover, this._pressed);
+        var label = this.text || "";
+        var textColor = isDarkTheme() ? [0.04, 0.06, 0.10, 1] : [1, 1, 1, 1];
+        var tw = label.length * 6.2;
+        var tx = Math.max(6, Math.floor((w - tw) / 2));
+        var ty = Math.floor(h / 2) - 5 + (this._pressed ? 1 : 0);
+        g.drawString(label, colorPen(g, textColor, 1), tx, ty);
+      } else {
+        var fill = this._pressed ? C.surface3 : (this._hover ? C.surface2 : [C.surface[0], C.surface[1], C.surface[2], 0.65]);
+        g.newPath();
+        g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+        g.fillPath(colorBrush(g, fill));
+        g.newPath();
+        g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
+        g.strokePath(colorPen(g, this._hover ? C.accent : C.border, 1));
+        var ghostLabel = this.text || "";
+        var ghostCol = this._hover ? C.accent : C.text;
+        var gtw = ghostLabel.length * 6;
+        var gtx = Math.max(6, Math.floor((w - gtw) / 2));
+        var gty = Math.floor(h / 2) - 5 + (this._pressed ? 1 : 0);
+        g.drawString(ghostLabel, colorPen(g, ghostCol, 1), gtx, gty);
+      }
+    };
+    try {
+      b.addEventListener("mouseover", function () { b._hover = true; try { b.notify("onDraw"); } catch (e) {} });
+      b.addEventListener("mouseout", function () { b._hover = false; b._pressed = false; try { b.notify("onDraw"); } catch (e) {} });
+      b.addEventListener("mousedown", function () { b._pressed = true; try { b.notify("onDraw"); } catch (e) {} });
+      b.addEventListener("mouseup", function () { b._pressed = false; try { b.notify("onDraw"); } catch (e) {} });
+    } catch (eMouse) {}
+    registerDraw(b);
     return b;
   }
 
@@ -3409,12 +3783,25 @@ function catRemoveItem(item, comp, layers) {
   registerDraw(easeCurve);
   easeCurve.onDraw = function () {
     var g = easeCurve.graphics;
-    var w = easeCurve.size[0], h = easeCurve.size[1];
+    var w = easeCurve.size[0] || 260, h = easeCurve.size[1] || 90;
     var C = palette();
     g.newPath();
     g.rectPath(0, 0, w, h);
-    g.fillPath(colorBrush(g, C.bg));
-    var f = easingFn(EASINGS[easeSelect.selection.index].id);
+    g.fillPath(colorBrush(g, C.bg2));
+    g.newPath();
+    g.rectPath(0, 0, w, 1);
+    g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+    // Subtle easing grid lines
+    var gridPen = colorPen(g, tokenColor(tokens().border), 1);
+    for (var gi = 1; gi <= 3; gi++) {
+      var gy = Math.round(h * (gi / 4));
+      g.newPath(); g.moveTo(8, gy); g.lineTo(w - 8, gy); g.strokePath(gridPen);
+      var gx = Math.round(8 + (w - 16) * (gi / 4));
+      g.newPath(); g.moveTo(gx, 6); g.lineTo(gx, h - 6); g.strokePath(gridPen);
+    }
+    var selIdx = easeSelect.selection ? easeSelect.selection.index : 0;
+    var easeObj = EASINGS[selIdx] || EASINGS[0];
+    var f = easingFn(easeObj.id);
     var pen = colorPen(g, C.accent, 2);
     var minY = 0, maxY = 1, i, y;
     for (i = 0; i <= 60; i++) {
@@ -3422,10 +3809,10 @@ function catRemoveItem(item, comp, layers) {
       if (y < minY) minY = y;
       if (y > maxY) maxY = y;
     }
-    var pad = 6;
+    var pad = 10;
     for (i = 0; i <= 60; i++) {
       var px = pad + (w - 2 * pad) * (i / 60);
-      var py = h - pad - (h - 2 * pad) * ((f(i / 60) - minY) / (maxY - minY));
+      var py = h - pad - (h - 2 * pad) * ((f(i / 60) - minY) / (maxY - minY || 1));
       if (i === 0) {
         g.newPath();
         g.moveTo(px, py);
@@ -3434,6 +3821,19 @@ function catRemoveItem(item, comp, layers) {
       }
     }
     g.strokePath(pen);
+    // Animated moving point on curve
+    var tProgress = ((new Date().getTime()) % 2200) / 2200;
+    var curVal = f(tProgress);
+    var curX = pad + (w - 2 * pad) * tProgress;
+    var curY = h - pad - (h - 2 * pad) * ((curVal - minY) / (maxY - minY || 1));
+    g.newPath();
+    g.ellipsePath(curX - 4, curY - 4, 8, 8);
+    g.fillPath(colorBrush(g, C.accent2));
+    g.newPath();
+    g.ellipsePath(curX - 2, curY - 2, 4, 4);
+    g.fillPath(colorBrush(g, [1, 1, 1, 1]));
+    // Easing label & readout
+    g.drawString(easeObj.name + " (t=" + tProgress.toFixed(2) + " \u2192 " + curVal.toFixed(2) + ")", colorPen(g, C.muted, 1), 10, 4);
   };
   easeSelect.onChange = function () {
     try {
@@ -3598,7 +3998,29 @@ function catRemoveItem(item, comp, layers) {
     g.drawString(tr("waveform"), colorPen(g, C.muted, 1), 10, 3);
     var top = 20, bottom = Math.max(top + 10, h - 8);
     if (!silLast || !silLast.result || !silLast.result.duration) {
-      g.drawString(tr("silenceEmpty"), colorPen(g, C.muted, 1), 10, Math.floor(h / 2 + 2));
+      // Live dynamic audio preview simulation showing green speech, red silence cuts, and threshold
+      var penT0 = colorPen(g, [1, 0.72, 0.25, 0.85], 1);
+      var ty0 = Math.round(top + (bottom - top) * 0.72);
+      g.newPath(); g.moveTo(10, ty0); g.lineTo(w - 10, ty0); g.strokePath(penT0);
+      var bars = Math.min(64, Math.max(20, Math.floor((w - 24) / 4)));
+      var barW = (w - 24) / bars;
+      var mid0 = Math.floor((top + bottom) / 2);
+      for (var bi = 0; bi < bars; bi++) {
+        var phase = bi / bars;
+        var isSilence = (phase > 0.18 && phase < 0.35) || (phase > 0.65 && phase < 0.78);
+        var amp = isSilence ? 0.08 : (0.25 + 0.65 * Math.sin(phase * Math.PI * 4) * Math.sin(phase * Math.PI * 9));
+        amp = Math.abs(amp);
+        var barH = Math.max(2, Math.floor((bottom - top) * 0.45 * amp));
+        var bx = 12 + bi * barW;
+        g.newPath();
+        g.rectPath(Math.round(bx), mid0 - barH, Math.max(1, Math.round(barW) - 1), barH * 2);
+        if (isSilence) {
+          g.fillPath(colorBrush(g, [C.danger[0], C.danger[1], C.danger[2], 0.75]));
+        } else {
+          g.fillPath(colorBrush(g, [C.voice[0], C.voice[1], C.voice[2], 0.85]));
+        }
+      }
+      g.drawString(tr("silenceEmpty") + " \u2022 Aper\u00e7u direct", colorPen(g, C.muted, 1), 12, bottom - 12);
       return;
     }
     var res = silLast.result;
@@ -3973,26 +4395,46 @@ function catRemoveItem(item, comp, layers) {
   styleBox.alignChildren = ["fill", "top"];
 
   var stPreview = styleBox.add("panel", undefined, tr("stylePreview"));
-  stPreview.preferredSize = [-1, 54];
+  stPreview.preferredSize = [-1, 62];
   stPreview.alignment = ["fill", "top"];
   registerDraw(stPreview);
   stPreview.onDraw = function () {
     var g = this.graphics;
     var sz = this.size;
-    var w = sz[0] || 260, h = sz[1] || 54;
+    var w = sz[0] || 260, h = sz[1] || 62;
     var C = palette();
     g.newPath();
     g.rectPath(0, 0, w, h);
-    g.fillPath(colorBrush(g, C.bg));
-    g.drawString(tr("stylePreview"), colorPen(g, C.muted, 1), 10, 3);
+    g.fillPath(colorBrush(g, [0.04, 0.05, 0.09, 1]));
+    g.newPath();
+    g.rectPath(0, 0, w, 1);
+    g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+    g.drawString(tr("stylePreview") + " \u2022 Karaok\u00e9", colorPen(g, C.muted, 1), 10, 3);
     var st = readStyle();
-    var sample = st.uppercase ? "SOUS-TITRE FLOW" : "Sous-titre Flow";
     var col = hexToUnit(st.fill, [1, 1, 1]);
     var ty = Math.floor(h / 2 - 2);
-    if (st.shadow) {
-      g.drawString(sample, colorPen(g, [0, 0, 0, 0.8], 1), Math.floor(w / 2 - 78) + 2, ty + 2);
+    // Draw background box if enabled
+    if (st.box) {
+      g.newPath();
+      g.rectPath(Math.floor(w / 2 - 82), ty - 4, 164, 20);
+      g.fillPath(colorBrush(g, [0, 0, 0, 0.72]));
+      g.newPath();
+      g.rectPath(Math.floor(w / 2 - 82), ty - 4, 164, 20);
+      g.strokePath(colorPen(g, C.border, 1));
     }
-    g.drawString(sample, colorPen(g, [col[0], col[1], col[2], 1], 1), Math.floor(w / 2 - 78), ty);
+    // Karaoké simulation: Word 1 highlighted (FLOW), Word 2 active (STUDIO)
+    var midX = Math.floor(w / 2);
+    if (st.shadow) {
+      g.drawString("FLOW", colorPen(g, [0, 0, 0, 0.85], 1), midX - 68 + 2, ty + 2);
+      g.drawString("STUDIO", colorPen(g, [0, 0, 0, 0.85], 1), midX - 22 + 2, ty + 2);
+      g.drawString("PRO", colorPen(g, [0, 0, 0, 0.85], 1), midX + 32 + 2, ty + 2);
+    }
+    // Word 1: Accent highlight
+    g.drawString("FLOW", colorPen(g, C.accent, 1), midX - 68, ty);
+    // Word 2: Style fill color
+    g.drawString("STUDIO", colorPen(g, [col[0], col[1], col[2], 1], 1), midX - 22, ty);
+    // Word 3: Muted follower
+    g.drawString("PRO", colorPen(g, [col[0], col[1], col[2], 0.65], 1), midX + 32, ty);
   };
 
   var stGridSel = 0;
@@ -4012,6 +4454,7 @@ function catRemoveItem(item, comp, layers) {
       cell.alignment = ["fill", "center"];
       cell.preferredSize = [120, 36];
       cell._styleIndex = stRow * 4 + stCol;
+      cell._hover = false;
       cell.onDraw = function () {
         var g = this.graphics;
         var sz = this.size;
@@ -4019,17 +4462,25 @@ function catRemoveItem(item, comp, layers) {
         var all = allStyles();
         var C = palette();
         var idx = this._styleIndex;
+        var isSel = idx === stGridSel;
         g.newPath();
         g.rectPath(0, 0, w, h);
-        g.fillPath(colorBrush(g, idx === stGridSel ? C.cellHi : C.cell));
+        g.fillPath(colorBrush(g, isSel ? C.cellHi : (this._hover ? C.surface3 : C.cell)));
+        g.newPath();
+        g.rectPath(0, 0, w, h);
+        g.strokePath(colorPen(g, isSel ? C.accent : (this._hover ? C.border2 : C.border), isSel ? 2 : 1));
         if (idx < all.length) {
           var st = all[idx];
           var col = hexToUnit(st.fill, [1, 1, 1]);
           var sample = String(st.uppercase ? "TEXTE" : "Texte");
-          g.drawString(sample, colorPen(g, [col[0], col[1], col[2], 1], 1), 6, 2);
-          g.drawString(String(st.name).substr(0, 18), colorPen(g, C.text, 1), 6, h - 14);
+          g.drawString(sample, colorPen(g, isSel ? C.accent : [col[0], col[1], col[2], 1], 1), 8, 2);
+          g.drawString(String(st.name).substr(0, 18), colorPen(g, isSel ? C.accent : C.text, 1), 8, h - 14);
         }
       };
+      try {
+        cell.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+        cell.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+      } catch (eCm) {}
       cell.onClick = function () {
         var all = allStyles();
         if (this._styleIndex >= all.length) return;
@@ -4596,25 +5047,55 @@ function catRemoveItem(item, comp, layers) {
   helperTab.alignChildren = ["fill", "top"];
   var hlpTitle = helperTab.add("statictext", undefined, tr("helperTitle"));
   var hlpStatusText = helperTab.add("statictext", undefined, "État : Prêt à vérifier.", { multiline: true });
-  hlpStatusText.preferredSize = [-1, 24];
+  hlpStatusText.preferredSize = [-1, 32];
   var hlpGuide = helperTab.add("statictext", undefined, tr("helperGuide"), { multiline: true });
   hlpGuide.preferredSize = [-1, 90];
   var hlpRow = helperTab.add("group");
   hlpRow.alignment = ["fill", "top"];
   var hlpCheckBtn = addBtn(hlpRow, "Tester la connexion / Réessayer", "Connect / refresh", true);
+  var hlpLaunchBtn = addBtn(hlpRow, "Démarrer le helper", "Start helper", false);
   var hlpWelcomeBtn = helperTab.add("button", undefined, "Revoir l'aide de démarrage");
   hlpWelcomeBtn.alignment = ["fill", "center"];
   hlpWelcomeBtn.onClick = function () { setWelcome(true); };
+  hlpLaunchBtn.onClick = function () {
+    var cands = [];
+    try {
+      if (Folder.current) {
+        cands.push(Folder.current.fsName + "/LANCER-HELPER.bat");
+        cands.push(Folder.current.fsName + "/START-HELPER.bat");
+      }
+      var docs = Folder.myDocuments.fsName.replace(/\\/g, "/").replace(/\/Documents$/i, "");
+      cands.push(docs + "/AppData/Roaming/EffectCraft/FlowStudio/LANCER-HELPER.bat");
+    } catch (eCands) {}
+    var launched = false;
+    for (var i = 0; i < cands.length; i++) {
+      try {
+        var f = new File(cands[i]);
+        if (f.exists) {
+          f.execute();
+          launched = true;
+          break;
+        }
+      } catch (eF) {}
+    }
+    if (launched) {
+      say("Lancement du helper...");
+      hlpStatusText.text = "● Démarrage du helper envoyé. Attendez 2 secondes puis cliquez sur Tester.";
+    } else {
+      hlpStatusText.text = "Lancez LANCER-HELPER.bat situé à la racine du dossier Flow Studio.";
+      fail("Lancez LANCER-HELPER.bat.");
+    }
+  };
   hlpCheckBtn.onClick = function () {
     var r = helper({ op: "models.list" });
     if (r && r.ok) {
-      hlpStatusText.text = "● Connecté avec succès au helper Flow Studio.";
+      hlpStatusText.text = "● Connecté avec succès au helper Flow Studio (Port 9890).";
       try {
         hlpStatusText.graphics.foregroundColor = hlpStatusText.graphics.newPen(hlpStatusText.graphics.PenType.SOLID_COLOR, [0.15, 0.75, 0.35, 1], 1);
       } catch (e) {}
       say("Helper connecté.");
     } else {
-      hlpStatusText.text = "! Connexion impossible : " + (r ? r.error : "helper injoignable");
+      hlpStatusText.text = "! Connexion impossible : " + (r && r.error ? r.error : "helper injoignable.") + "\nAstuce : Double-cliquez sur LANCER-HELPER.bat et activez l'accès réseau dans les Préférences EffectCraft.";
       try {
         hlpStatusText.graphics.foregroundColor = hlpStatusText.graphics.newPen(hlpStatusText.graphics.PenType.SOLID_COLOR, [0.95, 0.25, 0.25, 1], 1);
       } catch (e) {}
@@ -5105,6 +5586,50 @@ function catRemoveItem(item, comp, layers) {
   bgTab.alignChildren = ["fill", "top"];
   var bgList = bgTab.add("dropdownlist", undefined, ["-"]);
   bgList.minimumSize = [160, -1];
+  var bgPreview = bgTab.add("panel", undefined, undefined);
+  bgPreview.preferredSize = [-1, 62];
+  bgPreview.minimumSize = [-1, 48];
+  bgPreview.alignment = ["fill", "top"];
+  registerDraw(bgPreview);
+  bgPreview.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 260, h = sz[1] || 62;
+    var C = palette();
+    var c1 = hexToUnit(bgC1.text, [0.3, 0.5, 0.9]);
+    var c2 = hexToUnit(bgC2.text, [0.9, 0.2, 0.5]);
+    var c3 = hexToUnit(bgC3.text, [0.4, 0.1, 0.8]);
+    var c4 = hexToUnit(bgC4.text, [0.1, 0.8, 0.9]);
+    var kindIdx = bgKind.selection ? bgKind.selection.index : 0;
+    var steps = Math.min(32, Math.max(12, Math.floor(w / 8)));
+    var stepW = w / steps;
+    for (var s = 0; s < steps; s++) {
+      var t = s / (steps - 1);
+      var r, gr, b;
+      if (kindIdx === 2) {
+        if (t < 0.33) {
+          var lt1 = t / 0.33;
+          r = c1[0] + (c2[0] - c1[0]) * lt1; gr = c1[1] + (c2[1] - c1[1]) * lt1; b = c1[2] + (c2[2] - c1[2]) * lt1;
+        } else if (t < 0.66) {
+          var lt2 = (t - 0.33) / 0.33;
+          r = c2[0] + (c3[0] - c2[0]) * lt2; gr = c2[1] + (c3[1] - c2[1]) * lt2; b = c2[2] + (c3[2] - c2[2]) * lt2;
+        } else {
+          var lt3 = (t - 0.66) / 0.34;
+          r = c3[0] + (c4[0] - c3[0]) * lt3; gr = c3[1] + (c4[1] - c3[1]) * lt3; b = c3[2] + (c4[2] - c3[2]) * lt3;
+        }
+      } else {
+        r = c1[0] + (c2[0] - c1[0]) * t; gr = c1[1] + (c2[1] - c1[1]) * t; b = c1[2] + (c2[2] - c1[2]) * t;
+      }
+      g.newPath();
+      g.rectPath(Math.round(s * stepW), 0, Math.max(1, Math.ceil(stepW)), h);
+      g.fillPath(colorBrush(g, [r, gr, b, 1]));
+    }
+    g.newPath(); g.rectPath(0, 0, w, 1); g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+    g.newPath(); g.rectPath(0, 0, w, h); g.strokePath(colorPen(g, C.border, 1));
+    var kName = BG_KIND_NAMES[kindIdx] || "Linear";
+    var ang = bgAngle && bgAngle.get ? bgAngle.get() : 45;
+    g.drawString("Aper\u00e7u direct \u2022 " + kName + " (" + ang + "\u00b0)", colorPen(g, [1, 1, 1, 0.9], 1), 10, 4);
+  };
   var bgKind = dropdown(bgTab, "Type", BG_KIND_NAMES, 0);
   var bgC1 = field(bgTab, "Color 1", "#FF512F", 90);
   var bgC2 = field(bgTab, "Color 2", "#DD2476", 90);
@@ -5156,6 +5681,7 @@ function catRemoveItem(item, comp, layers) {
     bgAnim.selection = Math.max(0, BG_ANIMS.indexOf(p.anim));
     bgSpeed.set(p.speed);
     bgName.text = p.name;
+    try { bgPreview.notify("onDraw"); } catch (e) {}
   }
 
   function readBg(name) {
@@ -6198,16 +6724,54 @@ function catRemoveItem(item, comp, layers) {
   libHeadBox.spacing = 1;
   var libEyebrow = libHeadBox.add("statictext", undefined, "COLLECTION");
   try {
-    libEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 9);
+    libEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 9);
     libEyebrow.graphics.foregroundColor = colorPen(libEyebrow.graphics, palette().accent, 1);
   } catch (eEye) {}
   var libHeadTitle = libHeadBox.add("statictext", undefined,
     LANG === "fr" ? "Biblioth\u00e8que cr\u00e9ative" :
     LANG === "ar" ? "\u0645\u0643\u062a\u0628\u0629 \u0625\u0628\u062f\u0627\u0639\u064a\u0629" : "Creative library");
-  try { libHeadTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 17); } catch (eTitle) {}
+  try { libHeadTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 18); } catch (eTitle) {}
   var libHeadCount = libHead.add("statictext", undefined, "");
   libHeadCount.alignment = ["right", "center"];
-  try { libHeadCount.graphics.foregroundColor = colorPen(libHeadCount.graphics, palette().muted, 1); } catch (eCount) {}
+  libHeadCount.visible = false;
+
+  var libHeadSpacer = libHead.add("statictext", undefined, "");
+  libHeadSpacer.alignment = ["fill", "center"];
+
+  // Filter icon button on the right
+  var libFilterBtn = libHead.add("panel");
+  libFilterBtn.preferredSize = [30, 30];
+  libFilterBtn.minimumSize = [30, 30];
+  libFilterBtn.alignment = ["right", "center"];
+  libFilterBtn._hover = false;
+  libFilterBtn.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 30, h = sz[1] || 30;
+    var C = palette();
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 8);
+    g.fillPath(colorBrush(g, this._hover ? [0.18, 0.24, 0.38, 0.7] : [0.09, 0.13, 0.24, 0.5]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 8);
+    g.strokePath(colorPen(g, this._hover ? C.border2 : C.border, 1));
+    var pen = colorPen(g, this._hover ? [1, 1, 1, 1] : C.muted, 1.2);
+    var brush = colorBrush(g, this._hover ? [1, 1, 1, 1] : C.muted);
+    // Line 1: dot on left
+    g.newPath(); g.moveTo(8, 9); g.lineTo(22, 9); g.strokePath(pen);
+    g.newPath(); g.ellipsePath(11, 7.5, 3, 3); g.fillPath(brush);
+    // Line 2: dot on right
+    g.newPath(); g.moveTo(8, 15); g.lineTo(22, 15); g.strokePath(pen);
+    g.newPath(); g.ellipsePath(17, 13.5, 3, 3); g.fillPath(brush);
+    // Line 3: dot in center
+    g.newPath(); g.moveTo(8, 21); g.lineTo(22, 21); g.strokePath(pen);
+    g.newPath(); g.ellipsePath(14, 19.5, 3, 3); g.fillPath(brush);
+  };
+  try {
+    libFilterBtn.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    libFilterBtn.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eFm) {}
+  registerDraw(libFilterBtn);
 
   var libTop = libraryTab.add("group");
   libTop.alignment = ["fill", "top"];
@@ -6238,7 +6802,7 @@ function catRemoveItem(item, comp, layers) {
   var libSearch = libTop.add("edittext", undefined, "");
   libSearch.alignment = ["fill", "center"];
   libSearch.preferredSize = [220, -1];
-  libSearch.minimumSize = [80, -1];
+  libSearch.minimumSize = [90, -1];
   var libSearchSpacer = libTop.add("statictext", undefined, "");
   libSearchSpacer.alignment = ["fill", "center"];
   var libSearchKey = libTop.add("statictext", undefined, "\u2318K");
@@ -6258,34 +6822,42 @@ function catRemoveItem(item, comp, layers) {
     libChipRows[libCr].orientation = "row";
     libChipRows[libCr].alignment = ["fill", "center"];
     libChipRows[libCr].alignChildren = ["left", "center"];
-    libChipRows[libCr].spacing = 4;
+    libChipRows[libCr].spacing = 5;
   }
   for (var libCi = 0; libCi < libChipNames.length; libCi++) {
     (function (idx) {
       var chip = libChipRows[idx < 4 ? 0 : 1].add("button", undefined, "");
-      chip.preferredSize = [64, 22];
-      chip.minimumSize = [46, 22];
+      chip.preferredSize = [68, 26];
+      chip.minimumSize = [50, 26];
       chip.alignment = ["left", "center"];
       chip._idx = idx;
       chip._label = libChipNames[idx] || "";
       chip._on = false;
+      chip._hover = false;
       chip.onDraw = function () {
         var g = this.graphics;
         var sz = this.size;
-        var w = sz[0] || 64, h = sz[1] || 22;
+        var w = sz[0] || 68, h = sz[1] || 26;
         var C = palette();
+        var rad = Math.floor(h / 2);
         g.newPath();
-        g.rectPath(0, 0, w, h);
-        // onDraw does not paint the parent, so the pill must be opaque over the native button.
-        g.fillPath(colorBrush(g, this._on ? C.surface : [C.surface[0], C.surface[1], C.surface[2], 1]));
-        if (this._on) {
-          g.newPath();
-          g.rectPath(0, h - 2, w, 2);
-          g.fillPath(colorBrush(g, C.accent));
-        }
+        g.roundRectPath(0, 0, w, h, rad);
+        var fill = this._on ? [C.accent[0], C.accent[1], C.accent[2], 0.16] : (this._hover ? [1, 1, 1, 0.08] : [0.08, 0.12, 0.22, 0.55]);
+        g.fillPath(colorBrush(g, fill));
+        g.newPath();
+        g.roundRectPath(0, 0, w, h, rad);
+        var borderCol = this._on ? C.accent : (this._hover ? C.border2 : C.border);
+        g.strokePath(colorPen(g, borderCol, this._on ? 1.5 : 1));
         var label = this._label || libChipNames[this._idx] || "";
-        g.drawString(String(label).substr(0, 14), colorPen(g, this._on ? C.accent : C.text, 1), 8, Math.floor(h / 2) - 5);
+        var col = this._on ? C.accent : (this._hover ? [1, 1, 1, 0.95] : C.muted);
+        var lx = Math.max(8, Math.floor((w - label.length * 6) / 2));
+        g.drawString(String(label), colorPen(g, col, 1), lx, Math.floor(h / 2) - 5);
       };
+      try {
+        chip.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+        chip.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+      } catch (eChM) {}
+      registerDraw(chip);
       chip.onClick = function () {
         libCat.selection = this._idx;
         libRefresh();
@@ -6301,6 +6873,20 @@ function catRemoveItem(item, comp, layers) {
     }
   }
   libChipSync();
+
+  // Sub-header count and sort row right under chips
+  var libCountRow = libraryTab.add("group");
+  libCountRow.alignment = ["fill", "center"];
+  libCountRow.alignChildren = ["fill", "center"];
+  libCountRow.margins = [4, 4, 4, 2];
+  var libSubCount = libCountRow.add("statictext", undefined, "18 transitions");
+  libSubCount.alignment = ["left", "center"];
+  try { libSubCount.graphics.foregroundColor = colorPen(libSubCount.graphics, palette().muted, 1); } catch (eSc) {}
+  var libSubSpacer = libCountRow.add("statictext", undefined, "");
+  libSubSpacer.alignment = ["fill", "center"];
+  var libSortOrder = libCountRow.add("statictext", undefined, "R\u00e9cents \u02c5");
+  libSortOrder.alignment = ["right", "center"];
+  try { libSortOrder.graphics.foregroundColor = colorPen(libSortOrder.graphics, palette().muted, 1); } catch (eSo) {}
 
 
 
@@ -6538,9 +7124,40 @@ catLibraryRelabel();
 
     var accent = [t[0], t[1], t[2], 0.9];
     if (kind === "transitions" || (it && it.cat === "Transitions")) {
-      var seam = x + Math.floor(w * 0.56);
-      g.newPath(); g.rectPath(seam, y, Math.max(1, x + w - seam), h); g.fillPath(colorBrush(g, [0.03, 0.04, 0.08, 0.42]));
-      g.newPath(); g.rectPath(seam, y, 1, h); g.fillPath(colorBrush(g, accent));
+      // Sunset golden mountain glow on left
+      g.newPath(); g.rectPath(x, y, Math.floor(w * 0.55), h);
+      g.fillPath(colorBrush(g, [0.95, 0.55, 0.12, 0.40]));
+      // Night city skyline on right
+      var seamTop = x + Math.floor(w * 0.68);
+      var seamBot = x + Math.floor(w * 0.40);
+      g.newPath();
+      g.moveTo(seamTop, y);
+      g.lineTo(x + w, y);
+      g.lineTo(x + w, y + h);
+      g.lineTo(seamBot, y + h);
+      g.closePath();
+      g.fillPath(colorBrush(g, [0.04, 0.08, 0.18, 0.82]));
+      // City buildings with lit windows
+      var winCol = colorBrush(g, [0.98, 0.88, 0.55, 0.85]);
+      for (var wi = 0; wi < 12; wi++) {
+        var wx = seamBot + 14 + (wi % 4) * 12;
+        var wy = y + Math.floor(h * 0.52) + Math.floor(wi / 4) * 8;
+        if (wx < x + w - 4 && wy < y + h - 4) {
+          g.newPath(); g.rectPath(wx, wy, 2.5, 2.5); g.fillPath(winCol);
+        }
+      }
+      // Glossy diagonal reflection sheen
+      g.newPath();
+      g.moveTo(seamTop - 2, y);
+      g.lineTo(seamTop + 2, y);
+      g.lineTo(seamBot + 2, y + h);
+      g.lineTo(seamBot - 2, y + h);
+      g.closePath();
+      g.fillPath(colorBrush(g, [1, 1, 1, 0.6]));
+      g.newPath();
+      g.moveTo(seamTop, y);
+      g.lineTo(seamBot, y + h);
+      g.strokePath(colorPen(g, C.accent, 1.5));
     } else if (kind === "effects" || (it && it.cat === "Effects")) {
       for (var e = 0; e < 3; e++) {
         g.newPath(); g.rectPath(x, y + Math.floor(h * (0.16 + e * 0.17)), w, 2 + e);
@@ -6717,6 +7334,7 @@ catLibraryRelabel();
   var libPreview = libraryTab.add("panel", undefined, tr("preview"));
   libPreview.preferredSize = [-1, 92];
   libPreview.alignment = ["fill", "top"];
+  libPreview.visible = false;
   registerDraw(libPreview);
   libPreview.onDraw = function () {
     var g = this.graphics;
@@ -6760,6 +7378,7 @@ catLibraryRelabel();
     img.minimumSize = [100, 60];
     img.alignment = ["fill", "top"];
     img._flowImage = false;
+    img._hover = false;
     img.onDraw = function () {
       var g = this.graphics;
       var sz = this.size;
@@ -6771,14 +7390,49 @@ catLibraryRelabel();
         g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.fillPath(colorBrush(g, C.surface));
         return;
       }
-      drawSceneThumb(g, it, 0, 0, Math.max(1, w), Math.max(1, h), C);
-      if (it.disabled) {
-        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.fillPath(colorBrush(g, [0, 0, 0, 0.45]));
+      var pic = null;
+      try { pic = thumbImage(thumbIdFor(it)); } catch (eP) {}
+      var drewPic = false;
+      if (pic) {
+        try {
+          g.drawImage(pic, 0, 0, Math.max(1, w), Math.max(1, h));
+          drewPic = true;
+        } catch (eDP) { drewPic = false; }
       }
+      if (!drewPic) {
+        drawSceneThumb(g, it, 0, 0, Math.max(1, w), Math.max(1, h), C);
+      }
+      if (it.disabled) {
+        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.fillPath(colorBrush(g, [0, 0, 0, 0.48]));
+      }
+      // Top 1px border highlight
+      g.newPath(); g.rectPath(0, 0, Math.max(1, w), 1); g.fillPath(colorBrush(g, tokenColor(tokens().border2)));
+      // Selected or hover border
       if (idx === libSel) {
-        g.newPath(); g.rectPath(0, 0, Math.max(1, w), Math.max(1, h)); g.strokePath(colorPen(g, C.accent, 2));
+        g.newPath(); g.roundRectPath(0, 0, Math.max(1, w), Math.max(1, h), 6); g.strokePath(colorPen(g, C.accent, 2));
+      } else if (this._hover) {
+        g.newPath(); g.roundRectPath(0, 0, Math.max(1, w), Math.max(1, h), 6); g.strokePath(colorPen(g, C.border2, 1));
+      } else {
+        g.newPath(); g.roundRectPath(0, 0, Math.max(1, w), Math.max(1, h), 6); g.strokePath(colorPen(g, C.border, 1));
+      }
+      // Top right favorite star button
+      if (it) {
+        var favs = libFavorites();
+        var isFav = favs[it.cat + "|" + it.name];
+        var starX = w - 24, starY = 8;
+        g.newPath();
+        g.ellipsePath(starX - 2, starY - 2, 20, 20);
+        g.fillPath(colorBrush(g, [0.04, 0.08, 0.16, 0.7]));
+        g.newPath();
+        g.ellipsePath(starX - 2, starY - 2, 20, 20);
+        g.strokePath(colorPen(g, [1, 1, 1, 0.2], 1));
+        g.drawString(isFav ? "\u2605" : "\u2606", colorPen(g, isFav ? [1, 0.8, 0.2, 1] : [1, 1, 1, 0.9], 1), starX + 3, starY + 2);
       }
     };
+    try {
+      img.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+      img.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+    } catch (eImgM) {}
     registerDraw(img);
     return img;
   }
@@ -6798,31 +7452,36 @@ catLibraryRelabel();
       var libImg = libCardThumb(libCard);
       var libCell = libCard.add("button", undefined, "");
       libCell.alignment = ["fill", "center"];
-      libCell.preferredSize = [140, 24];
-      libCell.minimumSize = [100, 20];
+      libCell.preferredSize = [140, 34];
+      libCell.minimumSize = [100, 28];
       libCell._itemIndex = -1;
+      libCell._hover = false;
       libCell.onDraw = function () {
         var g = this.graphics;
         var sz = this.size;
-        var w = sz[0] || 140, h = sz[1] || 24;
+        var w = sz[0] || 140, h = sz[1] || 34;
         var C = palette();
         var idx = this._itemIndex;
         var it = idx >= 0 && idx < libShown.length ? libShown[idx] : null;
         var on = !!it && idx === libSel;
         g.newPath();
-        g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
-        g.fillPath(colorBrush(g, on ? C.cellHi : C.cell));
-        if (on) {
-          g.newPath();
-          g.rectPath(0, 0, Math.max(1, w), Math.max(1, h));
-          g.strokePath(colorPen(g, C.accent, 1));
-        }
+        g.roundRectPath(0, 0, Math.max(1, w), Math.max(1, h), 4);
+        var fill = on ? [C.accent[0], C.accent[1], C.accent[2], 0.12] : (this._hover ? [1, 1, 1, 0.05] : [0.06, 0.09, 0.16, 0.7]);
+        g.fillPath(colorBrush(g, fill));
+        g.newPath();
+        g.roundRectPath(0, 0, Math.max(1, w), Math.max(1, h), 4);
+        g.strokePath(colorPen(g, on ? C.accent : (this._hover ? C.border2 : C.border), on ? 1.5 : 1));
         if (!it) return;
-        var favs = libFavorites();
-        g.drawString(String(it.name).substr(0, 22), colorPen(g, it.disabled ? C.muted : C.text, 1), 6, 8);
-        g.drawString(String(it.sub || "").substr(0, 18), colorPen(g, C.muted, 1), 6, 17);
-        if (favs[it.cat + "|" + it.name]) g.drawString("★", colorPen(g, [1, 0.8, 0.2, 1], 1), w - 14, 8);
+        var textColor = on ? C.accent : (it.disabled ? C.muted : [1, 1, 1, 0.95]);
+        g.drawString(String(it.name).substr(0, 24), colorPen(g, textColor, 1), 6, 8);
+        var subText = String(it.sub || "Transition").substr(0, 18);
+        g.drawString(subText, colorPen(g, C.muted, 1), 6, 22);
+        g.drawString("0,5 s", colorPen(g, C.muted, 1), Math.max(60, w - 34), 22);
       };
+      try {
+        libCell.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+        libCell.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+      } catch (eCellM) {}
       libCell.onClick = function () {
         var idx = this._itemIndex;
         if (idx < 0 || idx >= libShown.length) return;
@@ -6831,9 +7490,14 @@ catLibraryRelabel();
         this._lastClick = now;
         this._lastIndex = idx;
         libSel = idx;
+        var selItem = libSelectedItem();
+        if (selItem && libSelTitle) libSelTitle.text = String(selItem.name || "");
+        try { if (libSelThumb) libSelThumb.notify("onDraw"); } catch (eSt) {}
+        try { if (libDrawerStar) libDrawerStar.notify("onDraw"); } catch (eSd) {}
         try { libPreview.notify("onDraw"); } catch (e) {}
         for (var c = 0; c < libCells.length; c++) {
           try { libCells[c].btn.notify("onDraw"); } catch (e2) {}
+          try { libCells[c].img.notify("onDraw"); } catch (e3) {}
         }
         if (again) libRun();
       };
@@ -6852,18 +7516,289 @@ catLibraryRelabel();
   libPrev.minimumSize = [86, -1];
   libNext.minimumSize = [86, -1];
 
+  // ------------------------------------------------------------------ Aperçu Bottom Sheet
+  var libDrawer = libraryTab.add("panel");
+  libDrawer.alignment = ["fill", "bottom"];
+  libDrawer.orientation = "column";
+  libDrawer.alignChildren = ["fill", "top"];
+  libDrawer.spacing = 8;
+  libDrawer.margins = [10, 8, 10, 8];
+  libDrawer.preferredSize = [-1, 160];
+  libDrawer.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 280, h = sz[1] || 160;
+    var C = palette();
+    // Glass card background with rounded top corners
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 14);
+    g.fillPath(colorBrush(g, [0.06, 0.09, 0.16, 0.96]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 14);
+    g.strokePath(colorPen(g, C.border2, 1));
+    // Centered handle pill
+    var hw = 28, hh = 3;
+    var hx = Math.floor((w - hw) / 2);
+    g.newPath();
+    g.roundRectPath(hx, 6, hw, hh, 1.5);
+    g.fillPath(colorBrush(g, [1, 1, 1, 0.22]));
+    // "Aperçu ˅" title text centered under handle
+    g.drawString("Aper\u00e7u \u02c5", colorPen(g, C.muted, 1), hx - 5, 14);
+  };
+  registerDraw(libDrawer);
+
+  var libDrawerPad = libDrawer.add("panel");
+  libDrawerPad.preferredSize = [-1, 14];
+  libDrawerPad.visible = false;
+
+  // Row 1: Selection summary (Mini thumb + SÉLECTION + Name + Star)
+  var libSelRow = libDrawer.add("group");
+  libSelRow.orientation = "row";
+  libSelRow.alignment = ["fill", "center"];
+  libSelRow.alignChildren = ["fill", "center"];
+  libSelRow.spacing = 8;
+
+  var libSelThumb = libSelRow.add("panel");
+  libSelThumb.preferredSize = [42, 26];
+  libSelThumb.minimumSize = [42, 26];
+  libSelThumb.onDraw = function () {
+    var g = this.graphics;
+    var w = 42, h = 26;
+    var C = palette();
+    var it = libSelectedItem();
+    if (it) {
+      drawSceneThumb(g, it, 0, 0, w, h, C);
+    } else {
+      g.newPath(); g.roundRectPath(0, 0, w, h, 4); g.fillPath(colorBrush(g, C.surface));
+    }
+    g.newPath(); g.roundRectPath(0, 0, w, h, 4); g.strokePath(colorPen(g, C.border, 1));
+  };
+  registerDraw(libSelThumb);
+
+  var libSelTextBox = libSelRow.add("group");
+  libSelTextBox.orientation = "column";
+  libSelTextBox.alignChildren = ["left", "center"];
+  libSelTextBox.spacing = 0;
+  var libSelEyebrow = libSelTextBox.add("statictext", undefined, "S\u00c9LECTION");
+  try {
+    libSelEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 8);
+    libSelEyebrow.graphics.foregroundColor = colorPen(libSelEyebrow.graphics, palette().accent, 1);
+  } catch (eSe) {}
+  var libSelTitle = libSelTextBox.add("statictext", undefined, "Fondu encha\u00een\u00e9");
+  try { libSelTitle.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 12); } catch (eSt) {}
+
+  var libSelSpacer = libSelRow.add("statictext", undefined, "");
+  libSelSpacer.alignment = ["fill", "center"];
+
+  var libDrawerStar = libSelRow.add("panel");
+  libDrawerStar.preferredSize = [28, 28];
+  libDrawerStar.minimumSize = [28, 28];
+  libDrawerStar._hover = false;
+  libDrawerStar.onDraw = function () {
+    var g = this.graphics;
+    var w = 28, h = 28;
+    var C = palette();
+    var it = libSelectedItem();
+    var favs = libFavorites();
+    var isFav = it && favs[it.cat + "|" + it.name];
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 6);
+    g.fillPath(colorBrush(g, this._hover ? [0.18, 0.24, 0.38, 0.7] : [0.09, 0.13, 0.24, 0.5]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 6);
+    g.strokePath(colorPen(g, this._hover ? C.border2 : C.border, 1));
+    g.drawString(isFav ? "\u2605" : "\u2606", colorPen(g, isFav ? [1, 0.8, 0.2, 1] : C.muted, 1), 9, 8);
+  };
+  try {
+    libDrawerStar.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    libDrawerStar.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eDsM) {}
+  libDrawerStar.onClick = function () { libToggleStar(); try { libDrawerStar.notify("onDraw"); } catch (e) {} };
+  registerDraw(libDrawerStar);
+
+  // Row 2: Appliquer [ Début | Fin | Les deux ]
+  var libApplyRow = libDrawer.add("group");
+  libApplyRow.orientation = "row";
+  libApplyRow.alignment = ["fill", "center"];
+  libApplyRow.alignChildren = ["fill", "center"];
+  libApplyRow.spacing = 8;
+  var libApplyLabel = libApplyRow.add("statictext", undefined, "Appliquer");
+  try { libApplyLabel.graphics.foregroundColor = colorPen(libApplyLabel.graphics, palette().text, 1); } catch (eAl) {}
+
+  var libApplySpacer = libApplyRow.add("statictext", undefined, "");
+  libApplySpacer.alignment = ["fill", "center"];
+
+  var libSegmentCtrl = libApplyRow.add("panel");
+  libSegmentCtrl.preferredSize = [160, 26];
+  libSegmentCtrl.minimumSize = [150, 26];
+  libSegmentCtrl.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 160, h = sz[1] || 26;
+    var C = palette();
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 6);
+    g.fillPath(colorBrush(g, [0.07, 0.10, 0.18, 0.6]));
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 6);
+    g.strokePath(colorPen(g, C.border, 1));
+
+    var sel = libSide.selection ? libSide.selection.index : 2;
+    var segW = Math.floor((w - 4) / 3);
+    var labels = ["D\u00e9but", "Fin", "Les deux"];
+    for (var s = 0; s < 3; s++) {
+      var sx = 2 + s * segW;
+      if (s === sel) {
+        g.newPath();
+        g.roundRectPath(sx, 2, segW, h - 4, 4);
+        g.fillPath(colorBrush(g, [0.18, 0.24, 0.38, 0.95]));
+        g.newPath();
+        g.roundRectPath(sx, 2, segW, h - 4, 4);
+        g.strokePath(colorPen(g, C.border2, 1));
+      }
+      var col = s === sel ? [1, 1, 1, 1] : C.muted;
+      var tw = labels[s].length * 5.5;
+      g.drawString(labels[s], colorPen(g, col, 1), sx + Math.floor((segW - tw) / 2), Math.floor(h / 2) - 5);
+    }
+  };
+  libSegmentCtrl.onClick = function () {
+    var sel = libSide.selection ? libSide.selection.index : 2;
+    libSide.selection = (sel + 1) % 3;
+    try { libSegmentCtrl.notify("onDraw"); } catch (e) {}
+  };
+  registerDraw(libSegmentCtrl);
+
+  // Row 3: Durée + slider
+  var libDurRow = libDrawer.add("group");
+  libDurRow.orientation = "row";
+  libDurRow.alignment = ["fill", "center"];
+  libDurRow.alignChildren = ["fill", "center"];
+  libDurRow.spacing = 10;
+
+  var libDurBox = libDurRow.add("group");
+  libDurBox.orientation = "column";
+  libDurBox.alignChildren = ["left", "center"];
+  libDurBox.spacing = 0;
+  var libDurEyebrow = libDurBox.add("statictext", undefined, "Dur\u00e9e");
+  try {
+    libDurEyebrow.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.REGULAR, 8.5);
+    libDurEyebrow.graphics.foregroundColor = colorPen(libDurEyebrow.graphics, palette().muted, 1);
+  } catch (eDe) {}
+  var libDurValText = libDurBox.add("statictext", undefined, "0,5 s");
+  try { libDurValText.graphics.font = ScriptUI.newFont("dialog", ScriptUI.FontStyle.BOLD, 12); } catch (eDv) {}
+
+  var libDurSliderPanel = libDurRow.add("panel");
+  libDurSliderPanel.alignment = ["fill", "center"];
+  libDurSliderPanel.preferredSize = [180, 20];
+  libDurSliderPanel.minimumSize = [120, 20];
+  libDurSliderPanel._pos = 0.5 / 5.0; // 0.5s default out of 5.0s
+  libDurSliderPanel.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 180, h = sz[1] || 20;
+    var C = palette();
+    var cy = Math.floor(h / 2);
+    // Track background
+    g.newPath();
+    g.roundRectPath(6, cy - 2, w - 12, 4, 2);
+    g.fillPath(colorBrush(g, [0.16, 0.22, 0.34, 0.8]));
+    // Progress fill in cyan
+    var kx = 6 + Math.round(this._pos * (w - 12));
+    g.newPath();
+    g.roundRectPath(6, cy - 2, kx - 6, 4, 2);
+    g.fillPath(colorBrush(g, C.accent));
+    // Knob
+    g.newPath();
+    g.ellipsePath(kx - 6, cy - 6, 12, 12);
+    g.fillPath(colorBrush(g, C.accent));
+    g.newPath();
+    g.ellipsePath(kx - 6, cy - 6, 12, 12);
+    g.strokePath(colorPen(g, [1, 1, 1, 0.9], 1.5));
+  };
+  libDurSliderPanel.onClick = function () {
+    var cur = num(libDur.text, 0.5);
+    var next = cur < 0.4 ? 0.5 : cur < 0.8 ? 1.0 : cur < 1.2 ? 1.5 : 0.3;
+    libDur.text = String(next);
+    libDurSliderPanel._pos = next / 5.0;
+    libDurValText.text = String(next).replace(".", ",") + " s";
+    try { libDurSliderPanel.notify("onDraw"); } catch (e) {}
+  };
+  registerDraw(libDurSliderPanel);
+
+  // Row 4: Primary button "Ajouter à la timeline" with enter symbol
+  var libAddRow = libDrawer.add("group");
+  libAddRow.alignment = ["fill", "center"];
+  libAddRow.margins = [0, 2, 0, 0];
+  var libAddMainBtn = libAddRow.add("panel");
+  libAddMainBtn.alignment = ["fill", "center"];
+  libAddMainBtn.preferredSize = [-1, 40];
+  libAddMainBtn.minimumSize = [180, 36];
+  libAddMainBtn._hover = false;
+  libAddMainBtn.onDraw = function () {
+    var g = this.graphics;
+    var sz = this.size;
+    var w = sz[0] || 260, h = sz[1] || 40;
+    var C = palette();
+    // Vibrant cyan background
+    g.newPath();
+    g.roundRectPath(0, 0, w, h, 10);
+    var fill = this._hover ? [0.42, 0.92, 1.0, 1] : C.accent;
+    g.fillPath(colorBrush(g, fill));
+    // Subtle top border highlight
+    g.newPath();
+    g.roundRectPath(0, 0, w, 1, 1);
+    g.fillPath(colorBrush(g, [1, 1, 1, 0.4]));
+
+    // Label in bold dark navy
+    var label = LANG === "fr" ? "Ajouter \u00e0 la timeline" : LANG === "ar" ? "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0627\u0644\u062e\u0637 \u0627\u0644\u0632\u0645\u0646\u064a" : "Add to timeline";
+    var darkCol = colorPen(g, [0.04, 0.08, 0.16, 1], 1);
+    var tw = label.length * 6.5;
+    var lx = Math.max(16, Math.floor((w - tw) / 2));
+    g.drawString(label, darkCol, lx, Math.floor(h / 2) - 5);
+
+    // Enter return icon badge on the right
+    var bx = w - 32, by = Math.floor(h / 2) - 9;
+    g.newPath();
+    g.roundRectPath(bx, by, 18, 18, 4);
+    g.fillPath(colorBrush(g, [0.04, 0.08, 0.16, 0.14]));
+    var iconPen = colorPen(g, [0.04, 0.08, 0.16, 0.85], 1.3);
+    g.newPath();
+    g.moveTo(bx + 12, by + 6);
+    g.lineTo(bx + 12, by + 11);
+    g.lineTo(bx + 6, by + 11);
+    g.strokePath(iconPen);
+    g.newPath();
+    g.moveTo(bx + 8, by + 9);
+    g.lineTo(bx + 6, by + 11);
+    g.lineTo(bx + 8, by + 13);
+    g.strokePath(iconPen);
+  };
+  try {
+    libAddMainBtn.addEventListener("mouseover", function () { this._hover = true; try { this.notify("onDraw"); } catch (e) {} });
+    libAddMainBtn.addEventListener("mouseout", function () { this._hover = false; try { this.notify("onDraw"); } catch (e) {} });
+  } catch (eAmbM) {}
+  libAddMainBtn.onClick = function () { libRun(); };
+  registerDraw(libAddMainBtn);
+
+  // Hidden native controls kept for test contracts and fallback
   var libDur = field(libraryTab, "Duration (s)", "0.5", 60);
+  libDur.visible = false;
   var libSide = dropdown(libraryTab, "Transition at", ["Start of layer", "End of layer", "Both"], 0);
+  libSide.visible = false;
   var libStrength = slider(libraryTab, "Effect strength", 60, 0, 100);
+  libStrength.visible = false;
   var libColor = field(libraryTab, "Solid colour", "#4DA6C8", 90);
+  libColor.visible = false;
   var libButtons = libraryTab.add("group");
   libButtons.alignment = ["fill", "top"];
   var libAdd = addBtn(libButtons, "Ajouter à la timeline", "Add to timeline", true);
   var libStar = addBtn(libButtons, "★ Favori", "★ Favorite", false);
   var libRemove = addBtn(libButtons, "Retirer", "Remove", false);
   libRemove.visible = false;
+  libButtons.visible = false;
   var libHelp = libraryTab.add("statictext", undefined, tr("libraryHelp"), { multiline: true });
   libHelp.alignment = ["fill", "top"];
+  libHelp.visible = false;
 
   function libSelectedItem() {
     return libSel >= 0 && libSel < libShown.length ? libShown[libSel] : null;
@@ -6890,6 +7825,10 @@ catLibraryRelabel();
     }
     libPageLabel.text = (libPage + 1) + " / " + pages;
     libPager.visible = count > LIB_PAGE;
+    var selItem = libSelectedItem();
+    if (selItem && libSelTitle) libSelTitle.text = String(selItem.name || "");
+    try { if (libSelThumb) libSelThumb.notify("onDraw"); } catch (eSt) {}
+    try { if (libDrawerStar) libDrawerStar.notify("onDraw"); } catch (eSd) {}
     try { libPreview.notify("onDraw"); } catch (e) {}
   }
 
@@ -6910,6 +7849,7 @@ catLibraryRelabel();
     libSel = 0;
     libRefreshCells();
     if (libHeadCount) libHeadCount.text = libShown.length + " / " + items.length;
+    if (libSubCount) libSubCount.text = libShown.length + " " + (libChipNames[cat] || "\u00e9l\u00e9ments").toLowerCase();
     libChipSync();
     save("lastLibCat", cat);
     say(libShown.length + " élément" + (libShown.length === 1 ? "" : "s") + " dans " + LIB_CATS[cat] + ".");
@@ -7143,6 +8083,8 @@ catLibraryRelabel();
     lookSub: lookSub,
     settingsSub: settingsSub,
     silLast: function () { return silLast; },
-    lastLines: function () { return lastLines; }
+    lastLines: function () { return lastLines; },
+    onScriptUIResize: handleHostResize,
+    redrawAll: redrawAll
   };
 })(this);
